@@ -1,0 +1,13 @@
+# Maven.gitignore
+target/
+dev_ears/
+**/.mvn/wrapper/
+
+# IntelliJ.gitignore
+*.iml
+*.eml
+*.ipr
+*.iws
+.shelf/
+.idea/
+out/
