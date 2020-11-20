@@ -1,13 +1,12 @@
 package com.dss.tennis.tournament.tables.service;
 
 import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
-import com.dss.tennis.tournament.tables.model.v1.Contest;
+import com.dss.tennis.tournament.tables.helper.ContestHelper;
+import com.dss.tennis.tournament.tables.helper.PlayerHelper;
+import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.model.v1.Player;
-import com.dss.tennis.tournament.tables.model.v1.Score;
 import com.dss.tennis.tournament.tables.model.v1.Tournament;
-import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
-import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,11 @@ public class TournamentService {
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
-    private TournamentRepository tournamentRepository;
+    private PlayerHelper playerHelper;
     @Autowired
-    private ContestRepository contestRepository;
+    private TournamentHelper tournamentHelper;
+    @Autowired
+    private ContestHelper contestHelper;
 
     @Transactional
     //todo:refactor this method
@@ -41,22 +42,17 @@ public class TournamentService {
             String lastName = player.split(" ")[1].trim();
             Optional<Player> repoPlayer = playerRepository.findByFirstNameAndLastName(firstName, lastName);
             if (!repoPlayer.isPresent()) {
-                playerList.add(playerRepository.save(Player.builder().firstName(firstName).lastName(lastName).build()));
+                playerList.add(playerHelper.createNewPlayer(firstName, lastName));
             } else {
                 playerList.add(repoPlayer.get());
             }
         });
 
-        Tournament tournament = tournamentRepository.save(Tournament.builder().name(createTournamentDTO.getName())
-                .type(createTournamentDTO.getType())
-                .inProgress(true)
-                .build());
+        Tournament tournament = tournamentHelper.createNewTournament(createTournamentDTO);
 
         for (int i = 0; i < playerList.size(); i++) {
             for (int j = i + 1; j < playerList.size(); j++) {
-                Contest contest = Contest.builder().playerOne(playerList.get(i)).playerTwo(playerList.get(j))
-                        .tournament(tournament).score(new Score()).build();
-                contestRepository.save(contest);
+                contestHelper.createNewContest(playerList.get(i), playerList.get(j), tournament);
             }
         }
     }
