@@ -7,10 +7,7 @@ import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CreateTournamentCommand implements DssBotCommand {
 
@@ -68,7 +65,7 @@ public class CreateTournamentCommand implements DssBotCommand {
         return replyToUser;
     }
 
-    private void addPlayers(String message, ArrayList<String> players) {
+    private void addPlayers(String message, List<String> players) {
         Arrays.stream(message.trim().split("\n")).filter(player -> !player.isEmpty()).forEach(players::add);
     }
 }
