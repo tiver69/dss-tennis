@@ -5,6 +5,6 @@ public class BotUtil {
     private static String COMMAND_PATTERN = "^/.+";
 
     public static boolean isCommand(String commandMessage) {
-        return commandMessage.matches(COMMAND_PATTERN);
+        return commandMessage.trim().matches(COMMAND_PATTERN);
     }
 }

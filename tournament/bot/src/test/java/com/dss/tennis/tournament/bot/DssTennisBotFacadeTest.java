@@ -18,7 +18,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.stream.Stream;
 
-import static com.dss.tennis.tournament.bot.service.KeyboardMarkupService.*;
+import static com.dss.tennis.tournament.bot.helper.KeyboardMarkupHelper.*;
+import static com.dss.tennis.tournament.bot.helper.MainMenuHelper.START_KEYBOARD;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +28,6 @@ public class DssTennisBotFacadeTest {
 
     private static Integer ID = 1;
     private static BotState CURRENT_BOT_STATE = BotState.MAIN_MENU;
-    private static String MESSAGE_START_TEXT = "/start";
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Message messageMock;
@@ -83,7 +83,7 @@ public class DssTennisBotFacadeTest {
     @Test
     public void testBasicInputMessageFlow() {
         prepareInputMessageFlow();
-        when(messageMock.getText()).thenReturn(MESSAGE_START_TEXT);
+        when(messageMock.getText()).thenReturn(START_KEYBOARD);
 
         testInstance.handleUpdate(updateMock);
 
@@ -103,14 +103,14 @@ public class DssTennisBotFacadeTest {
         verify(botStateHelperMock).processInputMessage(CURRENT_BOT_STATE, messageMock);
     }
 
-    private void prepareCallbackFlow(){
+    private void prepareCallbackFlow() {
         when(updateMock.hasCallbackQuery()).thenReturn(true);
         when(updateMock.getCallbackQuery()).thenReturn(callbackQueryMock);
         when(callbackQueryMock.getMessage()).thenReturn(messageMock);
         when(callbackQueryMock.getFrom().getId()).thenReturn(ID);
     }
 
-    private void prepareInputMessageFlow(){
+    private void prepareInputMessageFlow() {
         when(updateMock.hasCallbackQuery()).thenReturn(false);
         when(updateMock.getMessage()).thenReturn(messageMock);
         when(messageMock.hasText()).thenReturn(true);

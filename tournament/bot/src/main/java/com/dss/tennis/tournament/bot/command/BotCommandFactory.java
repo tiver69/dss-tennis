@@ -1,9 +1,12 @@
 package com.dss.tennis.tournament.bot.command;
 
 import com.dss.tennis.tournament.bot.state.BotState;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BotCommandFactory {
-    public static DssBotCommand getCommand(BotState botState) {
+
+    public DssBotCommand getCommand(BotState botState) {
         switch (botState) {
             case INIT:
                 return new InitCommand();

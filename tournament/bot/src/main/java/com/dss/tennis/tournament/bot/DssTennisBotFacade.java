@@ -1,29 +1,27 @@
 package com.dss.tennis.tournament.bot;
 
-import com.dss.tennis.tournament.bot.service.MainMenuService;
 import com.dss.tennis.tournament.bot.state.BotState;
 import com.dss.tennis.tournament.bot.state.BotStateHelper;
 import com.dss.tennis.tournament.bot.state.cache.DssTennisUserStateCache;
 import com.dss.tennis.tournament.tables.model.v1.TournamentType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.dss.tennis.tournament.bot.service.KeyboardMarkupService.*;
+import static com.dss.tennis.tournament.bot.helper.KeyboardMarkupHelper.*;
+import static com.dss.tennis.tournament.bot.helper.MainMenuHelper.START_KEYBOARD;
 
+@Component("dssTennisBotFacade")
 public class DssTennisBotFacade {
 
-    private final MainMenuService mainMenuService;
-    private final DssTennisUserStateCache userStateCache;
-    private final BotStateHelper botStateHelper;
-
-    public DssTennisBotFacade() {
-        this.mainMenuService = new MainMenuService();
-        this.userStateCache = DssTennisUserStateCache.getInstance();
-        this.botStateHelper = new BotStateHelper();
-    }
+    @Autowired
+    private DssTennisUserStateCache userStateCache;
+    @Autowired
+    private BotStateHelper botStateHelper;
 
     public BotApiMethod<?> handleUpdate(Update update) {
         if (update.hasCallbackQuery()) {
@@ -50,7 +48,7 @@ public class DssTennisBotFacade {
         BotState botState;
 
         switch (messageText) {
-            case "/start":
+            case START_KEYBOARD:
                 botState = BotState.INIT;
                 break;
             default:
@@ -73,12 +71,12 @@ public class DssTennisBotFacade {
             case UPDATE_TOURNAMENT_CALLBACK_DATA:
                 botState = BotState.ADD_MATCH;
                 break;
-            case ROUND_TOURNAMENT_TYPE_CALLBACK_DATA:
+            case ROUND_TYPE_CALLBACK_DATA:
                 //todo remove it from here
                 userStateCache.getUserCreateTournamentDTO(userId).setType(TournamentType.ROUND);
                 botState = userStateCache.getUsersCurrentBotState(userId);
                 break;
-            case ELIMINATION_TOURNAMENT_CALLBACK_DATA:
+            case ELIMINATION_TYPE_CALLBACK_DATA:
                 //todo remove it from here
                 botState = userStateCache.getUsersCurrentBotState(userId);
                 userStateCache.getUserCreateTournamentDTO(userId).setType(TournamentType.ELIMINATION);
