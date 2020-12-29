@@ -2,17 +2,18 @@ package com.dss.tennis.tournament.bot.state.cache;
 
 import com.dss.tennis.tournament.bot.state.BotState;
 import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class DssTennisUserStateCache implements UserStateCache {
+
+    public static final BotState DEFAULT_STATE = BotState.MAIN_MENU;
 
     private final Map<Integer, BotState> usersBotStates = new HashMap<>();
     private final Map<Integer, CreateTournamentDTO> usersCreateTournaments = new HashMap<>();
-
-    private DssTennisUserStateCache() {
-    }
 
     @Override
     public CreateTournamentDTO getUserCreateTournamentDTO(int userId) {
@@ -35,19 +36,11 @@ public class DssTennisUserStateCache implements UserStateCache {
     @Override
     public BotState getUsersCurrentBotState(int userId) {
         BotState botState = usersBotStates.get(userId);
-        return botState == null ? BotState.MAIN_MENU : botState;
+        return botState == null ? DEFAULT_STATE : botState;
     }
 
     @Override
     public void clearForUser(int userId) {
         saveUserCreateTournamentDTO(userId, new CreateTournamentDTO());
-    }
-
-    private static class SingletonHelper {
-        private static final DssTennisUserStateCache INSTANCE = new DssTennisUserStateCache();
-    }
-
-    public static DssTennisUserStateCache getInstance() {
-        return SingletonHelper.INSTANCE;
     }
 }

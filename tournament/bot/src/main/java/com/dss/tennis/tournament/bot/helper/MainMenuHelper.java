@@ -1,5 +1,6 @@
-package com.dss.tennis.tournament.bot.service;
+package com.dss.tennis.tournament.bot.helper;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -8,19 +9,18 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenuService {
+@Component
+public class MainMenuHelper {
 
-    public SendMessage getMainMenuMessage(final long chatId, final String textMessage) {
-        final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
-        final SendMessage mainMenuMessage =
-                createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
+    public static final String START_KEYBOARD = "/start";
 
-        return mainMenuMessage;
+    public SendMessage getMainMenuMessage(long chatId, String textMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
+        return createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
     }
 
     private ReplyKeyboardMarkup getMainMenuKeyboard() {
-
-        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
@@ -28,16 +28,14 @@ public class MainMenuService {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow row1 = new KeyboardRow();
-        row1.add(new KeyboardButton("/start"));
+        row1.add(new KeyboardButton(START_KEYBOARD));
         keyboard.add(row1);
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
 
-    private SendMessage createMessageWithKeyboard(final long chatId,
-                                                  String textMessage,
-                                                  final ReplyKeyboardMarkup replyKeyboardMarkup) {
-        final SendMessage sendMessage = new SendMessage();
+    private SendMessage createMessageWithKeyboard(long chatId, String textMessage, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
         sendMessage.setText(textMessage);

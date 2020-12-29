@@ -1,19 +1,21 @@
 package com.dss.tennis.tournament.bot.command;
 
-import com.dss.tennis.tournament.bot.service.MainMenuService;
+import com.dss.tennis.tournament.bot.helper.MainMenuHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+@Component
 public class MainMenuCommand implements DssBotCommand {
 
-    private final MainMenuService mainMenuService;
+    public static final String START_MESSAGE = "Lets start with main menu.";
 
-    public MainMenuCommand() {
-        this.mainMenuService = new MainMenuService();
-    }
+    @Autowired
+    private MainMenuHelper mainMenuHelper;
 
     @Override
     public SendMessage execute(int userId, Message message) {
-        return mainMenuService.getMainMenuMessage(message.getChatId(), "Lets start with main menu.");
+        return mainMenuHelper.getMainMenuMessage(message.getChatId(), START_MESSAGE);
     }
 }

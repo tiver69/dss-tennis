@@ -1,6 +1,7 @@
 package com.dss.tennis.tournament.bot;
 
 import lombok.Getter;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -11,7 +12,10 @@ public class DssTennisBot extends TelegramLongPollingBot {
     private DssTennisBotFacade facade;
 
     public DssTennisBot() {
-        this.facade = new DssTennisBotFacade();
+        AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
+        appContext.scan("com.dss.tennis.tournament.bot");
+        appContext.refresh();
+        this.facade = (DssTennisBotFacade) appContext.getBean("dssTennisBotFacade");;
     }
 
     @Override
