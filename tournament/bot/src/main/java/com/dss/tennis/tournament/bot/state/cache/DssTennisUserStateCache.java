@@ -4,6 +4,7 @@ import com.dss.tennis.tournament.bot.state.BotState;
 import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class DssTennisUserStateCache implements UserStateCache {
     @Override
     public CreateTournamentDTO getUserCreateTournamentDTO(int userId) {
         if (usersCreateTournaments.get(userId) == null) {
-            saveUserCreateTournamentDTO(userId, new CreateTournamentDTO());
+            saveUserCreateTournamentDTO(userId, CreateTournamentDTO.builder().players(new ArrayList<>()).build());
         }
         return usersCreateTournaments.get(userId);
     }

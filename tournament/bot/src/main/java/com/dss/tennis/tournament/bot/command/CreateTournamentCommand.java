@@ -19,23 +19,23 @@ public class CreateTournamentCommand implements DssBotCommand {
     @Autowired
     private KeyboardMarkupHelper keyboardMarkupHelper;
 
-    private final Map<BotState, String> messageQuestionToState = new HashMap<>();
+    public static final Map<BotState, String> STATE_TO_MESSAGE_MAP = new HashMap<>();
 
-    public CreateTournamentCommand() {
-        messageQuestionToState.put(BotState.ASK_NAME, "What is tournament name?");
-        messageQuestionToState.put(BotState.ASK_TYPE, "What is tournament type?");
-        messageQuestionToState.put(BotState.ASK_PLAYERS, "Enter participants:");
-        messageQuestionToState.put(BotState.ASK_ADDITIONAL_PLAYERS, "Would you like to add more?");
-        messageQuestionToState.put(BotState.CONFIRM_TOURNAMENT, "We are going to save %s %s tournament with %d players. Pressed?");
-        messageQuestionToState.put(BotState.SAVE_TOURNAMENT, "Tournament was saved. Lets play now!");
-        messageQuestionToState.put(BotState.ROLLBACK_TOURNAMENT, "Canceling changes");
+    static {
+        STATE_TO_MESSAGE_MAP.put(BotState.ASK_NAME, "What is tournament name?");
+        STATE_TO_MESSAGE_MAP.put(BotState.ASK_TYPE, "What is tournament type?");
+        STATE_TO_MESSAGE_MAP.put(BotState.ASK_PLAYERS, "Enter participants:");
+        STATE_TO_MESSAGE_MAP.put(BotState.ASK_ADDITIONAL_PLAYERS, "Would you like to add more?");
+        STATE_TO_MESSAGE_MAP.put(BotState.CONFIRM_TOURNAMENT, "We are going to save %s %s tournament with %d players. Pressed?");
+        STATE_TO_MESSAGE_MAP.put(BotState.SAVE_TOURNAMENT, "Tournament was saved. Lets play now!");
+        STATE_TO_MESSAGE_MAP.put(BotState.ROLLBACK_TOURNAMENT, "Canceling changes");
     }
 
     @Override
     public SendMessage execute(int userId, Message message) {
         BotState currentBotState = userStateCache.getUsersCurrentBotState(userId);
         CreateTournamentDTO createTournamentDTO = userStateCache.getUserCreateTournamentDTO(userId);
-        SendMessage replyToUser = new SendMessage(message.getChatId(), messageQuestionToState.get(currentBotState));
+        SendMessage replyToUser = new SendMessage(message.getChatId(), STATE_TO_MESSAGE_MAP.get(currentBotState));
 
         if (BotState.ASK_NAME.equals(currentBotState)) {
             userStateCache.setUsersCurrentBotState(userId, BotState.ASK_TYPE);
@@ -49,13 +49,11 @@ public class CreateTournamentCommand implements DssBotCommand {
             userStateCache.setUsersCurrentBotState(userId, BotState.ASK_ADDITIONAL_PLAYERS);
         }
         if (BotState.ASK_ADDITIONAL_PLAYERS.equals(currentBotState)) {
-            //todo: refactor this mess
-            if (createTournamentDTO.getPlayers() == null) createTournamentDTO.setPlayers(new ArrayList<>());
             addPlayers(message.getText(), createTournamentDTO.getPlayers());
             replyToUser.setReplyMarkup(keyboardMarkupHelper.getYesNoMarkup());
         }
         if (BotState.CONFIRM_TOURNAMENT.equals(currentBotState)) {
-            replyToUser.setText(String.format(messageQuestionToState.get(currentBotState),
+            replyToUser.setText(String.format(STATE_TO_MESSAGE_MAP.get(currentBotState),
                     createTournamentDTO.getName(),
                     createTournamentDTO.getType().toString().toLowerCase(),
                     createTournamentDTO.getPlayers().size()));

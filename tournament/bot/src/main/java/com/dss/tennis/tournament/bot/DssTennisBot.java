@@ -15,7 +15,7 @@ public class DssTennisBot extends TelegramLongPollingBot {
         AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
         appContext.scan("com.dss.tennis.tournament.bot");
         appContext.refresh();
-        this.facade = (DssTennisBotFacade) appContext.getBean("dssTennisBotFacade");;
+        this.facade = (DssTennisBotFacade) appContext.getBean("dssTennisBotFacade");
     }
 
     @Override
