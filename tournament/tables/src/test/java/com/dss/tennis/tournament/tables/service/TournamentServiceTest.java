@@ -72,8 +72,8 @@ class TournamentServiceTest {
     }
 
     @Test
-    public void shouldCreateNewTournament() {
-        CreateTournamentDTO createTournamentDTO = prepareEliminationCreateTournamentDTO();
+    public void shouldCreateNewTournamentWithAllowedRoundType() {
+        CreateTournamentDTO createTournamentDTO = prepareRoundCreateTournamentDTO();
         when(playerRepository.findByFirstNameAndLastName(PLAYER_ONE_FIRST_NAME, PLAYER_ONE_LAST_NAME))
                 .thenReturn(Optional.of(playerOne));
         when(playerRepository.findByFirstNameAndLastName(PLAYER_THREE_FIRST_NAME, PLAYER_THREE_LAST_NAME))
@@ -101,6 +101,13 @@ class TournamentServiceTest {
     }
 
     @Test
+    public void shouldNotCreateNewTournamentWithNotSupportedType() {
+        CreateTournamentDTO createTournamentDTO = prepareEliminationCreateTournamentDTO();
+
+        assertThrows(IllegalArgumentException.class, () -> testInstance.createNewTournament(createTournamentDTO));
+    }
+
+    @Test
     public void shouldReturnExceptionWhenValidationFailOnCreateNewTournament() {
         when(playerValidator.validatePlayerName(playerNameList.get(0))).thenReturn(Optional.of(anyString()));
         CreateTournamentDTO createTournamentDTO = prepareEliminationCreateTournamentDTO();
@@ -113,6 +120,14 @@ class TournamentServiceTest {
         });
     }
 
+    private CreateTournamentDTO prepareRoundCreateTournamentDTO() {
+        CreateTournamentDTO createTournament = new CreateTournamentDTO();
+        createTournament.setName(TOURNAMENT_NAME);
+        createTournament.setType(TournamentType.ROUND);
+        createTournament.setPlayers(playerNameList);
+
+        return createTournament;
+    }
 
     private CreateTournamentDTO prepareEliminationCreateTournamentDTO() {
         CreateTournamentDTO createTournament = new CreateTournamentDTO();

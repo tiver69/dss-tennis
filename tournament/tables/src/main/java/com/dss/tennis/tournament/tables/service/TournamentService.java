@@ -6,6 +6,7 @@ import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.model.v1.Player;
 import com.dss.tennis.tournament.tables.model.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.v1.TournamentType;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
@@ -50,10 +51,14 @@ public class TournamentService {
 
         Tournament tournament = tournamentHelper.createNewTournament(createTournamentDTO);
 
-        for (int i = 0; i < playerList.size(); i++) {
-            for (int j = i + 1; j < playerList.size(); j++) {
-                contestHelper.createNewContest(playerList.get(i), playerList.get(j), tournament);
+        if (TournamentType.ROUND.equals(createTournamentDTO.getType())) {
+            for (int i = 0; i < playerList.size(); i++) {
+                for (int j = i + 1; j < playerList.size(); j++) {
+                    contestHelper.createNewContest(playerList.get(i), playerList.get(j), tournament);
+                }
             }
+        } else {
+            throw new IllegalArgumentException("Tournament Type Creation is not yet supported");
         }
     }
 
