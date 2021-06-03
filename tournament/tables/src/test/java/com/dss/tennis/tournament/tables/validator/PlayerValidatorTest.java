@@ -1,7 +1,8 @@
 package com.dss.tennis.tournament.tables.validator;
 
+import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
-import com.dss.tennis.tournament.tables.validator.error.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +21,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class PlayerValidatorTest {
 
-    private static String VALID_NAME = "FirstName LastName  ";
-    private static String INVALID_NAME1 = "oneWordName";
-    private static String INVALID_NAME2 = "Three Word Name";
-    private static String EMPTY_NAME = "";
-    private static String TRIM_EMPTY_NAME = "    ";
+    private static final String VALID_NAME = "FirstName LastName  ";
+    private static final String INVALID_NAME1 = "oneWordName";
+    private static final String INVALID_NAME2 = "Three Word Name";
+    private static final String EMPTY_NAME = "";
+    private static final String TRIM_EMPTY_NAME = "    ";
 
     @Mock
     private PlayerRepository playerRepository;
@@ -35,11 +36,12 @@ class PlayerValidatorTest {
     @ParameterizedTest
     @MethodSource
     public void shouldReturnPlayerFirstOrLastNameEmpty(String playerName) {
-        Optional<String> result = testInstance.validatePlayerName(playerName);
+        Optional<DetailedErrorData> result = testInstance.validatePlayerName(playerName);
 
         Assertions.assertAll(
                 () -> assertTrue(result.isPresent()),
-                () -> assertEquals(ErrorConstants.PLAYER_FIRST_OR_LAST_NAME_EMPTY, result.get())
+                () -> assertEquals(ErrorConstants.PLAYER_FIRST_OR_LAST_NAME_EMPTY, result.get().getErrorConstant()),
+                () -> assertNull(result.get().getDetailParameter())
         );
     }
 
@@ -55,7 +57,7 @@ class PlayerValidatorTest {
 
     @Test
     public void shouldPassValidation() {
-        Optional<String> result = testInstance.validatePlayerName(VALID_NAME);
+        Optional<DetailedErrorData> result = testInstance.validatePlayerName(VALID_NAME);
         assertFalse(result.isPresent());
     }
 }

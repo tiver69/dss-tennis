@@ -1,6 +1,8 @@
 package com.dss.tennis.tournament.tables.service;
 
 import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_TYPE_NOT_SUPPORTED;
 
 @Service
 public class TournamentService {
@@ -58,19 +62,18 @@ public class TournamentService {
                 }
             }
         } else {
-            throw new IllegalArgumentException("Tournament Type Creation is not yet supported");
+            throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, createTournamentDTO.getType());
         }
     }
 
     private void validateCreateTournamentDTO(CreateTournamentDTO createTournamentDTO) {
-        Set<String> errorSet = new HashSet<>();
+        Set<DetailedErrorData> errorSet = new HashSet<>();
         tournamentValidator.validateTournamentName(createTournamentDTO.getName()).ifPresent(errorSet::add);
-        //todo: add error details here with name specifying
+        //todo: add error details here with first/last name specifying
         createTournamentDTO.getPlayers().stream().map(playerValidator::validatePlayerName).filter(Optional::isPresent)
                 .forEach(error -> errorSet.add(error.get()));
         if (!errorSet.isEmpty()) {
-            //todo: error to return in response
-            throw new IllegalArgumentException("Validation fail for tournament creation.");
+            throw new DetailedException(errorSet);
         }
     }
 

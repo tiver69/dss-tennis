@@ -1,6 +1,8 @@
 package com.dss.tennis.tournament.tables.service;
 
 import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
@@ -22,8 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +63,7 @@ class TournamentServiceTest {
     private Tournament newTournament;
 
     @InjectMocks
-    TournamentService testInstance;
+    private TournamentService testInstance;
 
     @BeforeAll
     static void beforeAll() {
@@ -104,16 +105,21 @@ class TournamentServiceTest {
     public void shouldNotCreateNewTournamentWithNotSupportedType() {
         CreateTournamentDTO createTournamentDTO = prepareEliminationCreateTournamentDTO();
 
-        assertThrows(IllegalArgumentException.class, () -> testInstance.createNewTournament(createTournamentDTO));
+        assertThrows(DetailedException.class, () -> testInstance.createNewTournament(createTournamentDTO));
     }
 
     @Test
     public void shouldReturnExceptionWhenValidationFailOnCreateNewTournament() {
-        when(playerValidator.validatePlayerName(playerNameList.get(0))).thenReturn(Optional.of(anyString()));
-        CreateTournamentDTO createTournamentDTO = prepareEliminationCreateTournamentDTO();
+        DetailedErrorData detailedErrorData = new DetailedErrorData();
+        when(playerValidator.validatePlayerName(playerNameList.get(0)))
+                .thenReturn(Optional.of(detailedErrorData));
+        CreateTournamentDTO createTournamentDTO = prepareRoundCreateTournamentDTO();
 
-        assertThrows(IllegalArgumentException.class, () -> testInstance.createNewTournament(createTournamentDTO));
+        DetailedException result = assertThrows(DetailedException.class, () -> testInstance
+                .createNewTournament(createTournamentDTO));
 
+        assertEquals(1, result.getErrors().size());
+        assertTrue(result.getErrors().contains(detailedErrorData));
         verify(tournamentValidator).validateTournamentName(TOURNAMENT_NAME);
         playerNameList.forEach(playerName -> {
             verify(playerValidator).validatePlayerName(playerName);

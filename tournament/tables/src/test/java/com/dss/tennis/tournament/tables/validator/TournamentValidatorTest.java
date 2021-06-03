@@ -1,9 +1,9 @@
 package com.dss.tennis.tournament.tables.validator;
 
-import com.dss.tennis.tournament.tables.helper.ContestHelper;
+import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.v1.Tournament;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
-import com.dss.tennis.tournament.tables.validator.error.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,10 +36,11 @@ class TournamentValidatorTest {
     @ParameterizedTest
     @MethodSource
     public void shouldReturnTournamentNameEmptyErrorCode(String tournamentName) {
-        Optional<String> result = testInstance.validateTournamentName(tournamentName);
+        Optional<DetailedErrorData> result = testInstance.validateTournamentName(tournamentName);
         Assertions.assertAll(
                 () -> assertTrue(result.isPresent()),
-                () -> assertEquals(ErrorConstants.TOURNAMENT_NAME_EMPTY, result.get())
+                () -> assertEquals(ErrorConstants.TOURNAMENT_NAME_EMPTY, result.get().getErrorConstant()),
+                () -> assertNull(result.get().getDetailParameter())
         );
     }
 
@@ -55,16 +56,17 @@ class TournamentValidatorTest {
     public void shouldReturnTournamentNameDuplicateErrorCode() {
         when(tournamentRepository.findByName(TOURNAMENT_NAME)).thenReturn(Optional.of(new Tournament()));
 
-        Optional<String> result = testInstance.validateTournamentName(TOURNAMENT_NAME);
+        Optional<DetailedErrorData> result = testInstance.validateTournamentName(TOURNAMENT_NAME);
         Assertions.assertAll(
                 () -> assertTrue(result.isPresent()),
-                () -> assertEquals(ErrorConstants.TOURNAMENT_NAME_DUPLICATE, result.get())
+                () -> assertEquals(ErrorConstants.TOURNAMENT_NAME_DUPLICATE, result.get().getErrorConstant()),
+                () -> assertEquals(TOURNAMENT_NAME, result.get().getDetailParameter())
         );
     }
 
     @Test
     public void shouldPassValidation() {
-        Optional<String> result = testInstance.validateTournamentName(TOURNAMENT_NAME);
+        Optional<DetailedErrorData> result = testInstance.validateTournamentName(TOURNAMENT_NAME);
         assertFalse(result.isPresent());
     }
 }

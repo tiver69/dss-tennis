@@ -1,11 +1,14 @@
 package com.dss.tennis.tournament.tables.validator;
 
+import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
-import com.dss.tennis.tournament.tables.validator.error.ErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NAME_DUPLICATE;
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NAME_EMPTY;
 
 @Component
 public class TournamentValidator {
@@ -13,11 +16,11 @@ public class TournamentValidator {
     @Autowired
     private TournamentRepository tournamentRepository;
 
-    public Optional<String> validateTournamentName(String tournamentName) {
+    public Optional<DetailedErrorData> validateTournamentName(String tournamentName) {
         if (tournamentName == null || tournamentName.trim().isEmpty())
-            return Optional.of(ErrorConstants.TOURNAMENT_NAME_EMPTY);
+            return Optional.of(new DetailedErrorData(TOURNAMENT_NAME_EMPTY));
         if (tournamentRepository.findByName(tournamentName).isPresent())
-            return Optional.of(ErrorConstants.TOURNAMENT_NAME_DUPLICATE);
+            return Optional.of(new DetailedErrorData(TOURNAMENT_NAME_DUPLICATE, tournamentName));
         return Optional.empty();
     }
 
