@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -89,7 +90,7 @@ class TournamentServiceTest {
 
         testInstance.createNewTournament(createTournamentDTO);
 
-        verify(tournamentValidator).validateTournamentName(TOURNAMENT_NAME);
+        verify(tournamentValidator).validateCreateTournament(createTournamentDTO);
         playerNameList.forEach(playerName -> {
             verify(playerValidator).validatePlayerName(playerName);
         });
@@ -113,17 +114,16 @@ class TournamentServiceTest {
 
     @Test
     public void shouldReturnExceptionWhenValidationFailOnCreateNewTournament() {
-        DetailedErrorData detailedErrorData = new DetailedErrorData();
         when(playerValidator.validatePlayerName(playerNameList.get(0)))
-                .thenReturn(Optional.of(detailedErrorData));
+                .thenReturn(Sets.newSet(new DetailedErrorData()));
         CreateTournamentDTO createTournamentDTO = prepareRoundCreateTournamentDTO();
 
         DetailedException result = assertThrows(DetailedException.class, () -> testInstance
                 .createNewTournament(createTournamentDTO));
 
         assertEquals(1, result.getErrors().size());
-        assertTrue(result.getErrors().contains(detailedErrorData));
-        verify(tournamentValidator).validateTournamentName(TOURNAMENT_NAME);
+        assertFalse(result.getErrors().isEmpty());
+        verify(tournamentValidator).validateCreateTournament(createTournamentDTO);
         playerNameList.forEach(playerName -> {
             verify(playerValidator).validatePlayerName(playerName);
         });

@@ -67,11 +67,10 @@ public class TournamentService {
     }
 
     private void validateCreateTournamentDTO(CreateTournamentDTO createTournamentDTO) {
-        Set<DetailedErrorData> errorSet = new HashSet<>();
-        tournamentValidator.validateTournamentName(createTournamentDTO.getName()).ifPresent(errorSet::add);
-        //todo: add error details here with first/last name specifying
-        createTournamentDTO.getPlayers().stream().map(playerValidator::validatePlayerName).filter(Optional::isPresent)
-                .forEach(error -> errorSet.add(error.get()));
+        Set<DetailedErrorData> errorSet = new HashSet<>(tournamentValidator
+                .validateCreateTournament(createTournamentDTO));
+        createTournamentDTO.getPlayers().stream().map(playerValidator::validatePlayerName)
+                .forEach(errorSet::addAll);
         if (!errorSet.isEmpty()) {
             throw new DetailedException(errorSet);
         }

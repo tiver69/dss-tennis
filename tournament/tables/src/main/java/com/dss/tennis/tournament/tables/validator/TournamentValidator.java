@@ -1,27 +1,29 @@
 package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
+import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NAME_DUPLICATE;
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NAME_EMPTY;
 
 @Component
 public class TournamentValidator {
 
     @Autowired
     private TournamentRepository tournamentRepository;
+    @Autowired
+    private ValidatorHelper<CreateTournamentDTO> validatorHelper;
 
-    public Optional<DetailedErrorData> validateTournamentName(String tournamentName) {
-        if (tournamentName == null || tournamentName.trim().isEmpty())
-            return Optional.of(new DetailedErrorData(TOURNAMENT_NAME_EMPTY));
-        if (tournamentRepository.findByName(tournamentName).isPresent())
-            return Optional.of(new DetailedErrorData(TOURNAMENT_NAME_DUPLICATE, tournamentName));
-        return Optional.empty();
+    public Set<DetailedErrorData> validateCreateTournament(CreateTournamentDTO tournamentDTO) {
+        Set<DetailedErrorData> detailedErrorSet = new HashSet<>(validatorHelper.validateObject(tournamentDTO));
+        if (tournamentRepository.findByName(tournamentDTO.getName()).isPresent())
+            detailedErrorSet.add(new DetailedErrorData(TOURNAMENT_NAME_DUPLICATE, tournamentDTO.getName()));
+        return detailedErrorSet;
     }
 
 }

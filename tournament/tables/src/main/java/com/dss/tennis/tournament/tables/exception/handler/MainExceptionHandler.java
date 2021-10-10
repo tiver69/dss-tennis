@@ -57,7 +57,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
     }
 
-    private String constructSequentialPointer(String errorConstant, Long pointer) {
+    private String constructSequentialPointer(String errorConstant, Integer pointer) {
         String sequentialPointerFormat = environment.getProperty(errorConstant + POINTER_SUFFIX);
         return pointer == null ? sequentialPointerFormat :
                 String.format(sequentialPointerFormat, pointer);

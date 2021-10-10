@@ -10,5 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class AbstractSequentialDTO {
-    private Long sequenceNumber;
+    private Integer sequenceNumber;
 }

@@ -8,5 +8,6 @@ public enum ErrorConstants {
     TOURNAMENT_TYPE_NOT_SUPPORTED,
 
     //player errors
-    PLAYER_FIRST_OR_LAST_NAME_EMPTY
+    PLAYER_FIRST_NAME_EMPTY,
+    PLAYER_LAST_NAME_EMPTY
 }
