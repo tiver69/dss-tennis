@@ -29,7 +29,7 @@ public class SequenceConverter<S, D extends AbstractSequentialDTO> extends Abstr
         return destination;
     }
 
-    private D convertSequenceElement(S sourceElement, long sequenceNumber) {
+    private D convertSequenceElement(S sourceElement, int sequenceNumber) {
         D destinationElement = modelMapper.map(sourceElement, this.destinationClass);
         destinationElement.setSequenceNumber(sequenceNumber);
 
