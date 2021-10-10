@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.controller;
 
-import com.dss.tennis.tournament.tables.model.v1.Player;
+import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

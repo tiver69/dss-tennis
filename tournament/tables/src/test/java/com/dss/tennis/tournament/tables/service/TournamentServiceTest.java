@@ -1,18 +1,19 @@
 package com.dss.tennis.tournament.tables.service;
 
-import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
-import com.dss.tennis.tournament.tables.model.v1.Player;
-import com.dss.tennis.tournament.tables.model.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,7 +40,7 @@ class TournamentServiceTest {
     private static final String PLAYER_THREE_FIRST_NAME = "FirstNameThree";
     private static final String PLAYER_THREE_LAST_NAME = "LastNameThree";
 
-    private static List<String> playerNameList;
+    private static List<PlayerDTO> playerNameList;
 
     @Mock
     private TournamentValidator tournamentValidator;
@@ -54,34 +55,36 @@ class TournamentServiceTest {
     @Mock
     private ContestHelper contestHelper;
     @Spy
-    private Player playerOne;
+    private Player playerOneEntity;
     @Spy
-    private Player playerTwo;
+    private Player playerTwoEntity;
     @Spy
-    private Player playerThree;
+    private Player playerThreeEntity;
     @Spy
     private Tournament newTournament;
 
     @InjectMocks
     private TournamentService testInstance;
 
-    @BeforeAll
-    static void beforeAll() {
-        playerNameList = Arrays.asList(PLAYER_ONE_FIRST_NAME + " " + PLAYER_ONE_LAST_NAME,
-                PLAYER_TWO_FIRST_NAME + " " + PLAYER_TWO_LAST_NAME,
-                PLAYER_THREE_FIRST_NAME + " " + PLAYER_THREE_LAST_NAME);
+    private final PlayerDTO playerOne = new PlayerDTO(PLAYER_ONE_FIRST_NAME, PLAYER_ONE_LAST_NAME);
+    private final PlayerDTO playerTwo = new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME);
+    private final PlayerDTO playerThree = new PlayerDTO(PLAYER_THREE_FIRST_NAME, PLAYER_THREE_LAST_NAME);
+
+    @BeforeEach
+    void before() {
+        playerNameList = Arrays.asList(playerOne, playerTwo, playerThree);
     }
 
     @Test
     public void shouldCreateNewTournamentWithAllowedRoundType() {
         CreateTournamentDTO createTournamentDTO = prepareRoundCreateTournamentDTO();
         when(playerRepository.findByFirstNameAndLastName(PLAYER_ONE_FIRST_NAME, PLAYER_ONE_LAST_NAME))
-                .thenReturn(Optional.of(playerOne));
+                .thenReturn(Optional.of(playerOneEntity));
         when(playerRepository.findByFirstNameAndLastName(PLAYER_THREE_FIRST_NAME, PLAYER_THREE_LAST_NAME))
-                .thenReturn(Optional.of(playerThree));
+                .thenReturn(Optional.of(playerThreeEntity));
         when(playerRepository.findByFirstNameAndLastName(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME))
                 .thenReturn(Optional.empty());
-        when(playerHelper.createNewPlayer(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME)).thenReturn(playerTwo);
+        when(playerHelper.createNewPlayer(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME)).thenReturn(playerTwoEntity);
         when(tournamentHelper.createNewTournament(createTournamentDTO)).thenReturn(newTournament);
 
         testInstance.createNewTournament(createTournamentDTO);
@@ -96,9 +99,9 @@ class TournamentServiceTest {
 
         verify(tournamentHelper).createNewTournament(createTournamentDTO);
         verify(playerHelper).createNewPlayer(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME);
-        verify(contestHelper).createNewContest(playerOne, playerTwo, newTournament);
-        verify(contestHelper).createNewContest(playerOne, playerThree, newTournament);
-        verify(contestHelper).createNewContest(playerTwo, playerThree, newTournament);
+        verify(contestHelper).createNewContest(playerOneEntity, playerTwoEntity, newTournament);
+        verify(contestHelper).createNewContest(playerOneEntity, playerThreeEntity, newTournament);
+        verify(contestHelper).createNewContest(playerTwoEntity, playerThreeEntity, newTournament);
     }
 
     @Test
