@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.model.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import org.junit.jupiter.api.Assertions;

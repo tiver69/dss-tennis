@@ -1,4 +1,4 @@
-package com.dss.tennis.tournament.tables.model.v1;
+package com.dss.tennis.tournament.tables.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorDataSource {
-    private String parameter;
-    private String pointer;
+public class PlayerDTO extends AbstractSequentialDTO{
+
+    private String firstName;
+    private String lastName;
 }

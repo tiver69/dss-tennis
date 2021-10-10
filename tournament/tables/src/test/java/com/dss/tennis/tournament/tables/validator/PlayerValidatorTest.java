@@ -1,6 +1,7 @@
 package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
+import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import org.junit.jupiter.api.Assertions;
@@ -21,9 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class PlayerValidatorTest {
 
-    private static final String VALID_NAME = "FirstName LastName  ";
-    private static final String INVALID_NAME1 = "oneWordName";
-    private static final String INVALID_NAME2 = "Three Word Name";
+    private static final String VALID_FIRST_NAME = "FirstName";
+    private static final String VALID_LAST_NAME = "LastName  ";
     private static final String EMPTY_NAME = "";
     private static final String TRIM_EMPTY_NAME = "    ";
 
@@ -35,8 +35,8 @@ class PlayerValidatorTest {
 
     @ParameterizedTest
     @MethodSource
-    public void shouldReturnPlayerFirstOrLastNameEmpty(String playerName) {
-        Optional<DetailedErrorData> result = testInstance.validatePlayerName(playerName);
+    public void shouldReturnPlayerFirstOrLastNameEmpty(PlayerDTO player) {
+        Optional<DetailedErrorData> result = testInstance.validatePlayerName(player);
 
         Assertions.assertAll(
                 () -> assertTrue(result.isPresent()),
@@ -47,17 +47,17 @@ class PlayerValidatorTest {
 
     private static Stream<Arguments> shouldReturnPlayerFirstOrLastNameEmpty() {
         return Stream.of(
-                Arguments.of(EMPTY_NAME),
-                Arguments.of(TRIM_EMPTY_NAME),
-                Arguments.of(INVALID_NAME1),
-                Arguments.of(INVALID_NAME2),
-                Arguments.of((Object) null)
+                Arguments.of(new PlayerDTO(EMPTY_NAME, VALID_LAST_NAME)),
+                Arguments.of(new PlayerDTO(TRIM_EMPTY_NAME, EMPTY_NAME)),
+                Arguments.of(new PlayerDTO(VALID_FIRST_NAME, EMPTY_NAME))
+//                Arguments.of((Object) null) //todo: handle null player
         );
     }
 
     @Test
     public void shouldPassValidation() {
-        Optional<DetailedErrorData> result = testInstance.validatePlayerName(VALID_NAME);
+        Optional<DetailedErrorData> result = testInstance
+                .validatePlayerName(new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME));
         assertFalse(result.isPresent());
     }
 }

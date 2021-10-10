@@ -1,8 +1,8 @@
 package com.dss.tennis.tournament.tables.helper;
 
-import com.dss.tennis.tournament.tables.model.v1.Contest;
-import com.dss.tennis.tournament.tables.model.v1.Player;
-import com.dss.tennis.tournament.tables.model.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v1.Contest;
+import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

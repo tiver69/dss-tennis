@@ -1,14 +1,14 @@
 package com.dss.tennis.tournament.tables.service;
 
-import com.dss.tennis.tournament.tables.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
-import com.dss.tennis.tournament.tables.model.v1.Player;
-import com.dss.tennis.tournament.tables.model.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
@@ -43,8 +43,8 @@ public class TournamentService {
 
         List<Player> playerList = new ArrayList<>();
         createTournamentDTO.getPlayers().forEach(player -> {
-            String firstName = player.split(" ")[0].trim();
-            String lastName = player.split(" ")[1].trim();
+            String firstName = player.getFirstName();
+            String lastName = player.getLastName();
             Optional<Player> repoPlayer = playerRepository.findByFirstNameAndLastName(firstName, lastName);
             if (!repoPlayer.isPresent()) {
                 playerList.add(playerHelper.createNewPlayer(firstName, lastName));

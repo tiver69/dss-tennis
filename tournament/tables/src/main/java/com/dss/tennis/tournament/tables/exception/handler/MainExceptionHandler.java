@@ -2,8 +2,8 @@ package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.model.v1.ErrorData;
-import com.dss.tennis.tournament.tables.model.v1.ErrorDataSource;
+import com.dss.tennis.tournament.tables.model.db.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.db.v1.ErrorDataSource;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +45,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         String errorConstant = currentError.getErrorConstant().toString();
         ErrorDataSource errorDataSource = ErrorDataSource.builder()
                 .parameter(currentError.getDetailParameter())
-                .pointer(environment.getProperty(errorConstant + POINTER_SUFFIX))
+                .pointer(constructSequentialPointer(errorConstant, currentError.getSequentNumber()))
                 .build();
 
         return ErrorData.builder()
@@ -55,6 +55,12 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                 .detail(environment.getProperty(errorConstant + DETAIL_SUFFIX))
                 .source(errorDataSource)
                 .build();
+    }
+
+    private String constructSequentialPointer(String errorConstant, Long pointer) {
+        String sequentialPointerFormat = environment.getProperty(errorConstant + POINTER_SUFFIX);
+        return pointer == null ? sequentialPointerFormat :
+                String.format(sequentialPointerFormat, pointer);
     }
 
     private HttpStatus getHttpStatus(List<ErrorData> list) {

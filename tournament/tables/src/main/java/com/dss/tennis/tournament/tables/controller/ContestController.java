@@ -1,7 +1,6 @@
 package com.dss.tennis.tournament.tables.controller;
 
-import com.dss.tennis.tournament.tables.model.v1.Contest;
-import com.dss.tennis.tournament.tables.model.v1.Score;
+import com.dss.tennis.tournament.tables.model.db.v1.Contest;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import com.dss.tennis.tournament.tables.repository.ScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
