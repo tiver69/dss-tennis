@@ -9,5 +9,6 @@ public enum ErrorConstants {
 
     //player errors
     PLAYER_FIRST_NAME_EMPTY,
-    PLAYER_LAST_NAME_EMPTY
+    PLAYER_LAST_NAME_EMPTY,
+    PLAYER_NOT_FOUND
 }
