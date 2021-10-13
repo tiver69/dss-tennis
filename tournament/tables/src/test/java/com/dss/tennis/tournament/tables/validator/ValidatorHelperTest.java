@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -67,7 +67,7 @@ class ValidatorHelperTest {
 
     @Test
     public void shouldReturnDetailedErrorDataWithoutSequentialNumber() {
-        CreateTournamentDTO tournamentDTO = new CreateTournamentDTO();
+        TournamentDTO tournamentDTO = new TournamentDTO();
         when(constraintViolationMock.getMessage()).thenReturn(TOURNAMENT_NAME_EMPTY.name());
         when(javaxValidatorMock.validate(tournamentDTO)).thenReturn(Sets.newSet(constraintViolationMock));
 

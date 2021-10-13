@@ -12,6 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerDTO extends AbstractSequentialDTO {
 
+    public PlayerDTO(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    private int id;
     @Required(message = "PLAYER_FIRST_NAME_EMPTY")
     private String firstName;
     @Required(message = "PLAYER_LAST_NAME_EMPTY")

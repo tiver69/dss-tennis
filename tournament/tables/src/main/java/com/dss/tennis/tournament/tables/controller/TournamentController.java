@@ -1,9 +1,10 @@
 package com.dss.tennis.tournament.tables.controller;
 
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
 import com.dss.tennis.tournament.tables.service.TournamentService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +17,23 @@ public class TournamentController {
 
     @Autowired
     TournamentService tournamentService;
-
     @Autowired
-    ModelMapper modelMapper;
+    ConverterHelper converterHelper;
 
     @PostMapping
-    public ResponseEntity<?> createTournament(@RequestBody CreateTournament tournament) {
-        CreateTournamentDTO createTournamentDto = modelMapper.map(tournament, CreateTournamentDTO.class);
-        tournamentService.createNewTournament(createTournamentDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<GetTournament> createTournament(@RequestBody CreateTournament tournament) {
+        TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class, true);
+
+        TournamentDTO tournamentDTO = tournamentService.createNewTournament(tournamentDto);
+        GetTournament tournamentResponse = converterHelper.convert(tournamentDTO, GetTournament.class);
+        return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/{tournamentId}")
-    public ResponseEntity<?> findTournamentById(@PathVariable Integer tournamentId) {
-//        Optional<Tournament> tournament = tournamentRepository.findById(tournamentId);
-//        tournament.ifPresent(System.out::println);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<GetTournament> findTournamentById(@PathVariable Integer tournamentId) {
+        TournamentDTO tournamentDTO = tournamentService.getTournament(tournamentId);
+
+        GetTournament tournamentResponse = converterHelper.convert(tournamentDTO, GetTournament.class);
+        return new ResponseEntity<>(tournamentResponse, HttpStatus.OK);
     }
 }

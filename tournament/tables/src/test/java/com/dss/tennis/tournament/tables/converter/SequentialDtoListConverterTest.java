@@ -1,8 +1,7 @@
-package com.dss.tennis.tournament.tables.convertor;
+package com.dss.tennis.tournament.tables.converter;
 
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SequenceConverterTest {
+class SequentialDtoListConverterTest {
 
     private static final String TOURNAMENT_NAME = "tournamentName";
     private static final String PLAYER_ONE_FIRST_NAME = "FirstNameOne";
@@ -30,7 +29,7 @@ class SequenceConverterTest {
 
     @BeforeAll
     static void before() {
-        MODEL_MAPPER.addConverter(new SequenceConverter<CreatePlayer, PlayerDTO>(MODEL_MAPPER, PlayerDTO.class));
+        MODEL_MAPPER.addConverter(new SequentialDtoListConverter());
 
         PLAYERS.add(new CreatePlayer(PLAYER_ONE_FIRST_NAME, PLAYER_ONE_LAST_NAME));
         PLAYERS.add(new CreatePlayer(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME));
@@ -39,9 +38,9 @@ class SequenceConverterTest {
 
     @Test
     public void shouldConvertToCreateTournamentDTOWithSequenceNumbers() {
-        CreateTournamentDTO result = MODEL_MAPPER
+        TournamentDTO result = MODEL_MAPPER
                 .map(CreateTournament.builder().name(TOURNAMENT_NAME).type(TournamentType.ROUND)
-                        .players(PLAYERS).build(), CreateTournamentDTO.class);
+                        .players(PLAYERS).build(), TournamentDTO.class);
 
         Assertions.assertAll(
                 () -> assertEquals(result.getName(), TOURNAMENT_NAME),

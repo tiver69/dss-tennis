@@ -13,9 +13,18 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateTournamentDTO {
+public class TournamentDTO {
+
+    public TournamentDTO(String name, TournamentType type, List<PlayerDTO> players) {
+        this.name = name;
+        this.type = type;
+        this.players = players;
+    }
+
+    private int id;
     @Required(message = "TOURNAMENT_NAME_EMPTY")
     private String name;
     private TournamentType type;
+    private List<ContestDTO> contests;
     private List<PlayerDTO> players;
 }

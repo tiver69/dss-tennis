@@ -26,7 +26,7 @@ class EliminationTournamentFactoryTest {
     @Test
     public void shouldThrowUnsupportedError() {
         DetailedException result = Assertions
-                .assertThrows(DetailedException.class, () -> testInstance.build(tournamentSpy, Lists.emptyList()));
+                .assertThrows(DetailedException.class, () -> testInstance.createNewContests(tournamentSpy, Lists.emptyList()));
 
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),

@@ -2,7 +2,7 @@ package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
@@ -31,7 +31,7 @@ class TournamentHelperTest {
     @Spy
     private Tournament tournamentSpy;
     @Spy
-    private CreateTournamentDTO createTournamentDtoSpy;
+    private TournamentDTO tournamentDtoSpy;
 
     @InjectMocks
     private TournamentHelper testInstance;
@@ -39,19 +39,19 @@ class TournamentHelperTest {
     @Test
     public void shouldCreateNewEliminationTournament() {
         List<PlayerDTO> players = Collections.emptyList();
-        when(createTournamentDtoSpy.getType()).thenReturn(TournamentType.ELIMINATION);
-        when(createTournamentDtoSpy.getPlayers()).thenReturn(players);
+        when(tournamentDtoSpy.getType()).thenReturn(TournamentType.ELIMINATION);
+        when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentRepositoryMock.save(any(Tournament.class))).thenReturn(tournamentSpy);
-        Tournament result = testInstance.createNewTournamentWithContests(createTournamentDtoSpy);
+        Tournament result = testInstance.createNewTournamentWithContests(tournamentDtoSpy);
 
         Assertions.assertEquals(tournamentSpy, result);
         verify(tournamentRepositoryMock).save(any(Tournament.class));
-        verify(eliminationTournamentFactoryMock).build(tournamentSpy, players);
+        verify(eliminationTournamentFactoryMock).createNewContests(tournamentSpy, players);
     }
 
     @Test
     public void shouldCreateNewTournament() {
-        testInstance.createNewTournament(createTournamentDtoSpy);
+        testInstance.createNewTournament(tournamentDtoSpy);
 
         verify(tournamentRepositoryMock).save(any(Tournament.class));
     }

@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.controller;
 
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
 import com.dss.tennis.tournament.tables.service.TournamentService;
@@ -48,8 +48,8 @@ class TournamentControllerTest {
 
     @Test
     public void shouldPerformNewTournamentCreation() throws Exception {
-        when(modelMapper.map(any(CreateTournament.class), eq(CreateTournamentDTO.class)))
-                .thenReturn(new CreateTournamentDTO());
+        when(modelMapper.map(any(CreateTournament.class), eq(TournamentDTO.class)))
+                .thenReturn(new TournamentDTO());
 
         MvcResult content = mockMvc
                 .perform(post("/tournaments")
@@ -59,8 +59,8 @@ class TournamentControllerTest {
 //                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
                 .andReturn();
 
-        verify(modelMapper).map(any(CreateTournament.class), eq(CreateTournamentDTO.class));
-        verify(tournamentService).createNewTournament(any(CreateTournamentDTO.class));
+        verify(modelMapper).map(any(CreateTournament.class), eq(TournamentDTO.class));
+        verify(tournamentService).createNewTournament(any(TournamentDTO.class));
         Assertions.assertEquals("", content.getResponse().getContentAsString());
     }
 

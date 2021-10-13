@@ -4,7 +4,7 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
@@ -30,7 +30,7 @@ class TournamentServiceTest {
     private TournamentHelper tournamentHelperMock;
 
     @Spy
-    private CreateTournamentDTO createTournamentDtoSpy;
+    private TournamentDTO tournamentDtoSpy;
     @Spy
     private PlayerDTO playerDtoSpy;
     @Spy
@@ -41,28 +41,28 @@ class TournamentServiceTest {
 
     @Test
     public void shouldCreateNewTournament() {
-        when(createTournamentDtoSpy.getPlayers()).thenReturn(Lists.list(playerDtoSpy));
-        when(tournamentHelperMock.createNewTournamentWithContests(createTournamentDtoSpy)).thenReturn(tournamentSpy);
+        when(tournamentDtoSpy.getPlayers()).thenReturn(Lists.list(playerDtoSpy));
+        when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
 
-        testInstance.createNewTournament(createTournamentDtoSpy);
+        testInstance.createNewTournament(tournamentDtoSpy);
 
-        verify(tournamentValidatorMock).validateCreateTournament(createTournamentDtoSpy);
+        verify(tournamentValidatorMock).validateCreateTournament(tournamentDtoSpy);
         verify(playerValidatorMock).validatePlayer(playerDtoSpy);
-        verify(tournamentHelperMock).createNewTournamentWithContests(createTournamentDtoSpy);
+        verify(tournamentHelperMock).createNewTournamentWithContests(tournamentDtoSpy);
     }
 
     @Test
     public void shouldReturnExceptionWhenValidationFailOnCreateNewTournament() {
-        when(createTournamentDtoSpy.getPlayers()).thenReturn(Lists.list(playerDtoSpy));
+        when(tournamentDtoSpy.getPlayers()).thenReturn(Lists.list(playerDtoSpy));
         when(playerValidatorMock.validatePlayer(playerDtoSpy))
                 .thenReturn(Sets.newSet(new DetailedErrorData()));
 
         DetailedException result = assertThrows(DetailedException.class, () -> testInstance
-                .createNewTournament(createTournamentDtoSpy));
+                .createNewTournament(tournamentDtoSpy));
 
         assertEquals(1, result.getErrors().size());
         assertFalse(result.getErrors().isEmpty());
-        verify(tournamentValidatorMock).validateCreateTournament(createTournamentDtoSpy);
+        verify(tournamentValidatorMock).validateCreateTournament(tournamentDtoSpy);
         verify(playerValidatorMock).validatePlayer(playerDtoSpy);
     }
 }

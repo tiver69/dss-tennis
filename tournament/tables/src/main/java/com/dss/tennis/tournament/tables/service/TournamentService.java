@@ -3,7 +3,8 @@ package com.dss.tennis.tournament.tables.service;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,21 @@ public class TournamentService {
     private TournamentHelper tournamentHelper;
 
     @Transactional
-    public void createNewTournament(CreateTournamentDTO createTournamentDTO) {
-        validateCreateTournamentDTO(createTournamentDTO);
-        tournamentHelper.createNewTournamentWithContests(createTournamentDTO);
+    public TournamentDTO createNewTournament(TournamentDTO tournamentDTO) {
+        validateCreateTournamentDTO(tournamentDTO);
+        Tournament tournament = tournamentHelper.createNewTournamentWithContests(tournamentDTO);
+
+        return tournamentHelper.getTournament(tournament.getId());
     }
 
-    private void validateCreateTournamentDTO(CreateTournamentDTO createTournamentDTO) {
+    public TournamentDTO getTournament(Integer tournamentId) {
+        return tournamentHelper.getTournament(tournamentId);
+    }
+
+    private void validateCreateTournamentDTO(TournamentDTO tournamentDTO) {
         Set<DetailedErrorData> errorSet = new HashSet<>(tournamentValidator
-                .validateCreateTournament(createTournamentDTO));
-        createTournamentDTO.getPlayers().stream().map(playerValidator::validatePlayer)
+                .validateCreateTournament(tournamentDTO));
+        tournamentDTO.getPlayers().stream().map(playerValidator::validatePlayer)
                 .forEach(errorSet::addAll);
         if (!errorSet.isEmpty()) {
             throw new DetailedException(errorSet);

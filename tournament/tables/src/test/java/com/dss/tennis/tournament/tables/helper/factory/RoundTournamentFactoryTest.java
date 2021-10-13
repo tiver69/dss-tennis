@@ -44,7 +44,7 @@ class RoundTournamentFactoryTest {
         when(playerHelperMock.getPlayer(playerOneDtoSpy)).thenReturn(playerOneSpy);
         when(playerHelperMock.getPlayer(playerTwoDtoSpy)).thenReturn(playerTwoSpy);
 
-        Tournament result = testInstance.build(tournamentSpy, Lists.list(playerOneDtoSpy, playerTwoDtoSpy));
+        Tournament result = testInstance.createNewContests(tournamentSpy, Lists.list(playerOneDtoSpy, playerTwoDtoSpy));
 
         Assertions.assertEquals(result, tournamentSpy);
         verify(contestHelperMock).createNewContest(playerOneSpy, playerTwoSpy, tournamentSpy);

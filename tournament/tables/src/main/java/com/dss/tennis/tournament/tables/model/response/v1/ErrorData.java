@@ -1,4 +1,4 @@
-package com.dss.tennis.tournament.tables.model.db.v1;
+package com.dss.tennis.tournament.tables.model.response.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +17,5 @@ public class ErrorData {
     private String detail;
 
     private ErrorDataSource source;
-    //todo: add additional links about
+    //todo: add additional links about for documentation
 }
