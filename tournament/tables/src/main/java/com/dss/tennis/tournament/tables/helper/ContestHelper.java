@@ -19,7 +19,7 @@ public class ContestHelper {
     @Autowired
     private ContestRepository contestRepository;
 
-    public List<Contest> getTournamentContest(Integer tournamentId) {
+    public List<Contest> getTournamentContests(Integer tournamentId) {
         List<Contest> contests = contestRepository.findByTournamentId(tournamentId);
         if (contests.isEmpty()) throw new DetailedException(TOURNAMENT_HAS_NO_CONTESTS, tournamentId.toString());
         return contests;

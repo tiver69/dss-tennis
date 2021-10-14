@@ -8,12 +8,16 @@ import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +62,43 @@ class PlayerHelperTest {
                 () -> assertEquals(1, result.getErrors().size()),
                 () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
                         .allMatch(errorConstant -> PLAYER_NOT_FOUND == errorConstant))
+        );
+    }
+
+    @Test
+    public void shouldCheckIfPlayerExistsWithBothNameProvided() {
+        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
+                .thenReturn(Optional.of(playerSpy));
+
+        Assertions.assertTrue(testInstance.isPlayerExist(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME)));
+    }
+
+    @Test
+    public void shouldCheckIfPlayerNotExistsWithBothNameProvided() {
+        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
+                .thenReturn(Optional.of(playerSpy));
+
+        Assertions.assertFalse(testInstance.isPlayerNotExist(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("withoutBothNameProvided")
+    public void shouldCheckIfPlayerExistsWithoutBothNameProvided(String firstName, String lastName) {
+        Assertions.assertFalse(testInstance.isPlayerExist(new PlayerDTO(firstName, lastName)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("withoutBothNameProvided")
+    public void shouldCheckIfPlayerNotExistsWithoutBothNameProvided(String firstName, String lastName) {
+        Assertions.assertTrue(testInstance.isPlayerNotExist(new PlayerDTO(firstName, lastName)));
+    }
+
+    private static Stream<Arguments> withoutBothNameProvided() {
+        return Stream.of(
+                Arguments.of(null, null, false),
+                Arguments.of("", "", false),
+                Arguments.of(PLAYER_FIRST_NAME, "", false),
+                Arguments.of(null, PLAYER_LAST_NAME, false)
         );
     }
 

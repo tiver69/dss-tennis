@@ -34,6 +34,7 @@ import static org.mockito.Mockito.*;
 class MainExceptionHandlerTest {
 
     private static final ErrorConstants TEST_CONSTANT = ErrorConstants.TOURNAMENT_NAME_DUPLICATE;
+    private static final String RUNTIME_MESSAGE = "Runtime message";
     private static final String ANY_DETAIL = "Detail";
     private static final String ERROR_DETAIL_DATA = "DetailData";
     private static final String ERROR_DETAIL_DATA_2 = "DetailData2";
@@ -52,11 +53,26 @@ class MainExceptionHandlerTest {
     @BeforeEach
     void setUp() {
         when(environmentMock.getProperty(any(String.class))).thenReturn(ANY_DETAIL);
-        when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
+    }
+
+    @Test
+    public void shouldHandleRuntimeException() {
+        ResponseEntity<ErrorResponse> result =
+                testInstance.handleRuntimeException(new RuntimeException(RUNTIME_MESSAGE));
+        List<ErrorData> resultResponseErrors = result.getBody().getErrors();
+
+        verify(environmentMock, times(5)).getProperty(any(String.class));
+        Assertions.assertAll(
+                () -> assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode()),
+                () -> assertEquals(1, resultResponseErrors.size()),
+                () -> assertEquals(RUNTIME_MESSAGE, resultResponseErrors.get(0).getSource().getParameter())
+        );
     }
 
     @Test
     public void shouldHandleErrorWithSingleConstant() {
+        when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
+
         ResponseEntity<ErrorResponse> result =
                 testInstance.handleDetailedException(new DetailedException(TEST_CONSTANT, ERROR_DETAIL_DATA));
         List<ErrorData> resultResponseErrors = result.getBody().getErrors();
@@ -71,6 +87,7 @@ class MainExceptionHandlerTest {
 
     @Test
     public void shouldHandleErrorWithSingleSequentialConstant() {
+        when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
         when(environmentMock.getProperty(TEST_CONSTANT + POINTER_SUFFIX)).thenReturn(SEQUENTIAL_POINTER_FORMAT);
 
         ResponseEntity<ErrorResponse> result =
@@ -90,6 +107,7 @@ class MainExceptionHandlerTest {
 
     @Test
     public void shouldHandleErrorWithMultipleConstants() {
+        when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
         Set<DetailedErrorData> detailedErrorDataSet = Sets
                 .newSet(new DetailedErrorData(TEST_CONSTANT, ERROR_DETAIL_DATA),
                         new DetailedErrorData(TOURNAMENT_NAME_EMPTY, ERROR_DETAIL_DATA_2),

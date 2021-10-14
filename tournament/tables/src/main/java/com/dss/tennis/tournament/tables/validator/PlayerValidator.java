@@ -21,8 +21,7 @@ public class PlayerValidator {
     public Set<DetailedErrorData> validatePlayer(PlayerDTO playerDTO) {
         Set<DetailedErrorData> detailedErrorData = validatorHelper.validateObject(playerDTO);
 
-        if (StringUtils.isNotBlank(playerDTO.getFirstName()) && StringUtils
-                .isNotBlank(playerDTO.getLastName()) && playerHelper.isPlayerNotExist(playerDTO))
+        if (detailedErrorData.isEmpty() && playerHelper.isPlayerNotExist(playerDTO))
             detailedErrorData
                     .add(new DetailedErrorData(ErrorConstants.PLAYER_NOT_FOUND, playerDTO.getSequenceNumber()));
         return detailedErrorData;

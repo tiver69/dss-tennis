@@ -1,11 +1,9 @@
 package com.dss.tennis.tournament.tables.converter;
 
-import com.dss.tennis.tournament.tables.model.db.v1.Contest;
+import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
 import com.dss.tennis.tournament.tables.model.dto.AbstractSequentialDTO;
-import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.GetContest;
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -19,25 +17,19 @@ import java.util.stream.Collectors;
 @Service
 public class ConverterHelper {
 
+    @Autowired
+    private ModelMapperFactory modelMapperFactory;
+
     public <S, D> D convert(S source, Class<D> destinationClass) {
         return convert(source, destinationClass, false);
     }
 
     public <S, D> D convert(S source, Class<D> destinationClass, boolean includeSequential) {
-        Object destinationObject = getModelMapper().map(source, destinationClass);
+        Object destinationObject = modelMapperFactory.getCustomizedModelMapper().map(source, destinationClass);
         if (includeSequential) {
             addSequential(destinationObject);
         }
         return destinationClass.cast(destinationObject);
-    }
-
-    private ModelMapper getModelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.createTypeMap(Contest.class, ContestDTO.class)
-                .setPostConverter(new ContestToDtoConverter(modelMapper));
-        modelMapper.createTypeMap(ContestDTO.class, GetContest.class)
-                .setPostConverter(new ContestDtoToGetResponseConverter());
-        return modelMapper;
     }
 
     private <D> void addSequential(D destinationObject) {

@@ -30,7 +30,7 @@ public class TournamentController {
     }
 
     @GetMapping("/{tournamentId}")
-    public ResponseEntity<GetTournament> findTournamentById(@PathVariable Integer tournamentId) {
+    public ResponseEntity<GetTournament> getTournamentById(@PathVariable Integer tournamentId) {
         TournamentDTO tournamentDTO = tournamentService.getTournament(tournamentId);
 
         GetTournament tournamentResponse = converterHelper.convert(tournamentDTO, GetTournament.class);

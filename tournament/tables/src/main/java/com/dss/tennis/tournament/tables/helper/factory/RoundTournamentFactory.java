@@ -42,7 +42,7 @@ public class RoundTournamentFactory implements AbstractTournamentFactory {
     public TournamentDTO buildExistingTournament(Tournament tournament) {
         TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class);
 
-        List<ContestDTO> contests = contestHelper.getTournamentContest(tournament.getId()).stream()
+        List<ContestDTO> contests = contestHelper.getTournamentContests(tournament.getId()).stream()
                 .map(contest -> converterHelper.convert(contest, ContestDTO.class)).collect(Collectors.toList());
 
         tournamentDto.setContests(contests);
