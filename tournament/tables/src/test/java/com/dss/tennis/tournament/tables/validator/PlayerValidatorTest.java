@@ -1,24 +1,27 @@
 package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
+import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerValidatorTest {
@@ -27,11 +30,12 @@ class PlayerValidatorTest {
     private static final String VALID_LAST_NAME = "LastName  ";
 
     @Mock
-    private PlayerRepository playerRepositoryMock;
+    private PlayerHelper playerHelperMock;
     @Mock
     private ValidatorHelper<PlayerDTO> validatorHelperMock;
+
     @Spy
-    private Player playerSpy;
+    private DetailedErrorData detailedErrorDataSpy;
 
     @InjectMocks
     private PlayerValidator testInstance;
@@ -40,8 +44,8 @@ class PlayerValidatorTest {
     public void shouldPassValidation() {
         PlayerDTO playerDTO = new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME);
         when(validatorHelperMock.validateObject(playerDTO)).thenReturn(Sets.newSet());
-        when(playerRepositoryMock.findByFirstNameAndLastName(VALID_FIRST_NAME, VALID_LAST_NAME))
-                .thenReturn(Optional.of(playerSpy));
+        when(playerHelperMock.isPlayerNotExist(playerDTO))
+                .thenReturn(false);
 
         Set<DetailedErrorData> result = testInstance.validatePlayer(playerDTO);
 
@@ -53,8 +57,6 @@ class PlayerValidatorTest {
         PlayerDTO playerDTO = new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME);
         DetailedErrorData detailedErrorData = new DetailedErrorData();
         when(validatorHelperMock.validateObject(playerDTO)).thenReturn(Sets.newSet(detailedErrorData));
-        when(playerRepositoryMock.findByFirstNameAndLastName(VALID_FIRST_NAME, VALID_LAST_NAME))
-                .thenReturn(Optional.of(playerSpy));
 
         Set<DetailedErrorData> result = testInstance
                 .validatePlayer(new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME));
@@ -71,17 +73,28 @@ class PlayerValidatorTest {
     public void shouldReturnNotFoundError() {
         PlayerDTO playerDTO = new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME);
         when(validatorHelperMock.validateObject(playerDTO)).thenReturn(Sets.newSet());
-        when(playerRepositoryMock.findByFirstNameAndLastName(VALID_FIRST_NAME, VALID_LAST_NAME))
-                .thenReturn(Optional.empty());
+        when(playerHelperMock.isPlayerNotExist(playerDTO)).thenReturn(true);
 
-        Set<DetailedErrorData> result = testInstance
-                .validatePlayer(new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME));
+        Set<DetailedErrorData> result = testInstance.validatePlayer(playerDTO);
 
         Assertions.assertAll(
                 () -> assertFalse(result.isEmpty()),
                 () -> assertEquals(1, result.size()),
                 () -> assertTrue(result.stream().map(DetailedErrorData::getErrorConstant)
                         .anyMatch(tt -> tt.equals(PLAYER_NOT_FOUND)))
+        );
+    }
+
+    @Test
+    public void shouldNotReturnNotFoundError() {
+        PlayerDTO playerDTO = new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME);
+        when(validatorHelperMock.validateObject(playerDTO)).thenReturn(Sets.newSet(detailedErrorDataSpy));
+
+        Set<DetailedErrorData> result = testInstance.validatePlayer(playerDTO);
+
+        Assertions.assertAll(
+                () -> assertEquals(1, result.size()),
+                () -> assertTrue(result.contains(detailedErrorDataSpy))
         );
     }
 }

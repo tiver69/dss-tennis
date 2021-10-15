@@ -24,9 +24,9 @@ class EliminationTournamentFactoryTest {
     private EliminationTournamentFactory testInstance;
 
     @Test
-    public void shouldThrowUnsupportedError() {
-        DetailedException result = Assertions
-                .assertThrows(DetailedException.class, () -> testInstance.build(tournamentSpy, Lists.emptyList()));
+    public void shouldThrowUnsupportedErrorWhenBuildExistingTournament() {
+        DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
+                .buildExistingTournament(tournamentSpy));
 
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),
@@ -36,4 +36,16 @@ class EliminationTournamentFactoryTest {
         );
     }
 
+    @Test
+    public void shouldThrowUnsupportedErrorWhenCreateContestsForNewTournament() {
+        DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
+                .createNewContests(tournamentSpy, Lists.emptyList()));
+
+        Assertions.assertAll(
+                () -> assertFalse(result.getErrors().isEmpty()),
+                () -> assertEquals(1, result.getErrors().size()),
+                () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
+                        .allMatch(errorConstant -> TOURNAMENT_TYPE_NOT_SUPPORTED == errorConstant))
+        );
+    }
 }

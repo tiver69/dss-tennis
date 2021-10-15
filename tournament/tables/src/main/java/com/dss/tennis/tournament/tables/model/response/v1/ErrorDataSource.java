@@ -1,4 +1,4 @@
-package com.dss.tennis.tournament.tables.model.db.v1;
+package com.dss.tennis.tournament.tables.model.response.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

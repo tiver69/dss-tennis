@@ -3,7 +3,7 @@ package com.dss.tennis.tournament.tables.validator;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.dto.CreateTournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,30 +29,30 @@ class TournamentValidatorTest {
     @Mock
     private TournamentRepository tournamentRepository;
     @Mock
-    private ValidatorHelper<CreateTournamentDTO> validatorHelper;
+    private ValidatorHelper<TournamentDTO> validatorHelper;
 
     @InjectMocks
     TournamentValidator testInstance;
 
     @Test
     public void shouldPassValidation() {
-        CreateTournamentDTO createTournamentDTO = new CreateTournamentDTO(TOURNAMENT_NAME, TournamentType.ROUND, null);
-        when(validatorHelper.validateObject(createTournamentDTO)).thenReturn(Sets.newSet());
+        TournamentDTO tournamentDTO = new TournamentDTO(TOURNAMENT_NAME, TournamentType.ROUND, null);
+        when(validatorHelper.validateObject(tournamentDTO)).thenReturn(Sets.newSet());
         when(tournamentRepository.findByName(TOURNAMENT_NAME)).thenReturn(Optional.empty());
 
-        Set<DetailedErrorData> result = testInstance.validateCreateTournament(createTournamentDTO);
+        Set<DetailedErrorData> result = testInstance.validateCreateTournament(tournamentDTO);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void shouldFailValidationWithEmptyName() {
-        CreateTournamentDTO createTournamentDTO = new CreateTournamentDTO(EMPTY_NAME, TournamentType.ROUND, null);
+        TournamentDTO tournamentDTO = new TournamentDTO(EMPTY_NAME, TournamentType.ROUND, null);
         DetailedErrorData detailedErrorData = new DetailedErrorData();
-        when(validatorHelper.validateObject(createTournamentDTO)).thenReturn(Sets.newSet(detailedErrorData));
+        when(validatorHelper.validateObject(tournamentDTO)).thenReturn(Sets.newSet(detailedErrorData));
         when(tournamentRepository.findByName(EMPTY_NAME)).thenReturn(Optional.empty());
 
-        Set<DetailedErrorData> result = testInstance.validateCreateTournament(createTournamentDTO);
+        Set<DetailedErrorData> result = testInstance.validateCreateTournament(tournamentDTO);
 
         Assertions.assertAll(
                 () -> assertFalse(result.isEmpty()),
@@ -64,11 +64,11 @@ class TournamentValidatorTest {
 
     @Test
     public void shouldFailValidationExistingTournamentName() {
-        CreateTournamentDTO createTournamentDTO = new CreateTournamentDTO(TOURNAMENT_NAME, TournamentType.ROUND, null);
-        when(validatorHelper.validateObject(createTournamentDTO)).thenReturn(Sets.newSet());
+        TournamentDTO tournamentDTO = new TournamentDTO(TOURNAMENT_NAME, TournamentType.ROUND, null);
+        when(validatorHelper.validateObject(tournamentDTO)).thenReturn(Sets.newSet());
         when(tournamentRepository.findByName(TOURNAMENT_NAME)).thenReturn(Optional.of(new Tournament()));
 
-        Set<DetailedErrorData> result = testInstance.validateCreateTournament(createTournamentDTO);
+        Set<DetailedErrorData> result = testInstance.validateCreateTournament(tournamentDTO);
 
         Assertions.assertAll(
                 () -> assertFalse(result.isEmpty()),

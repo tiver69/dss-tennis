@@ -23,8 +23,7 @@ public class ValidatorHelper<V> {
 
         return validationObject instanceof AbstractSequentialDTO ?
                 collectErrorDetailsWithSequentialNumber(errorMessages,
-                        ((AbstractSequentialDTO) validationObject)
-                                .getSequenceNumber()) :
+                        ((AbstractSequentialDTO) validationObject).getSequenceNumber()) :
                 collectErrorDetails(errorMessages);
     }
 
