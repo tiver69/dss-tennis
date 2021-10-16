@@ -1,9 +1,11 @@
 package com.dss.tennis.tournament.tables.controller;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +23,12 @@ public class TournamentController {
     ConverterHelper converterHelper;
 
     @PostMapping
-    public ResponseEntity<GetTournament> createTournament(@RequestBody CreateTournament tournament) {
+    public ResponseEntity<SuccessResponse<GetTournament>> createTournament(@RequestBody CreateTournament tournament) {
         TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class, true);
 
-        TournamentDTO tournamentDTO = tournamentService.createNewTournament(tournamentDto);
-        GetTournament tournamentResponse = converterHelper.convert(tournamentDTO, GetTournament.class);
+        SuccessResponseDTO<TournamentDTO> tournamentDTO = tournamentService.createNewTournament(tournamentDto);
+        SuccessResponse<GetTournament> tournamentResponse = converterHelper
+                .convertSuccessResponse(tournamentDTO, GetTournament.class);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
     }
 

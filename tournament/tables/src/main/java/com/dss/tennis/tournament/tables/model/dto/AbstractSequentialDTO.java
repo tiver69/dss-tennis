@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class AbstractSequentialDTO {
-    private Integer sequenceNumber;
+    private Byte sequenceNumber;
 }

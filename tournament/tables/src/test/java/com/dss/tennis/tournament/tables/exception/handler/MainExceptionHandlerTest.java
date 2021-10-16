@@ -5,7 +5,7 @@ import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErro
 import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import com.dss.tennis.tournament.tables.exception.handler.MainExceptionHandler.ErrorResponse;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorDataSource;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorData.ErrorDataSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class MainExceptionHandlerTest {
     private static final String POINTER_SUFFIX = ".pointer";
     private static final String SEQUENTIAL_POINTER_FORMAT = "[%o]";
     private static final String SEQUENTIAL_POINTER_RESPONSE = "[1]";
-    private static final Integer SEQUENCE_NUMBER = 1;
+    private static final Byte SEQUENCE_NUMBER = 1;
 
     @Mock
     private Environment environmentMock;

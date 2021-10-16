@@ -2,10 +2,15 @@ package com.dss.tennis.tournament.tables.service;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
+import com.dss.tennis.tournament.tables.exception.error.WarningConstant;
+import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
+import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
 import org.assertj.core.util.Lists;
@@ -18,6 +23,9 @@ import org.mockito.Spy;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
+import static com.dss.tennis.tournament.tables.exception.error.WarningConstant.PLAYER_DUPLICATION;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -25,13 +33,18 @@ import static org.mockito.Mockito.*;
 class TournamentServiceTest {
 
     private static final int TOURNAMENT_ID = 1;
+    private static final Byte REMOVED_SEQUENTIAL = 1;
 
     @Mock
     private TournamentValidator tournamentValidatorMock;
     @Mock
     private PlayerValidator playerValidatorMock;
     @Mock
+    private PlayerHelper playerHelperMock;
+    @Mock
     private TournamentHelper tournamentHelperMock;
+    @Mock
+    private WarningHandler warningHandlerMock;
 
     @Spy
     private TournamentDTO tournamentDtoSpy;
@@ -40,23 +53,57 @@ class TournamentServiceTest {
     @Spy
     private PlayerDTO playerDtoSpy;
     @Spy
+    private PlayerDTO removedPlayerDtoSpy;
+    @Spy
+    private ErrorData errorDataSpy;
+    @Spy
     private Tournament tournamentSpy;
 
     @InjectMocks
     private TournamentService testInstance;
 
     @Test
-    public void shouldCreateNewTournament() {
+    public void shouldCreateNewTournamentWithPlayerDuplication() {
+        List<PlayerDTO> players = Lists.list(playerDtoSpy);
+        when(removedPlayerDtoSpy.getSequenceNumber()).thenReturn(REMOVED_SEQUENTIAL);
         when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
-        when(tournamentDtoSpy.getPlayers()).thenReturn(Lists.list(playerDtoSpy));
+        when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
         when(tournamentHelperMock.getTournament(TOURNAMENT_ID)).thenReturn(responseTournamentDtoSpy);
+        when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.list(removedPlayerDtoSpy));
+        when(warningHandlerMock.createWarning(PLAYER_DUPLICATION, REMOVED_SEQUENTIAL)).thenReturn(errorDataSpy);
 
-        TournamentDTO result = testInstance.createNewTournament(tournamentDtoSpy);
+        SuccessResponseDTO<TournamentDTO> result = testInstance.createNewTournament(tournamentDtoSpy);
 
-        Assertions.assertEquals(responseTournamentDtoSpy, result);
+        Assertions.assertAll(
+                () -> assertEquals(responseTournamentDtoSpy, result.getData()),
+                () -> assertFalse(result.getWarnings().isEmpty()),
+                () -> assertTrue(result.getWarnings().contains(errorDataSpy))
+        );
+
         verify(tournamentValidatorMock).validateCreateTournament(tournamentDtoSpy);
         verify(playerValidatorMock).validatePlayer(playerDtoSpy);
+    }
+
+    @Test
+    public void shouldCreateNewTournamentWithoutPlayerDuplication() {
+        List<PlayerDTO> players = Lists.list(playerDtoSpy);
+        when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
+        when(tournamentDtoSpy.getPlayers()).thenReturn(players);
+        when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID)).thenReturn(responseTournamentDtoSpy);
+        when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.emptyList());
+
+        SuccessResponseDTO<TournamentDTO> result = testInstance.createNewTournament(tournamentDtoSpy);
+
+        Assertions.assertAll(
+                () -> assertEquals(responseTournamentDtoSpy, result.getData()),
+                () -> assertTrue(result.getWarnings().isEmpty())
+        );
+
+        verify(tournamentValidatorMock).validateCreateTournament(tournamentDtoSpy);
+        verify(playerValidatorMock).validatePlayer(playerDtoSpy);
+        verify(warningHandlerMock, never()).createWarning(any(WarningConstant.class), any(Byte.class));
     }
 
     @Test

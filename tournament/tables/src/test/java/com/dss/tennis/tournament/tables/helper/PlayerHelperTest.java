@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -30,6 +32,10 @@ class PlayerHelperTest {
 
     private static final String PLAYER_FIRST_NAME = "FirstNameOne";
     private static final String PLAYER_LAST_NAME = "LastNameOne";
+    private static final String PLAYER_TWO_FIRST_NAME = "FirstNameTwo";
+    private static final String PLAYER_TWO_LAST_NAME = "LastNameTwo";
+    private static final String PLAYER_THREE_FIRST_NAME = "FirstNameThree";
+    private static final String PLAYER_THREE_LAST_NAME = "LastNameThree";
 
     @Mock
     private PlayerRepository playerRepositoryMock;
@@ -107,5 +113,47 @@ class PlayerHelperTest {
         testInstance.createNewPlayer(PLAYER_FIRST_NAME, PLAYER_LAST_NAME);
 
         verify(playerRepositoryMock).save(any(Player.class));
+    }
+
+    @Test
+    public void shouldRemoveAllPlayerDuplicates() {
+        List<PlayerDTO> players = preparePlayers();
+        List<PlayerDTO> result = testInstance.removePlayerDuplicates(players);
+
+        Assertions.assertAll(
+                () -> assertEquals(2, result.size()),
+                () -> assertEquals(3, players.size()),
+                () -> assertEquals(PLAYER_FIRST_NAME, result.get(0).getFirstName()),
+                () -> assertEquals(PLAYER_TWO_FIRST_NAME, result.get(1).getFirstName())
+        );
+    }
+
+    @Test
+    public void shouldCompareEqualsPlayerDtoByNames() {
+        boolean result = testInstance
+                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 0),
+                        new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 2));
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    public void shouldCompareNotEqualsPlayerDtoByNames() {
+        boolean result = testInstance
+                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 0),
+                        new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME, (byte) 2));
+
+        Assertions.assertFalse(result);
+    }
+
+    private List<PlayerDTO> preparePlayers() {
+        List<PlayerDTO> players = new ArrayList<>();
+        players.add(
+                (new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 0)));
+        players.add(new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME, (byte) 1));
+        players.add(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 2));
+        players.add(new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME, (byte) 3));
+        players.add(new PlayerDTO(PLAYER_THREE_FIRST_NAME, PLAYER_THREE_LAST_NAME, (byte) 4));
+        return players;
     }
 }

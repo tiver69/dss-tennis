@@ -28,7 +28,7 @@ public class ValidatorHelper<V> {
     }
 
     private Set<DetailedErrorData> collectErrorDetailsWithSequentialNumber(Set<String> errorMessages,
-                                                                           Integer sequenceNumber) {
+                                                                           Byte sequenceNumber) {
         Set<DetailedErrorData> detailedErrorData = collectErrorDetails(errorMessages);
         detailedErrorData.forEach(detail -> detail.setSequentNumber(sequenceNumber));
         return detailedErrorData;

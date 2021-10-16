@@ -2,6 +2,8 @@ package com.dss.tennis.tournament.tables.converter;
 
 import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
 import com.dss.tennis.tournament.tables.model.dto.AbstractSequentialDTO;
+import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,11 @@ public class ConverterHelper {
 
     @Autowired
     private ModelMapperFactory modelMapperFactory;
+
+    public <S, D> SuccessResponse<D> convertSuccessResponse(SuccessResponseDTO<S> data, Class<D> responseClass) {
+        D responseData = convert(data.getData(), responseClass);
+        return new SuccessResponse<>(responseData, data.getWarnings());
+    }
 
     public <S, D> D convert(S source, Class<D> destinationClass) {
         return convert(source, destinationClass, false);
@@ -60,7 +67,7 @@ public class ConverterHelper {
     }
 
     private void addSequentialToList(List<? extends AbstractSequentialDTO> destinationList) {
-        for (int i = 0; i < destinationList.size(); i++) {
+        for (byte i = 0; i < destinationList.size(); i++) {
             destinationList.get(i).setSequenceNumber(i);
         }
     }

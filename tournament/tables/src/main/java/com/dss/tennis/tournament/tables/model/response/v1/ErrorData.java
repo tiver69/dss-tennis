@@ -18,4 +18,12 @@ public class ErrorData {
 
     private ErrorDataSource source;
     //todo: add additional links about for documentation
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class ErrorDataSource {
+        private String parameter;
+        private String pointer;
+    }
 }

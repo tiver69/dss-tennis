@@ -2,10 +2,13 @@ package com.dss.tennis.tournament.tables.controller;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -41,6 +45,7 @@ class TournamentControllerTest {
 
     private static final int TOURNAMENT_ID = 111;
     private static final String TOURNAMENT_NAME = "TOURNAMENT_NAME";
+    private static final String WARNING_CODE = "WARNING_CODE";
     private static final CreatePlayer PLAYER_ONE = new CreatePlayer();
     private static final CreatePlayer PLAYER_TWO = new CreatePlayer();
 
@@ -54,7 +59,7 @@ class TournamentControllerTest {
     @Spy
     private TournamentDTO tournamentDtoSpy;
     @Spy
-    private TournamentDTO createdTournamentDtoSpy;
+    private SuccessResponseDTO<TournamentDTO> createdTournamentDtoSpy;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -69,8 +74,8 @@ class TournamentControllerTest {
         when(converterHelperMock.convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true)))
                 .thenReturn(tournamentDtoSpy);
         when(tournamentServiceMock.createNewTournament(tournamentDtoSpy)).thenReturn(createdTournamentDtoSpy);
-        when(converterHelperMock.convert(createdTournamentDtoSpy, GetTournament.class))
-                .thenReturn(prepareGetTournament());
+        when(converterHelperMock.convertSuccessResponse(createdTournamentDtoSpy, GetTournament.class))
+                .thenReturn(prepareSuccessGetTournament());
 
         MvcResult content = mockMvc
                 .perform(post("/tournaments")
@@ -82,8 +87,8 @@ class TournamentControllerTest {
 
         verify(converterHelperMock).convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true));
         verify(tournamentServiceMock).createNewTournament(any(TournamentDTO.class));
-        verify(converterHelperMock).convert(any(TournamentDTO.class), eq(GetTournament.class));
-        Assertions.assertEquals(objectMapper.writeValueAsString(prepareGetTournament()), content.getResponse()
+        verify(converterHelperMock).convertSuccessResponse(createdTournamentDtoSpy, GetTournament.class);
+        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament()), content.getResponse()
                 .getContentAsString());
     }
 
@@ -102,6 +107,10 @@ class TournamentControllerTest {
         verify(converterHelperMock).convert(any(TournamentDTO.class), eq(GetTournament.class));
         Assertions.assertEquals(objectMapper.writeValueAsString(prepareGetTournament()), content.getResponse()
                 .getContentAsString());
+    }
+
+    private SuccessResponse<GetTournament> prepareSuccessGetTournament() {
+        return new SuccessResponse<>(prepareGetTournament(), List.of(ErrorData.builder().code(WARNING_CODE).build()));
     }
 
     private GetTournament prepareGetTournament() {

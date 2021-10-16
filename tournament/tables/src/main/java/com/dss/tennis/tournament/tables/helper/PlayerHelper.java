@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +40,30 @@ public class PlayerHelper {
     public Player createNewPlayer(String firstName, String lastName) {
         Player player = Player.builder().firstName(firstName).lastName(lastName).build();
         return playerRepository.save(player);
+    }
+
+
+    /**
+     * @return list of removed players
+     */
+    public List<PlayerDTO> removePlayerDuplicates(List<PlayerDTO> players) {
+        List<PlayerDTO> duplicatePlayers = new ArrayList<>();
+        for (int i = 0; i < players.size() - 1; i++) {
+            PlayerDTO currentPlayer = players.get(i);
+            for (int j = i + 1; j < players.size(); j++) {
+                if (isSamePlayer(currentPlayer, players.get(j))) {
+                    duplicatePlayers.add(players.get(j));
+                }
+            }
+        }
+        if (duplicatePlayers.size() != 0) {
+            players.removeAll(duplicatePlayers);
+        }
+        return duplicatePlayers;
+    }
+
+    public boolean isSamePlayer(PlayerDTO playerOne, PlayerDTO playerTwo) {
+        return StringUtils.equals(playerOne.getFirstName(), playerTwo.getFirstName()) && StringUtils
+                .equals(playerOne.getLastName(), playerTwo.getLastName());
     }
 }

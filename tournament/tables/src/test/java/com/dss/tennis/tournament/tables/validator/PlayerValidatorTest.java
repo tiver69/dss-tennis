@@ -2,26 +2,24 @@ package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
-import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.INSUFFICIENT_PLAYER_QUANTITY;
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerValidatorTest {
@@ -95,6 +93,27 @@ class PlayerValidatorTest {
         Assertions.assertAll(
                 () -> assertEquals(1, result.size()),
                 () -> assertTrue(result.contains(detailedErrorDataSpy))
+        );
+    }
+
+    @Test
+    public void shouldPassPlayerQuantityValidation() {
+        PlayerDTO playerDTO = new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME);
+
+        Optional<DetailedErrorData> result = testInstance.validatePlayerQuantity(Lists.list(playerDTO, playerDTO));
+
+        Assertions.assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void shouldNotPassPlayerQuantityValidation() {
+        PlayerDTO playerDTO = new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME);
+
+        Optional<DetailedErrorData> result = testInstance.validatePlayerQuantity(Lists.list(playerDTO));
+
+        Assertions.assertAll(
+                () -> assertTrue(result.isPresent()),
+                () -> assertEquals(INSUFFICIENT_PLAYER_QUANTITY, result.get().getErrorConstant())
         );
     }
 }

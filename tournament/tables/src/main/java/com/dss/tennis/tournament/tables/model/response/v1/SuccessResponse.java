@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorDataSource {
-    private String parameter;
-    private String pointer;
+public class SuccessResponse<D> {
+
+    private D data;
+    private List<ErrorData> warnings;
 }

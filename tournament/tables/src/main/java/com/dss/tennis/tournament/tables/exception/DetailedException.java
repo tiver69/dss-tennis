@@ -24,7 +24,7 @@ public class DetailedException extends RuntimeException {
         this.errors.add(new DetailedErrorData(error, detailParameter, null));
     }
 
-    public DetailedException(ErrorConstants error, String detailParameter, int sequentialNumber) {
+    public DetailedException(ErrorConstants error, String detailParameter, byte sequentialNumber) {
         this.errors.add(new DetailedErrorData(error, detailParameter, sequentialNumber));
     }
 
@@ -51,13 +51,13 @@ public class DetailedException extends RuntimeException {
             this.detailParameter = detailParameter;
         }
 
-        public DetailedErrorData(ErrorConstants errorConstant, Integer sequentNumber) {
+        public DetailedErrorData(ErrorConstants errorConstant, Byte sequentNumber) {
             this.errorConstant = errorConstant;
             this.sequentNumber = sequentNumber;
         }
 
         private ErrorConstants errorConstant;
         private String detailParameter;
-        private Integer sequentNumber;
+        private Byte sequentNumber;
     }
 }

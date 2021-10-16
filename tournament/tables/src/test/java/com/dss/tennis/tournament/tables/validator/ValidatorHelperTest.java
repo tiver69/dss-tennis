@@ -25,7 +25,7 @@ class ValidatorHelperTest {
 
     private static final String VALID_FIRST_NAME = "FirstName";
     private static final String VALID_LAST_NAME = "LastName  ";
-    private static final int SEQUENCE_NUMBER = 1;
+    private static final byte SEQUENCE_NUMBER = 1;
 
     @Mock
     private Validator javaxValidatorMock;

@@ -3,8 +3,11 @@ package com.dss.tennis.tournament.tables.converter;
 import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,9 +41,29 @@ class ConverterHelperTest {
 
     @Spy
     private CreateTournament createTournamentSpy;
+    @Spy
+    private ErrorData errorDataSpy;
 
     @InjectMocks
     private ConverterHelper testInstance;
+
+    @Test
+    public void shouldConvertSuccessfulResponseWithWarnings() {
+        TournamentDTO destination = prepareTournamentDto();
+
+        when(modelMapperFactoryMock.getCustomizedModelMapper()).thenReturn(modelMapperMock);
+        when(modelMapperMock.map(createTournamentSpy, TournamentDTO.class)).thenReturn(destination);
+
+        SuccessResponse<TournamentDTO> result = testInstance
+                .convertSuccessResponse(new SuccessResponseDTO<>(createTournamentSpy, List.of(errorDataSpy)),
+                        TournamentDTO.class);
+
+        Assertions.assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals(result.getData(), destination),
+                () -> assertTrue(result.getWarnings().contains(errorDataSpy))
+        );
+    }
 
     @Test
     public void shouldConvertCreateTournamentWithSequential() {
@@ -55,9 +78,9 @@ class ConverterHelperTest {
                 () -> assertNotNull(result),
                 () -> assertEquals(result, destination),
                 () -> assertTrue(result.getPlayers().stream().anyMatch(player -> player.getSequenceNumber() != null)),
-                () -> assertEquals(0, result.getPlayers().get(0).getSequenceNumber()),
-                () -> assertEquals(1, result.getPlayers().get(1).getSequenceNumber()),
-                () -> assertEquals(2, result.getPlayers().get(2).getSequenceNumber())
+                () -> assertEquals((byte) 0, result.getPlayers().get(0).getSequenceNumber()),
+                () -> assertEquals((byte) 1, result.getPlayers().get(1).getSequenceNumber()),
+                () -> assertEquals((byte) 2, result.getPlayers().get(2).getSequenceNumber())
         );
     }
 

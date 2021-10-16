@@ -3,7 +3,7 @@ package com.dss.tennis.tournament.tables.exception.handler;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorDataSource;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorData.ErrorDataSource;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,7 +67,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
     }
 
-    private String constructSequentialPointer(String errorConstant, Integer pointer) {
+    private String constructSequentialPointer(String errorConstant, Byte pointer) {
         String sequentialPointerFormat = environment.getProperty(errorConstant + POINTER_SUFFIX);
         return pointer == null ? sequentialPointerFormat :
                 String.format(sequentialPointerFormat, pointer);
