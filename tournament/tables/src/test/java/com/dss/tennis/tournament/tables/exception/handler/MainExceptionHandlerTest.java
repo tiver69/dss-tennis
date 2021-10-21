@@ -6,17 +6,19 @@ import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import com.dss.tennis.tournament.tables.exception.handler.MainExceptionHandler.ErrorResponse;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData.ErrorDataSource;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +47,26 @@ class MainExceptionHandlerTest {
     private static final Byte SEQUENCE_NUMBER = 1;
 
     @Mock
+    private InvalidFormatExceptionHandler invalidFormatExceptionHandlerMock;
+    @Mock
+    private JsonParseExceptionHandler jsonParseExceptionHandlerMock;
+    @Mock
+    private DefaultExceptionHandler defaultExceptionHandlerMock;
+    @Mock
     private Environment environmentMock;
+
+    @Spy
+    private ErrorData errorDataSpy;
+    @Mock
+    private HttpMessageNotReadableException exceptionSpy;
 
     @InjectMocks
     private MainExceptionHandler testInstance;
 
-    @BeforeEach
-    void setUp() {
-        when(environmentMock.getProperty(any(String.class))).thenReturn(ANY_DETAIL);
-    }
-
     @Test
     public void shouldHandleRuntimeException() {
+        when(environmentMock.getProperty(any(String.class))).thenReturn(ANY_DETAIL);
+
         ResponseEntity<ErrorResponse> result =
                 testInstance.handleRuntimeException(new RuntimeException(RUNTIME_MESSAGE));
         List<ErrorData> resultResponseErrors = result.getBody().getErrors();
@@ -71,6 +81,7 @@ class MainExceptionHandlerTest {
 
     @Test
     public void shouldHandleErrorWithSingleConstant() {
+        when(environmentMock.getProperty(any(String.class))).thenReturn(ANY_DETAIL);
         when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
 
         ResponseEntity<ErrorResponse> result =
@@ -87,6 +98,7 @@ class MainExceptionHandlerTest {
 
     @Test
     public void shouldHandleErrorWithSingleSequentialConstant() {
+        when(environmentMock.getProperty(any(String.class))).thenReturn(ANY_DETAIL);
         when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
         when(environmentMock.getProperty(TEST_CONSTANT + POINTER_SUFFIX)).thenReturn(SEQUENTIAL_POINTER_FORMAT);
 
@@ -107,6 +119,8 @@ class MainExceptionHandlerTest {
 
     @Test
     public void shouldHandleErrorWithMultipleConstants() {
+        when(environmentMock.getProperty(any(String.class))).thenReturn(ANY_DETAIL);
+
         when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
         Set<DetailedErrorData> detailedErrorDataSet = Sets
                 .newSet(new DetailedErrorData(TEST_CONSTANT, ERROR_DETAIL_DATA),
@@ -126,5 +140,26 @@ class MainExceptionHandlerTest {
                 () -> assertEquals(3, resultResponseErrors.size()),
                 () -> assertTrue(resultResponseErrors.stream().map(ErrorData::getSource)
                         .map(ErrorDataSource::getParameter).collect(Collectors.toList()).containsAll(parameters)));
+    }
+
+
+    @Test
+    public void shouldHandleHttpMessageNotReadableWithCause() {
+        testInstance.initialize();
+        InvalidFormatException invalidFormatException = new InvalidFormatException(null, RUNTIME_MESSAGE, null,
+                null);
+        when(exceptionSpy.getCause()).thenReturn(invalidFormatException);
+        when(invalidFormatExceptionHandlerMock.createErrorData(invalidFormatException)).thenReturn(errorDataSpy);
+
+        ResponseEntity<Object> result = testInstance
+                .handleHttpMessageNotReadable(exceptionSpy, null, null, null);
+        List<ErrorData> resultResponseErrors = ((ErrorResponse) result.getBody()).getErrors();
+
+        verify(invalidFormatExceptionHandlerMock).createErrorData(invalidFormatException);
+        Assertions.assertAll(
+                () -> assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode()),
+                () -> assertEquals(1, resultResponseErrors.size()),
+                () -> assertEquals(errorDataSpy, resultResponseErrors.get(0))
+        );
     }
 }

@@ -3,9 +3,10 @@ package com.dss.tennis.tournament.tables.model.db.v1;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -14,8 +15,9 @@ import javax.persistence.*;
 public class Tournament {
     private int id;
     private String name;
-    private boolean inProgress = true;
     private TournamentType type;
+    private StatusType status;
+    private LocalDate beginningDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,21 +40,6 @@ public class Tournament {
         this.name = name;
     }
 
-    //    @Type(type = "org.hibernate.type.NumericBooleanType")
-//    @Column(name = "in_progress", nullable = false)
-//    public boolean getInProgress() {
-//        return inProgress;
-//    }
-    @Type(type = "org.hibernate.type.NumericBooleanType")
-    @Column(name = "in_progress", nullable = false)
-    public boolean isInProgress() {
-        return inProgress;
-    }
-
-    public void setInProgress(boolean inProgress) {
-        this.inProgress = inProgress;
-    }
-
     @Basic
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
@@ -64,18 +51,35 @@ public class Tournament {
         this.type = type;
     }
 
+    @Basic
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    public StatusType getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusType status) {
+        this.status = status;
+    }
+
+    @Basic
+    @Column(name = "beginning_date", nullable = false)
+    public LocalDate getBeginningDate() {
+        return beginningDate;
+    }
+
+    public void setBeginningDate(LocalDate beginningDate) {
+        this.beginningDate = beginningDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Tournament that = (Tournament) o;
-
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-
-        return true;
+        return id == that.id && Objects
+                .equals(name, that.name) && type == that.type && status == that.status && Objects
+                .equals(beginningDate, that.beginningDate);
     }
 
     @Override
@@ -83,6 +87,7 @@ public class Tournament {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        return result;
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        return 31 * result + (beginningDate != null ? beginningDate.hashCode() : 0);
     }
 }

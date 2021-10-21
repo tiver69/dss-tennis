@@ -3,6 +3,7 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
+import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
@@ -16,12 +17,14 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -84,9 +87,29 @@ class TournamentHelperTest {
     }
 
     @Test
-    public void shouldCreateNewTournament() {
+    public void shouldCreateNewTournamentWithBeginningDateInFuture() {
+        when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now().plus(1, DAYS));
+
         testInstance.createNewTournament(tournamentDtoSpy);
 
-        verify(tournamentRepositoryMock).save(any(Tournament.class));
+        verify(tournamentRepositoryMock).save(preparePlannedTournament());
+    }
+
+    @Test
+    public void shouldCreateNewTournamentWithCurrentBeginningDate() {
+        when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now());
+
+        testInstance.createNewTournament(tournamentDtoSpy);
+
+        verify(tournamentRepositoryMock).save(prepareInProgressTournament());
+    }
+
+    private Tournament preparePlannedTournament() {
+        return Tournament.builder().status(StatusType.PLANNED).beginningDate(LocalDate.now().plus(1, DAYS))
+                .build();
+    }
+
+    private Tournament prepareInProgressTournament() {
+        return Tournament.builder().status(StatusType.IN_PROGRESS).beginningDate(LocalDate.now()).build();
     }
 }

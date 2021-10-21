@@ -18,5 +18,6 @@ public enum ErrorConstants {
     INSUFFICIENT_PLAYER_QUANTITY,
 
     //common errors
+    GENERAL_BAD_REQUEST,
     INTERNAL_SERVER_ERROR
 }

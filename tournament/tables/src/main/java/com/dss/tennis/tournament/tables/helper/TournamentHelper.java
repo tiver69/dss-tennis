@@ -4,14 +4,16 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.factory.AbstractTournamentFactory;
 import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
 import com.dss.tennis.tournament.tables.helper.factory.RoundTournamentFactory;
+import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
+import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
 
@@ -38,7 +40,8 @@ public class TournamentHelper {
     public Tournament createNewTournament(TournamentDTO tournamentDTO) {
         Tournament tournament = Tournament.builder().name(tournamentDTO.getName())
                 .type(tournamentDTO.getType())
-                .inProgress(true)
+                .status(getStatusBaseOnBeginningDate(tournamentDTO.getBeginningDate()))
+                .beginningDate(tournamentDTO.getBeginningDate())
                 .build();
         return tournamentRepository.save(tournament);
     }
@@ -48,6 +51,12 @@ public class TournamentHelper {
                 new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
 
         return getTournamentFactory(tournament.getType()).buildExistingTournament(tournament);
+    }
+
+    public StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate){
+        if (beginningDate == null || beginningDate.isAfter(LocalDate.now()))
+            return StatusType.PLANNED;
+        return StatusType.IN_PROGRESS;
     }
 
     private AbstractTournamentFactory getTournamentFactory(TournamentType type) {
