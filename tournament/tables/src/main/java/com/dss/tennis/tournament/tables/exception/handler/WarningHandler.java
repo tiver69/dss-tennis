@@ -3,6 +3,7 @@ package com.dss.tennis.tournament.tables.exception.handler;
 import com.dss.tennis.tournament.tables.exception.error.WarningConstant;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData.ErrorDataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -19,6 +20,10 @@ public class WarningHandler {
     @Autowired
     private Environment environment;
 
+    public ErrorData createWarning(WarningConstant warningConstant, String detailedParameter) {
+        return createWarning(warningConstant, detailedParameter, null);
+    }
+
     public ErrorData createWarning(WarningConstant warningConstant, Byte sequentNumber) {
         return createWarning(warningConstant, null, sequentNumber);
     }
@@ -26,15 +31,24 @@ public class WarningHandler {
     public ErrorData createWarning(WarningConstant warningConstant, String detailedParameter,
                                    Byte sequentNumber) {
         String errorConstant = warningConstant.toString();
-        ErrorDataSource errorDataSource = ErrorDataSource.builder()
-                .parameter(detailedParameter)
-                .pointer(constructSequentialPointer(errorConstant, sequentNumber))
-                .build();
+        ErrorDataSource errorDataSource = constructErrorDataSource(errorConstant, detailedParameter, sequentNumber);
 
         return ErrorData.builder()
                 .code(environment.getProperty(errorConstant + CODE_SUFFIX))
                 .detail(environment.getProperty(errorConstant + DETAIL_SUFFIX))
                 .source(errorDataSource)
+                .build();
+    }
+
+    private ErrorDataSource constructErrorDataSource(String errorConstant, String detailParameter, Byte sequentNumber) {
+        String sequentialPointerString = constructSequentialPointer(errorConstant, sequentNumber);
+        if (StringUtils.isBlank(detailParameter) && StringUtils.isBlank(sequentialPointerString)) {
+            return null;
+        }
+
+        return ErrorDataSource.builder()
+                .parameter(detailParameter)
+                .pointer(sequentialPointerString)
                 .build();
     }
 

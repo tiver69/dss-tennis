@@ -39,13 +39,10 @@ public class RoundTournamentFactory implements AbstractTournamentFactory {
     }
 
     @Override
-    public TournamentDTO buildExistingTournament(Tournament tournament) {
-        TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class);
-
-        List<ContestDTO> contests = contestHelper.getTournamentContests(tournament.getId()).stream()
+    public void buildExistingTournament(TournamentDTO tournamentDto) {
+        List<ContestDTO> contests = contestHelper.getTournamentContests(tournamentDto.getId()).stream()
                 .map(contest -> converterHelper.convert(contest, ContestDTO.class)).collect(Collectors.toList());
 
         tournamentDto.setContests(contests);
-        return tournamentDto;
     }
 }

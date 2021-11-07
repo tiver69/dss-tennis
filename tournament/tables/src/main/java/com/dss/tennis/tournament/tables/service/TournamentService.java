@@ -6,6 +6,7 @@ import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
@@ -47,11 +48,11 @@ public class TournamentService {
                 .map(tt -> warningHandler.createWarning(PLAYER_DUPLICATION, tt.getSequenceNumber()))
                 .collect(Collectors.toList());
 
-        return new SuccessResponseDTO(tournamentHelper.getTournament(tournament.getId()), warnings);
+        return new SuccessResponseDTO(tournamentHelper.getTournament(tournament.getId(), true), warnings);
     }
 
-    public TournamentDTO getTournament(Integer tournamentId) {
-        return tournamentHelper.getTournament(tournamentId);
+    public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {
+        return tournamentHelper.getTournament(tournamentId, requestParameters.isIncludeContests());
     }
 
     private void validateCreateTournamentDTO(TournamentDTO tournamentDTO) {

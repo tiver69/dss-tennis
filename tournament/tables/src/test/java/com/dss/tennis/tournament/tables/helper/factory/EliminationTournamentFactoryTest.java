@@ -3,6 +3,7 @@ package com.dss.tennis.tournament.tables.helper.factory;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ class EliminationTournamentFactoryTest {
 
     @Spy
     private Tournament tournamentSpy;
+    @Spy
+    private TournamentDTO tournamentDtoSpy;
 
     @InjectMocks
     private EliminationTournamentFactory testInstance;
@@ -26,7 +29,7 @@ class EliminationTournamentFactoryTest {
     @Test
     public void shouldThrowUnsupportedErrorWhenBuildExistingTournament() {
         DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
-                .buildExistingTournament(tournamentSpy));
+                .buildExistingTournament(tournamentDtoSpy));
 
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),

@@ -9,5 +9,5 @@ import java.util.List;
 public interface AbstractTournamentFactory {
     Tournament createNewContests(Tournament tournament, List<PlayerDTO> players);
 
-    TournamentDTO buildExistingTournament(Tournament tournament);
+    void buildExistingTournament(TournamentDTO tournament);
 }

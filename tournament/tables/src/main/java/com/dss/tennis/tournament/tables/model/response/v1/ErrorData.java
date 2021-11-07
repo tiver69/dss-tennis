@@ -22,6 +22,7 @@ public class ErrorData {
     @Data
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class ErrorDataSource {
         private String parameter;
         private String pointer;

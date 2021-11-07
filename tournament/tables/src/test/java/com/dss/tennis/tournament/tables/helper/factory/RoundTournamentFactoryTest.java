@@ -62,17 +62,16 @@ class RoundTournamentFactoryTest {
 
     @Test
     public void shouldBuildExistingRoundTournament() {
-        when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
-        when(converterHelperMock.convert(tournamentSpy, TournamentDTO.class)).thenReturn(tournamentDtoSpy);
         when(contestHelperMock.getTournamentContests(TOURNAMENT_ID))
                 .thenReturn(Arrays.asList(contestOneSpy, contestTwoSpy));
         when(converterHelperMock.convert(contestOneSpy, ContestDTO.class)).thenReturn(contestOneDtoSpy);
         when(converterHelperMock.convert(contestTwoSpy, ContestDTO.class)).thenReturn(contestTwoDtoSpy);
 
-        TournamentDTO result = testInstance.buildExistingTournament(tournamentSpy);
+        TournamentDTO result = new TournamentDTO();
+        result.setId(TOURNAMENT_ID);
+        testInstance.buildExistingTournament(result);
 
         Assertions.assertAll(
-                () -> assertEquals(tournamentDtoSpy, result),
                 () -> assertNotNull(result.getContests()),
                 () -> assertTrue(result.getContests().contains(contestOneDtoSpy)),
                 () -> assertTrue(result.getContests().contains(contestTwoDtoSpy))

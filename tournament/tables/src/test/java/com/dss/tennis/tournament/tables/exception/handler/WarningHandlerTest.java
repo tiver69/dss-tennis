@@ -53,15 +53,29 @@ class WarningHandlerTest {
     }
 
     @Test
-    public void shouldCreateWarningWithParameter() {
-        ErrorData result = testInstance.createWarning(TEST_CONSTANT, WARNING_PARAMETER, SEQUENCE_NUMBER);
+    public void shouldCreateWarningWithoutErrorDataSource() {
+        when(environmentMock.getProperty(TEST_CONSTANT + POINTER_SUFFIX)).thenReturn("");
+
+        ErrorData result = testInstance.createWarning(TEST_CONSTANT, SEQUENCE_NUMBER);
+
+        verify(environmentMock, times(3)).getProperty(any(String.class));
+        Assertions.assertAll(
+                () -> assertEquals(ANY_DETAIL, result.getCode()),
+                () -> assertEquals(ANY_DETAIL, result.getDetail()),
+                () -> assertNull(result.getSource())
+        );
+    }
+
+    @Test
+    public void shouldCreateWarningWithParameterWithoutSequenceNumber() {
+        ErrorData result = testInstance.createWarning(TEST_CONSTANT, WARNING_PARAMETER);
 
         verify(environmentMock, times(3)).getProperty(any(String.class));
         Assertions.assertAll(
                 () -> assertEquals(ANY_DETAIL, result.getCode()),
                 () -> assertEquals(ANY_DETAIL, result.getDetail()),
                 () -> assertEquals(WARNING_PARAMETER, result.getSource().getParameter()),
-                () -> assertEquals(SEQUENTIAL_POINTER_RESPONSE, result.getSource().getPointer())
+                () -> assertEquals(SEQUENTIAL_POINTER_FORMAT, result.getSource().getPointer())
         );
     }
 }

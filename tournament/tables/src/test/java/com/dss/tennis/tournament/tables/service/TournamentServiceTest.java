@@ -8,6 +8,7 @@ import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
@@ -69,7 +70,7 @@ class TournamentServiceTest {
         when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID)).thenReturn(responseTournamentDtoSpy);
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, true)).thenReturn(responseTournamentDtoSpy);
         when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.list(removedPlayerDtoSpy));
         when(warningHandlerMock.createWarning(PLAYER_DUPLICATION, REMOVED_SEQUENTIAL)).thenReturn(errorDataSpy);
 
@@ -91,7 +92,7 @@ class TournamentServiceTest {
         when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID)).thenReturn(responseTournamentDtoSpy);
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, true)).thenReturn(responseTournamentDtoSpy);
         when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.emptyList());
 
         SuccessResponseDTO<TournamentDTO> result = testInstance.createNewTournament(tournamentDtoSpy);
@@ -108,9 +109,11 @@ class TournamentServiceTest {
 
     @Test
     public void shouldGetTournament() {
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID)).thenReturn(responseTournamentDtoSpy);
+        RequestParameter requestParameter = new RequestParameter();
+        requestParameter.setIncludeContests(true);
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, true)).thenReturn(responseTournamentDtoSpy);
 
-        Assertions.assertEquals(responseTournamentDtoSpy, testInstance.getTournament(TOURNAMENT_ID));
+        Assertions.assertEquals(responseTournamentDtoSpy, testInstance.getTournament(TOURNAMENT_ID, requestParameter));
     }
 
     @Test

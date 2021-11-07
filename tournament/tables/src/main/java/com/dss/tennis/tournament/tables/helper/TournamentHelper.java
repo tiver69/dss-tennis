@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.helper;
 
+import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.factory.AbstractTournamentFactory;
 import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
@@ -26,6 +27,8 @@ public class TournamentHelper {
     private RoundTournamentFactory roundTournamentFactory;
     @Autowired
     private EliminationTournamentFactory eliminationTournamentFactory;
+    @Autowired
+    private ConverterHelper converterHelper;
 
     @Transactional
     public Tournament createNewTournamentWithContests(TournamentDTO tournamentDTO) {
@@ -46,14 +49,18 @@ public class TournamentHelper {
         return tournamentRepository.save(tournament);
     }
 
-    public TournamentDTO getTournament(Integer tournamentId) {
+    public TournamentDTO getTournament(Integer tournamentId, boolean includeContests) {
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->
                 new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
 
-        return getTournamentFactory(tournament.getType()).buildExistingTournament(tournament);
+        TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class);
+        if (includeContests) {
+            getTournamentFactory(tournament.getType()).buildExistingTournament(tournamentDto);
+        }
+        return tournamentDto;
     }
 
-    public StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate){
+    public StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate) {
         if (beginningDate == null || beginningDate.isAfter(LocalDate.now()))
             return StatusType.PLANNED;
         return StatusType.IN_PROGRESS;

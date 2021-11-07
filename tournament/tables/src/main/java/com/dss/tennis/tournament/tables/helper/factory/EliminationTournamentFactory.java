@@ -20,7 +20,7 @@ public class EliminationTournamentFactory implements AbstractTournamentFactory {
     }
 
     @Override
-    public TournamentDTO buildExistingTournament(Tournament tournament) {
+    public void buildExistingTournament(TournamentDTO tournament) {
         throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
     }
 }

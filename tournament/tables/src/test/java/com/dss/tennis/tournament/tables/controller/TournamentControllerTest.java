@@ -1,7 +1,9 @@
 package com.dss.tennis.tournament.tables.controller;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
@@ -28,6 +30,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.dss.tennis.tournament.tables.helper.RequestParameterHelper.INCLUDE_KEY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -45,6 +48,7 @@ class TournamentControllerTest {
     private static final int TOURNAMENT_ID = 111;
     private static final String TOURNAMENT_NAME = "TOURNAMENT_NAME";
     private static final String WARNING_CODE = "WARNING_CODE";
+    private static final String INCLUDE_PARAMETER = "INCLUDE_PARAMETER";
     private static final CreatePlayer PLAYER_ONE = new CreatePlayer();
     private static final CreatePlayer PLAYER_TWO = new CreatePlayer();
 
@@ -54,6 +58,8 @@ class TournamentControllerTest {
     private TournamentService tournamentServiceMock;
     @MockBean
     private ConverterHelper converterHelperMock;
+    @MockBean
+    private RequestParameterHelper requestParameterHelperMock;
 
     @Spy
     private TournamentDTO tournamentDtoSpy;
@@ -70,11 +76,13 @@ class TournamentControllerTest {
 
     @Test
     public void shouldPerformNewTournamentCreation() throws Exception {
+        SuccessResponse<GetTournament> response = prepareSuccessGetTournament(List
+                .of(ErrorData.builder().code(WARNING_CODE).build()));
         when(converterHelperMock.convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true)))
                 .thenReturn(tournamentDtoSpy);
         when(tournamentServiceMock.createNewTournament(tournamentDtoSpy)).thenReturn(createdTournamentDtoSpy);
         when(converterHelperMock.convertSuccessResponse(createdTournamentDtoSpy, GetTournament.class))
-                .thenReturn(prepareSuccessGetTournament());
+                .thenReturn(response);
 
         MvcResult content = mockMvc
                 .perform(post("/tournaments")
@@ -87,29 +95,56 @@ class TournamentControllerTest {
         verify(converterHelperMock).convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true));
         verify(tournamentServiceMock).createNewTournament(any(TournamentDTO.class));
         verify(converterHelperMock).convertSuccessResponse(createdTournamentDtoSpy, GetTournament.class);
-        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament()), content.getResponse()
+        Assertions.assertEquals(objectMapper.writeValueAsString(response), content.getResponse()
                 .getContentAsString());
     }
 
     @Test
-    public void shouldPerformGetTournament() throws Exception {
-        when(tournamentServiceMock.getTournament(TOURNAMENT_ID)).thenReturn(tournamentDtoSpy);
+    public void shouldPerformGetTournamentWithIncorrectIncludeParameter() throws Exception {
+        List<ErrorData> includeWarnings = List.of(ErrorData.builder().code(WARNING_CODE).build());
+        when(requestParameterHelperMock
+                .populateRequestParameter(eq(INCLUDE_KEY), eq(INCLUDE_PARAMETER), any(RequestParameter.class)))
+                .thenReturn(includeWarnings);
+        when(tournamentServiceMock.getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class)))
+                .thenReturn(tournamentDtoSpy);
         when(converterHelperMock.convert(tournamentDtoSpy, GetTournament.class))
                 .thenReturn(prepareGetTournament());
 
         MvcResult content = mockMvc
-                .perform(get("/tournaments/" + TOURNAMENT_ID))
+                .perform(get("/tournaments/" + TOURNAMENT_ID + "?include=" + INCLUDE_PARAMETER))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(tournamentServiceMock).getTournament(TOURNAMENT_ID);
+        verify(tournamentServiceMock).getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class));
         verify(converterHelperMock).convert(any(TournamentDTO.class), eq(GetTournament.class));
-        Assertions.assertEquals(objectMapper.writeValueAsString(prepareGetTournament()), content.getResponse()
-                .getContentAsString());
+        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament(includeWarnings)), content
+                .getResponse().getContentAsString());
     }
 
-    private SuccessResponse<GetTournament> prepareSuccessGetTournament() {
-        return new SuccessResponse<>(prepareGetTournament(), List.of(ErrorData.builder().code(WARNING_CODE).build()));
+    @Test
+    public void shouldPerformGetTournamentWithCorrectIncludeParameter() throws Exception {
+        List<ErrorData> includeWarnings = List.of();
+        when(requestParameterHelperMock
+                .populateRequestParameter(eq(INCLUDE_KEY), eq(INCLUDE_PARAMETER), any(RequestParameter.class)))
+                .thenReturn(includeWarnings);
+        when(tournamentServiceMock.getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class)))
+                .thenReturn(tournamentDtoSpy);
+        when(converterHelperMock.convert(tournamentDtoSpy, GetTournament.class))
+                .thenReturn(prepareGetTournament());
+
+        MvcResult content = mockMvc
+                .perform(get("/tournaments/" + TOURNAMENT_ID + "?include=" + INCLUDE_PARAMETER))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        verify(tournamentServiceMock).getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class));
+        verify(converterHelperMock).convert(any(TournamentDTO.class), eq(GetTournament.class));
+        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament(null)), content
+                .getResponse().getContentAsString());
+    }
+
+    private SuccessResponse<GetTournament> prepareSuccessGetTournament(List<ErrorData> warnings) {
+        return new SuccessResponse<>(prepareGetTournament(), warnings);
     }
 
     private GetTournament prepareGetTournament() {
