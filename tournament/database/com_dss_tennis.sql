@@ -29,17 +29,11 @@ CREATE TABLE `contest` (
   `round` tinyint(2) NOT NULL DEFAULT '0',
   `winner` tinyint(4) DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `player_one_id` int(11) NOT NULL,
-  `player_two_id` int(11) NOT NULL,
   `tournament_id` int(11) NOT NULL,
   `score_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`player_one_id`,`player_two_id`,`tournament_id`,`score_id`),
-  KEY `fk_contest_player1_idx` (`player_one_id`),
-  KEY `fk_contest_player2_idx` (`player_two_id`),
+  PRIMARY KEY (`id`,`tournament_id`,`score_id`),
   KEY `fk_contest_tournament1_idx` (`tournament_id`),
   KEY `fk_contest_score1_idx` (`score_id`),
-  CONSTRAINT `fk_contest_player1` FOREIGN KEY (`player_one_id`) REFERENCES `player` (`id`),
-  CONSTRAINT `fk_contest_player2` FOREIGN KEY (`player_two_id`) REFERENCES `player` (`id`),
   CONSTRAINT `fk_contest_score1` FOREIGN KEY (`score_id`) REFERENCES `score` (`id`),
   CONSTRAINT `fk_contest_tournament1` FOREIGN KEY (`tournament_id`) REFERENCES `tournament` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -51,8 +45,38 @@ CREATE TABLE `contest` (
 
 LOCK TABLES `contest` WRITE;
 /*!40000 ALTER TABLE `contest` DISABLE KEYS */;
-INSERT INTO `contest` VALUES (12,0,NULL,NULL,13,14,18,29),(13,0,NULL,NULL,13,15,18,30),(14,0,NULL,NULL,13,16,18,31),(15,0,NULL,NULL,14,15,18,32),(16,0,NULL,NULL,14,16,18,33),(17,0,NULL,NULL,15,16,18,34),(18,0,NULL,NULL,13,14,20,35),(19,0,NULL,NULL,13,15,20,36),(20,0,NULL,NULL,13,16,20,37),(21,0,NULL,NULL,14,15,20,38),(22,0,NULL,NULL,14,16,20,39),(23,0,NULL,NULL,15,16,20,40),(25,0,NULL,NULL,13,20,36,42),(26,0,NULL,NULL,13,15,36,43),(27,0,NULL,NULL,13,16,36,44),(28,0,NULL,NULL,20,15,36,45),(29,0,NULL,NULL,20,16,36,46),(30,0,NULL,NULL,15,16,36,47),(31,0,NULL,NULL,13,20,38,48),(32,0,NULL,NULL,13,15,38,49),(33,0,NULL,NULL,13,16,38,50),(34,0,NULL,NULL,20,15,38,51),(35,0,NULL,NULL,20,16,38,52),(36,0,NULL,NULL,15,16,38,53),(37,0,NULL,NULL,13,20,40,54),(38,0,NULL,NULL,13,15,40,55),(39,0,NULL,NULL,13,16,40,56),(40,0,NULL,NULL,20,15,40,57),(41,0,NULL,NULL,20,16,40,58),(42,0,NULL,NULL,15,16,40,59),(43,0,NULL,NULL,13,20,41,60),(44,0,NULL,NULL,13,15,41,61),(45,0,NULL,NULL,13,16,41,62),(46,0,NULL,NULL,20,15,41,63),(47,0,NULL,NULL,20,16,41,64),(48,0,NULL,NULL,15,16,41,65),(49,0,NULL,NULL,13,14,42,66),(50,0,NULL,NULL,13,15,42,67),(51,0,NULL,NULL,13,16,42,68),(52,0,NULL,NULL,14,15,42,69),(53,0,NULL,NULL,14,16,42,70),(54,0,NULL,NULL,15,16,42,71),(55,0,NULL,NULL,13,14,47,72),(56,0,NULL,NULL,13,15,47,73),(57,0,NULL,NULL,14,15,47,74),(58,0,NULL,NULL,13,14,48,75),(59,0,NULL,NULL,13,15,48,76),(60,0,NULL,NULL,14,15,48,77),(61,0,NULL,NULL,13,14,49,78),(62,0,NULL,NULL,13,15,49,79),(63,0,NULL,NULL,14,15,49,80),(64,0,NULL,NULL,13,14,50,81),(65,0,NULL,NULL,13,15,50,82),(66,0,NULL,NULL,14,15,50,83),(67,0,NULL,NULL,13,14,51,84),(68,0,NULL,NULL,13,15,51,85),(69,0,NULL,NULL,14,15,51,86);
+INSERT INTO `contest` VALUES (12,0,NULL,NULL,18,29),(13,0,NULL,NULL,18,30),(14,0,NULL,NULL,18,31),(15,0,NULL,NULL,18,32),(16,0,NULL,NULL,18,33),(17,0,NULL,NULL,18,34),(18,0,NULL,NULL,20,35),(19,0,NULL,NULL,20,36),(20,0,NULL,NULL,20,37),(21,0,NULL,NULL,20,38),(22,0,NULL,NULL,20,39),(23,0,NULL,NULL,20,40),(25,0,NULL,NULL,36,42),(26,0,NULL,NULL,36,43),(27,0,NULL,NULL,36,44),(28,0,NULL,NULL,36,45),(29,0,NULL,NULL,36,46),(30,0,NULL,NULL,36,47),(31,0,NULL,NULL,38,48),(32,0,NULL,NULL,38,49),(33,0,NULL,NULL,38,50),(34,0,NULL,NULL,38,51),(35,0,NULL,NULL,38,52),(36,0,NULL,NULL,38,53),(37,0,NULL,NULL,40,54),(38,0,NULL,NULL,40,55),(39,0,NULL,NULL,40,56),(40,0,NULL,NULL,40,57),(41,0,NULL,NULL,40,58),(42,0,NULL,NULL,40,59),(43,0,NULL,NULL,41,60),(44,0,NULL,NULL,41,61),(45,0,NULL,NULL,41,62),(46,0,NULL,NULL,41,63),(47,0,NULL,NULL,41,64),(48,0,NULL,NULL,41,65),(49,0,NULL,NULL,42,66),(50,0,NULL,NULL,42,67),(51,0,NULL,NULL,42,68),(52,0,NULL,NULL,42,69),(53,0,NULL,NULL,42,70),(54,0,NULL,NULL,42,71),(55,0,NULL,NULL,47,72),(56,0,NULL,NULL,47,73),(57,0,NULL,NULL,47,74),(58,0,NULL,NULL,48,75),(59,0,NULL,NULL,48,76),(60,0,NULL,NULL,48,77),(61,0,NULL,NULL,49,78),(62,0,NULL,NULL,49,79),(63,0,NULL,NULL,49,80),(64,0,NULL,NULL,50,81),(65,0,NULL,NULL,50,82),(66,0,NULL,NULL,50,83),(67,0,NULL,NULL,51,84),(68,0,NULL,NULL,51,85),(69,0,NULL,NULL,51,86);
 /*!40000 ALTER TABLE `contest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `double_contest`
+--
+
+DROP TABLE IF EXISTS `double_contest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `double_contest` (
+  `contest_id` int(11) NOT NULL,
+  `team_one_id` int(11) NOT NULL,
+  `team_two_id` int(11) NOT NULL,
+  PRIMARY KEY (`contest_id`,`team_one_id`,`team_two_id`),
+  KEY `fk_double_contest_team1_idx` (`team_one_id`),
+  KEY `fk_double_contest_team2_idx` (`team_two_id`),
+  KEY `fk_double_contest_contest1_idx` (`contest_id`),
+  CONSTRAINT `fk_double_contest_contest1` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`id`),
+  CONSTRAINT `fk_double_contest_team1` FOREIGN KEY (`team_one_id`) REFERENCES `team` (`id`),
+  CONSTRAINT `fk_double_contest_team2` FOREIGN KEY (`team_two_id`) REFERENCES `team` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `double_contest`
+--
+
+LOCK TABLES `double_contest` WRITE;
+/*!40000 ALTER TABLE `double_contest` DISABLE KEYS */;
+/*!40000 ALTER TABLE `double_contest` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -112,6 +136,64 @@ INSERT INTO `score` VALUES (29,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(30,NULL
 UNLOCK TABLES;
 
 --
+-- Table structure for table `single_contest`
+--
+
+DROP TABLE IF EXISTS `single_contest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `single_contest` (
+  `contest_id` int(11) NOT NULL,
+  `player_one_id` int(11) NOT NULL,
+  `player_two_id1` int(11) NOT NULL,
+  PRIMARY KEY (`contest_id`,`player_one_id`,`player_two_id1`),
+  KEY `fk_single_contest_player1_idx` (`player_one_id`),
+  KEY `fk_single_contest_player2_idx` (`player_two_id1`),
+  KEY `fk_single_contest_contest1_idx` (`contest_id`),
+  CONSTRAINT `fk_single_contest_contest1` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`id`),
+  CONSTRAINT `fk_single_contest_player1` FOREIGN KEY (`player_one_id`) REFERENCES `player` (`id`),
+  CONSTRAINT `fk_single_contest_player2` FOREIGN KEY (`player_two_id1`) REFERENCES `player` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `single_contest`
+--
+
+LOCK TABLES `single_contest` WRITE;
+/*!40000 ALTER TABLE `single_contest` DISABLE KEYS */;
+/*!40000 ALTER TABLE `single_contest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `team`
+--
+
+DROP TABLE IF EXISTS `team`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `team` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player_one_id` int(11) NOT NULL,
+  `player_two_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`player_one_id`,`player_two_id`),
+  KEY `fk_team_player1_idx` (`player_one_id`),
+  KEY `fk_team_player2_idx` (`player_two_id`),
+  CONSTRAINT `fk_team_player1` FOREIGN KEY (`player_one_id`) REFERENCES `player` (`id`),
+  CONSTRAINT `fk_team_player2` FOREIGN KEY (`player_two_id`) REFERENCES `player` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `team`
+--
+
+LOCK TABLES `team` WRITE;
+/*!40000 ALTER TABLE `team` DISABLE KEYS */;
+/*!40000 ALTER TABLE `team` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tournament`
 --
 
@@ -148,4 +230,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-26  0:04:13
+-- Dump completed on 2022-01-26  0:33:28
