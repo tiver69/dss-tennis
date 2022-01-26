@@ -5,6 +5,7 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.factory.AbstractTournamentFactory;
 import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
 import com.dss.tennis.tournament.tables.helper.factory.RoundTournamentFactory;
+import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
@@ -43,6 +44,7 @@ public class TournamentHelper {
     public Tournament createNewTournament(TournamentDTO tournamentDTO) {
         Tournament tournament = Tournament.builder().name(tournamentDTO.getName())
                 .type(tournamentDTO.getType())
+                .participantType(ParticipantType.SINGLE)
                 .status(getStatusBaseOnBeginningDate(tournamentDTO.getBeginningDate()))
                 .beginningDate(tournamentDTO.getBeginningDate())
                 .build();
