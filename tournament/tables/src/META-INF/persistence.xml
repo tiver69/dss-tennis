@@ -6,6 +6,7 @@
         <class>com.dss.tennis.tournament.tables.model.db.v1.Tournament</class>
         <class>com.dss.tennis.tournament.tables.model.db.v1.Score</class>
         <class>com.dss.tennis.tournament.tables.model.db.v1.Contest</class>
+        <class>com.dss.tennis.tournament.tables.model.db.v2.Team</class>
         <properties>
             <property name="hibernate.connection.url"
                       value="jdbc:mysql://localhost:3306/dss_tennis_tournament_tables?serverTimezone=UTC&amp;jdbcCompliantTruncation=false"/>
