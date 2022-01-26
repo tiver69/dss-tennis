@@ -207,6 +207,7 @@ CREATE TABLE `tournament` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   `type` enum('ROUND','ELIMINATION') COLLATE utf8_unicode_ci NOT NULL,
+  `participant_type` enum('SINGLE','DOUBLE') COLLATE utf8_unicode_ci NOT NULL,
   `status` enum('PLANNED','IN_PROGRESS','PLAYED') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'PLANNED',
   `beginning_date` date NOT NULL,
   PRIMARY KEY (`id`),
@@ -220,7 +221,7 @@ CREATE TABLE `tournament` (
 
 LOCK TABLES `tournament` WRITE;
 /*!40000 ALTER TABLE `tournament` DISABLE KEYS */;
-INSERT INTO `tournament` VALUES (1,'r3f','ELIMINATION','PLANNED','1999-03-17'),(15,'r3gg22','ELIMINATION','PLANNED','1999-03-17'),(16,'r3gg','ELIMINATION','PLANNED','1999-03-17'),(18,'r','ELIMINATION','PLANNED','1999-03-17'),(20,'rрасос','ELIMINATION','PLANNED','1999-03-17'),(36,'drntdyjrjtyr7r','ROUND','PLANNED','1999-03-17'),(38,'efjiefiier','ROUND','PLANNED','1999-03-17'),(39,'Tesetkjvernjvenveewfoi23','ROUND','PLANNED','1999-03-17'),(40,'Teseewfoi23','ROUND','PLANNED','1999-03-17'),(41,'Teseewf75goi23','ROUND','PLANNED','1999-03-17'),(42,'Teseewf75guygkuyvkuvkuyvyuviytxoi23','ROUND','PLANNED','1999-03-17'),(47,'Teseewf75uviytxoi23','ROUND','PLANNED','1999-03-17'),(48,'Tesee3','ROUND','PLANNED','1999-03-17'),(49,'T2342t443esee3','ROUND','PLANNED','1999-03-17'),(50,'T3esee3','ROUND','IN_PROGRESS','2021-10-20'),(51,'T3esирманпгиee3','ROUND','PLANNED','2021-10-26'),(52,'Double Test','ROUND','PLANNED','2021-10-26'),(57,'dygvrntdyjrjtyr7r','ROUND','IN_PROGRESS','2021-10-26'),(58,'d6ghrjtyr7r','ROUND','IN_PROGRESS','2021-10-26');
+INSERT INTO `tournament` VALUES (1,'r3f','ELIMINATION','SINGLE','PLANNED','1999-03-17'),(15,'r3gg22','ELIMINATION','SINGLE','PLANNED','1999-03-17'),(16,'r3gg','ELIMINATION','SINGLE','PLANNED','1999-03-17'),(18,'r','ELIMINATION','SINGLE','PLANNED','1999-03-17'),(20,'rрасос','ELIMINATION','SINGLE','PLANNED','1999-03-17'),(36,'drntdyjrjtyr7r','ROUND','SINGLE','PLANNED','1999-03-17'),(38,'efjiefiier','ROUND','SINGLE','PLANNED','1999-03-17'),(39,'Tesetkjvernjvenveewfoi23','ROUND','SINGLE','PLANNED','1999-03-17'),(40,'Teseewfoi23','ROUND','SINGLE','PLANNED','1999-03-17'),(41,'Teseewf75goi23','ROUND','SINGLE','PLANNED','1999-03-17'),(42,'Teseewf75guygkuyvkuvkuyvyuviytxoi23','ROUND','SINGLE','PLANNED','1999-03-17'),(47,'Teseewf75uviytxoi23','ROUND','SINGLE','PLANNED','1999-03-17'),(48,'Tesee3','ROUND','SINGLE','PLANNED','1999-03-17'),(49,'T2342t443esee3','ROUND','SINGLE','PLANNED','1999-03-17'),(50,'T3esee3','ROUND','SINGLE','IN_PROGRESS','2021-10-20'),(51,'T3esирманпгиee3','ROUND','SINGLE','PLANNED','2021-10-26'),(52,'Double Test','ROUND','SINGLE','PLANNED','2021-10-26'),(57,'dygvrntdyjrjtyr7r','ROUND','SINGLE','IN_PROGRESS','2021-10-26'),(58,'d6ghrjtyr7r','ROUND','SINGLE','IN_PROGRESS','2021-10-26');
 /*!40000 ALTER TABLE `tournament` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -233,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-26 21:50:42
+-- Dump completed on 2022-01-26 21:54:39

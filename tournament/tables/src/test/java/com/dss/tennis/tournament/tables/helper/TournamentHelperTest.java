@@ -4,6 +4,7 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
+import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
@@ -122,10 +123,12 @@ class TournamentHelperTest {
 
     private Tournament preparePlannedTournament() {
         return Tournament.builder().status(StatusType.PLANNED).beginningDate(LocalDate.now().plus(1, DAYS))
+                .participantType(ParticipantType.SINGLE)
                 .build();
     }
 
     private Tournament prepareInProgressTournament() {
-        return Tournament.builder().status(StatusType.IN_PROGRESS).beginningDate(LocalDate.now()).build();
+        return Tournament.builder().status(StatusType.IN_PROGRESS).beginningDate(LocalDate.now())
+                .participantType(ParticipantType.SINGLE).build();
     }
 }
