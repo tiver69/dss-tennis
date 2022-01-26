@@ -4,17 +4,19 @@ import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
-//@Entity
-@PrimaryKeyJoinColumn(name="contest_id")
+@Entity
+@PrimaryKeyJoinColumn(name = "contest_id")
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class SingleContest extends Contest {
 
     private Player playerOne;

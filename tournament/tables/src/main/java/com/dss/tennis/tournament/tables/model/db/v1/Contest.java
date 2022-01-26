@@ -8,7 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.sql.Date;
 
-@Entity
+@Deprecated
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -85,7 +85,7 @@ public class Contest {
     }
 
     @Basic
-    @Column(name = "winner", nullable = true)
+    @Column(name = "winner")
     public Byte getWinner() {
         return winner;
     }
@@ -95,7 +95,7 @@ public class Contest {
     }
 
     @Basic
-    @Column(name = "date", nullable = true)
+    @Column(name = "date")
     public Date getDate() {
         return date;
     }
@@ -114,9 +114,7 @@ public class Contest {
         if (id != contest.id) return false;
         if (round != contest.round) return false;
         if (winner != null ? !winner.equals(contest.winner) : contest.winner != null) return false;
-        if (date != null ? !date.equals(contest.date) : contest.date != null) return false;
-
-        return true;
+        return date != null ? date.equals(contest.date) : contest.date == null;
     }
 
     @Override

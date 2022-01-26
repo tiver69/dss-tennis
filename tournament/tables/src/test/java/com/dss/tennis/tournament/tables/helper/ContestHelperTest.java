@@ -2,9 +2,10 @@ package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.model.db.v1.Contest;
+import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -38,9 +39,9 @@ class ContestHelperTest {
     @Spy
     private Player playerTwoSpy;
     @Spy
-    private Contest contestOneSpy;
+    private SingleContest singleContestOneSpy;
     @Spy
-    private Contest contestTwoSpy;
+    private SingleContest singleContestTwoSpy;
     @Spy
     private Tournament tournamentSpy;
 
@@ -67,13 +68,13 @@ class ContestHelperTest {
     @Test
     public void shouldGetTournamentContests() {
         when(contestRepositoryMock.findByTournamentId(TOURNAMENT_ID))
-                .thenReturn(Arrays.asList(contestOneSpy, contestTwoSpy));
+                .thenReturn(Arrays.asList(singleContestOneSpy, singleContestTwoSpy));
 
         List<Contest> result = testInstance.getTournamentContests(TOURNAMENT_ID);
 
         Assertions.assertAll(
                 () -> assertNotNull(result),
-                () -> assertTrue(result.containsAll(Arrays.asList(contestOneSpy, contestTwoSpy)))
+                () -> assertTrue(result.containsAll(Arrays.asList(singleContestOneSpy, singleContestTwoSpy)))
         );
     }
 
@@ -81,6 +82,6 @@ class ContestHelperTest {
     public void shouldCreateNewContest() {
         testInstance.createNewContest(playerOneSpy, playerTwoSpy, tournamentSpy);
 
-        verify(contestRepositoryMock).save(any(Contest.class));
+        verify(contestRepositoryMock).save(any(SingleContest.class));
     }
 }
