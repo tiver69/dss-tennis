@@ -3,7 +3,7 @@ package com.dss.tennis.tournament.tables.helper.factory;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
-import com.dss.tennis.tournament.tables.model.db.v1.Contest;
+import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;

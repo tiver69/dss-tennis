@@ -1,10 +1,11 @@
 package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
-import com.dss.tennis.tournament.tables.model.db.v1.Contest;
+import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v1.Score;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class ContestHelper {
     }
 
     public Contest createNewContest(Player playerOne, Player playerTwo, Tournament tournament) {
-        Contest contest = Contest.builder()
+        Contest contest = SingleContest.builder()
                 .playerOne(playerOne)
                 .playerTwo(playerTwo)
                 .tournament(tournament)

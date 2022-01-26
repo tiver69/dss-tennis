@@ -3,19 +3,19 @@ package com.dss.tennis.tournament.tables.model.db.v2;
 import com.dss.tennis.tournament.tables.model.db.v1.Score;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Date;
 
-//@Entity
+@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Contest {
     private int id;
     private byte round;
@@ -66,7 +66,7 @@ public class Contest {
     }
 
     @Basic
-    @Column(name = "winner", nullable = true)
+    @Column(name = "winner")
     public Byte getWinner() {
         return winner;
     }
@@ -76,7 +76,7 @@ public class Contest {
     }
 
     @Basic
-    @Column(name = "date", nullable = true)
+    @Column(name = "date")
     public Date getDate() {
         return date;
     }
@@ -95,9 +95,7 @@ public class Contest {
         if (id != contest.id) return false;
         if (round != contest.round) return false;
         if (winner != null ? !winner.equals(contest.winner) : contest.winner != null) return false;
-        if (date != null ? !date.equals(contest.date) : contest.date != null) return false;
-
-        return true;
+        return date != null ? date.equals(contest.date) : contest.date == null;
     }
 
     @Override
