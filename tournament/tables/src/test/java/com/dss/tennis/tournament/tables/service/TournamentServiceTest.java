@@ -70,7 +70,8 @@ class TournamentServiceTest {
         when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, true)).thenReturn(responseTournamentDtoSpy);
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT))
+                .thenReturn(responseTournamentDtoSpy);
         when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.list(removedPlayerDtoSpy));
         when(warningHandlerMock.createWarning(PLAYER_DUPLICATION, REMOVED_SEQUENTIAL)).thenReturn(errorDataSpy);
 
@@ -92,7 +93,8 @@ class TournamentServiceTest {
         when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, true)).thenReturn(responseTournamentDtoSpy);
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT))
+                .thenReturn(responseTournamentDtoSpy);
         when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.emptyList());
 
         SuccessResponseDTO<TournamentDTO> result = testInstance.createNewTournament(tournamentDtoSpy);
@@ -110,8 +112,7 @@ class TournamentServiceTest {
     @Test
     public void shouldGetTournament() {
         RequestParameter requestParameter = new RequestParameter();
-        requestParameter.setIncludeContests(true);
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, true)).thenReturn(responseTournamentDtoSpy);
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, requestParameter)).thenReturn(responseTournamentDtoSpy);
 
         Assertions.assertEquals(responseTournamentDtoSpy, testInstance.getTournament(TOURNAMENT_ID, requestParameter));
     }

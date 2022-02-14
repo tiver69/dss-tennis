@@ -13,11 +13,13 @@ class RequestParameterTest {
         RequestParameter source = new RequestParameter();
         RequestParameter destination = new RequestParameter();
         source.setIncludeContests(true);
+        source.setIncludePlayers(true);
 
         source.copyRequestParameterTo(destination);
 
         Assertions.assertAll(
-                () -> assertTrue(destination.isIncludeContests())
+                () -> assertTrue(destination.isIncludeContests()),
+                () -> assertTrue(destination.isIncludePlayers())
         );
     }
 
@@ -25,11 +27,13 @@ class RequestParameterTest {
     public void shouldResetStateToDefault() {
         RequestParameter testInstance = new RequestParameter();
         testInstance.setIncludeContests(true);
+        testInstance.setIncludePlayers(true);
 
         testInstance.resetStateToDefault();
 
         Assertions.assertAll(
-                () -> assertFalse(testInstance.isIncludeContests())
+                () -> assertFalse(testInstance.isIncludeContests()),
+                () -> assertFalse(testInstance.isIncludePlayers())
         );
     }
 }

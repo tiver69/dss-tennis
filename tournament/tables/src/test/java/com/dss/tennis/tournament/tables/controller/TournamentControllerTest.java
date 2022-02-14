@@ -2,6 +2,7 @@ package com.dss.tennis.tournament.tables.controller;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
+import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
@@ -59,6 +60,8 @@ class TournamentControllerTest {
     @MockBean
     private ConverterHelper converterHelperMock;
     @MockBean
+    private ResponseHelper responseHelperMock;
+    @MockBean
     private RequestParameterHelper requestParameterHelperMock;
 
     @Spy
@@ -81,7 +84,7 @@ class TournamentControllerTest {
         when(converterHelperMock.convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true)))
                 .thenReturn(tournamentDtoSpy);
         when(tournamentServiceMock.createNewTournament(tournamentDtoSpy)).thenReturn(createdTournamentDtoSpy);
-        when(converterHelperMock.convertSuccessResponse(createdTournamentDtoSpy, GetTournament.class))
+        when(responseHelperMock.createSuccessResponse(createdTournamentDtoSpy, GetTournament.class))
                 .thenReturn(response);
 
         MvcResult content = mockMvc
@@ -94,7 +97,7 @@ class TournamentControllerTest {
 
         verify(converterHelperMock).convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true));
         verify(tournamentServiceMock).createNewTournament(any(TournamentDTO.class));
-        verify(converterHelperMock).convertSuccessResponse(createdTournamentDtoSpy, GetTournament.class);
+        verify(responseHelperMock).createSuccessResponse(createdTournamentDtoSpy, GetTournament.class);
         Assertions.assertEquals(objectMapper.writeValueAsString(response), content.getResponse()
                 .getContentAsString());
     }
@@ -107,8 +110,8 @@ class TournamentControllerTest {
                 .thenReturn(includeWarnings);
         when(tournamentServiceMock.getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class)))
                 .thenReturn(tournamentDtoSpy);
-        when(converterHelperMock.convert(tournamentDtoSpy, GetTournament.class))
-                .thenReturn(prepareGetTournament());
+        when(responseHelperMock.createSuccessResponse(tournamentDtoSpy, includeWarnings))
+                .thenReturn(prepareSuccessGetTournament(includeWarnings));
 
         MvcResult content = mockMvc
                 .perform(get("/tournaments/" + TOURNAMENT_ID + "?include=" + INCLUDE_PARAMETER))
@@ -116,30 +119,8 @@ class TournamentControllerTest {
                 .andReturn();
 
         verify(tournamentServiceMock).getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class));
-        verify(converterHelperMock).convert(any(TournamentDTO.class), eq(GetTournament.class));
+        verify(responseHelperMock).createSuccessResponse(any(TournamentDTO.class), eq(includeWarnings));
         Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament(includeWarnings)), content
-                .getResponse().getContentAsString());
-    }
-
-    @Test
-    public void shouldPerformGetTournamentWithCorrectIncludeParameter() throws Exception {
-        List<ErrorData> includeWarnings = List.of();
-        when(requestParameterHelperMock
-                .populateRequestParameter(eq(INCLUDE_KEY), eq(INCLUDE_PARAMETER), any(RequestParameter.class)))
-                .thenReturn(includeWarnings);
-        when(tournamentServiceMock.getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class)))
-                .thenReturn(tournamentDtoSpy);
-        when(converterHelperMock.convert(tournamentDtoSpy, GetTournament.class))
-                .thenReturn(prepareGetTournament());
-
-        MvcResult content = mockMvc
-                .perform(get("/tournaments/" + TOURNAMENT_ID + "?include=" + INCLUDE_PARAMETER))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        verify(tournamentServiceMock).getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class));
-        verify(converterHelperMock).convert(any(TournamentDTO.class), eq(GetTournament.class));
-        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament(null)), content
                 .getResponse().getContentAsString());
     }
 

@@ -48,11 +48,12 @@ public class TournamentService {
                 .map(tt -> warningHandler.createWarning(PLAYER_DUPLICATION, tt.getSequenceNumber()))
                 .collect(Collectors.toList());
 
-        return new SuccessResponseDTO(tournamentHelper.getTournament(tournament.getId(), true), warnings);
+        return new SuccessResponseDTO<>(tournamentHelper
+                .getTournament(tournament.getId(), RequestParameter.DEFAULT), warnings);
     }
 
     public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {
-        return tournamentHelper.getTournament(tournamentId, requestParameters.isIncludeContests());
+        return tournamentHelper.getTournament(tournamentId, requestParameters);
     }
 
     private void validateCreateTournamentDTO(TournamentDTO tournamentDTO) {

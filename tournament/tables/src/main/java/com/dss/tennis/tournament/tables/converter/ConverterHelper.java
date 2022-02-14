@@ -22,11 +22,6 @@ public class ConverterHelper {
     @Autowired
     private ModelMapperFactory modelMapperFactory;
 
-    public <S, D> SuccessResponse<D> convertSuccessResponse(SuccessResponseDTO<S> data, Class<D> responseClass) {
-        D responseData = convert(data.getData(), responseClass);
-        return new SuccessResponse<>(responseData, data.getWarnings());
-    }
-
     public <S, D> D convert(S source, Class<D> destinationClass) {
         return convert(source, destinationClass, false);
     }

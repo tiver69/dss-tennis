@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.converter;
 
-import com.dss.tennis.tournament.tables.model.db.v1.Contest;
+import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

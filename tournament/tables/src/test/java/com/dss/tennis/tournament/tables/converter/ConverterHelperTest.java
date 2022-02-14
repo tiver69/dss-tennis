@@ -41,29 +41,9 @@ class ConverterHelperTest {
 
     @Spy
     private CreateTournament createTournamentSpy;
-    @Spy
-    private ErrorData errorDataSpy;
 
     @InjectMocks
     private ConverterHelper testInstance;
-
-    @Test
-    public void shouldConvertSuccessfulResponseWithWarnings() {
-        TournamentDTO destination = prepareTournamentDto();
-
-        when(modelMapperFactoryMock.getCustomizedModelMapper()).thenReturn(modelMapperMock);
-        when(modelMapperMock.map(createTournamentSpy, TournamentDTO.class)).thenReturn(destination);
-
-        SuccessResponse<TournamentDTO> result = testInstance
-                .convertSuccessResponse(new SuccessResponseDTO<>(createTournamentSpy, List.of(errorDataSpy)),
-                        TournamentDTO.class);
-
-        Assertions.assertAll(
-                () -> assertNotNull(result),
-                () -> assertEquals(result.getData(), destination),
-                () -> assertTrue(result.getWarnings().contains(errorDataSpy))
-        );
-    }
 
     @Test
     public void shouldConvertCreateTournamentWithSequential() {
@@ -113,6 +93,4 @@ class ConverterHelperTest {
                 .players(player)
                 .build();
     }
-
-
 }

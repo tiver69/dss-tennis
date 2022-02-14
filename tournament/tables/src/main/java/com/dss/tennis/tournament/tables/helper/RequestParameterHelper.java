@@ -21,6 +21,7 @@ public class RequestParameterHelper {
     public static String PARAMETER_SEPARATOR = ",";
     public static String INCLUDE_KEY = "include";
     public static String CONTEST_VALUE = "contests";
+    public static String PLAYERS_VALUE = "players";
 
     private final Map<String, List<String>> allowedParameters = new HashMap<>();
     private final Map<String, Consumer<Boolean>> requestParameterSetter = new HashMap<>();
@@ -31,10 +32,11 @@ public class RequestParameterHelper {
 
     @PostConstruct
     protected void initialize() {
-        allowedParameters.put(INCLUDE_KEY, List.of(CONTEST_VALUE));
+        allowedParameters.put(INCLUDE_KEY, List.of(CONTEST_VALUE, PLAYERS_VALUE));
 
         tmpRequestParameter = new RequestParameter();
         requestParameterSetter.put(CONTEST_VALUE, tmpRequestParameter::setIncludeContests);
+        requestParameterSetter.put(PLAYERS_VALUE, tmpRequestParameter::setIncludePlayers);
     }
 
     public List<ErrorData> populateRequestParameter(String key, String value, RequestParameter finalRequestParameter) {

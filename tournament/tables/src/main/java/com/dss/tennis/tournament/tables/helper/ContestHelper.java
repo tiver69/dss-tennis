@@ -28,8 +28,8 @@ public class ContestHelper {
 
     public Contest createNewContest(Player playerOne, Player playerTwo, Tournament tournament) {
         Contest contest = SingleContest.builder()
-                .playerOne(playerOne)
-                .playerTwo(playerTwo)
+                .playerOneId(playerOne.getId())
+                .playerTwoId(playerTwo.getId())
                 .tournament(tournament)
                 .score(new Score())
                 .build();

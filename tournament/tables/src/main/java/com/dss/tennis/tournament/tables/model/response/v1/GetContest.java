@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class GetContest {
 
     private Integer id;
-    private GetPlayer playerOne;
-    private GetPlayer playerTwo;
+    private Integer playerOneId;
+    private Integer playerTwoId;
     private GetScore score;
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -14,5 +15,11 @@ import java.util.List;
 public class SuccessResponse<D> {
 
     private D data;
+    private Set<ResourceObject> included;
     private List<ErrorData> warnings;
+
+    public SuccessResponse(D data, List<ErrorData> warnings) {
+        this.data = data;
+        this.warnings = warnings;
+    }
 }

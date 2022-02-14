@@ -4,12 +4,11 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
-import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
-import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
-import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.db.v1.*;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
+import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -37,11 +37,15 @@ class TournamentHelperTest {
     private static final int TOURNAMENT_ID = 1;
 
     @Mock
+    private PlayerRepository playerRepositoryMock;
+    @Mock
     private TournamentRepository tournamentRepositoryMock;
     @Mock
     private EliminationTournamentFactory eliminationTournamentFactoryMock;
     @Mock
     private ConverterHelper converterHelperMock;
+    @Spy
+    private Player playerSpy;
     @Spy
     private Tournament tournamentSpy;
     @Spy
@@ -65,26 +69,30 @@ class TournamentHelperTest {
     }
 
     @Test
-    public void shouldGetEliminationTournamentWithContests() {
+    public void shouldGetEliminationTournamentWithContestsWithoutPlayers() {
         when(tournamentSpy.getType()).thenReturn(TournamentType.ELIMINATION);
         when(tournamentRepositoryMock.findById(TOURNAMENT_ID)).thenReturn(Optional.of(tournamentSpy));
         when(converterHelperMock.convert(tournamentSpy, TournamentDTO.class)).thenReturn(tournamentDtoSpy);
 
-        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, true);
+        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT);
 
         Assertions.assertEquals(tournamentDtoSpy, result);
         verify(eliminationTournamentFactoryMock).buildExistingTournament(tournamentDtoSpy);
+        verify(playerRepositoryMock, never()).findPlayersByTournamentId(TOURNAMENT_ID);
     }
 
     @Test
-    public void shouldGetEliminationTournamentWithoutContests() {
+    public void shouldGetEliminationTournamentWithoutContestsWithPlayers() {
         when(tournamentRepositoryMock.findById(TOURNAMENT_ID)).thenReturn(Optional.of(tournamentSpy));
         when(converterHelperMock.convert(tournamentSpy, TournamentDTO.class)).thenReturn(tournamentDtoSpy);
+        when(playerRepositoryMock.findPlayersByTournamentId(TOURNAMENT_ID)).thenReturn(List.of(playerSpy));
 
-        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, false);
+        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, new RequestParameter(false, true));
 
         Assertions.assertEquals(tournamentDtoSpy, result);
         verify(eliminationTournamentFactoryMock, never()).buildExistingTournament(tournamentDtoSpy);
+        verify(playerRepositoryMock).findPlayersByTournamentId(TOURNAMENT_ID);
+        verify(converterHelperMock).convert(playerSpy, PlayerDTO.class);
     }
 
     @Test
@@ -92,7 +100,8 @@ class TournamentHelperTest {
         when(tournamentRepositoryMock.findById(TOURNAMENT_ID)).thenReturn(Optional.empty());
 
         DetailedException resultError = Assertions
-                .assertThrows(DetailedException.class, () -> testInstance.getTournament(TOURNAMENT_ID, true));
+                .assertThrows(DetailedException.class, () -> testInstance
+                        .getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT));
         Set<DetailedErrorData> result = resultError.getErrors();
 
         Assertions.assertAll(
