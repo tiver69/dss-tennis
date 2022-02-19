@@ -5,6 +5,7 @@ public enum ErrorConstants {
     //tournament errors
     TOURNAMENT_NAME_EMPTY,
     TOURNAMENT_NAME_DUPLICATE,
+    TOURNAMENT_TYPE_EMPTY,
     TOURNAMENT_TYPE_NOT_SUPPORTED,
     TOURNAMENT_NOT_FOUND,
 

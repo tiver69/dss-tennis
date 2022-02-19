@@ -16,4 +16,8 @@ public class GetSingleParticipant extends GetParticipant {
     {
         this.setType(ResourceObjectType.PLAYER.value);
     }
+
+    public GetSingleParticipant(Integer id) {
+        this.setId(id);
+    }
 }

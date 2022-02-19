@@ -3,6 +3,7 @@ package com.dss.tennis.tournament.tables.helper.factory;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -16,20 +17,20 @@ import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TO
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class EliminationTournamentFactoryTest {
+class EliminationContestFactoryTest {
+
+    private static final Integer TOURNAMENT_ID = 1;
 
     @Spy
     private Tournament tournamentSpy;
-    @Spy
-    private TournamentDTO tournamentDtoSpy;
 
     @InjectMocks
-    private EliminationTournamentFactory testInstance;
+    private EliminationContestFactory testInstance;
 
     @Test
     public void shouldThrowUnsupportedErrorWhenBuildExistingTournament() {
         DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
-                .buildExistingTournament(tournamentDtoSpy));
+                .getContestDTOs(TOURNAMENT_ID, SingleContestDTO.class));
 
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),
@@ -42,7 +43,7 @@ class EliminationTournamentFactoryTest {
     @Test
     public void shouldThrowUnsupportedErrorWhenCreateContestsForNewTournament() {
         DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
-                .createNewContests(tournamentSpy, Lists.emptyList()));
+                .createContests(tournamentSpy, Lists.emptyList()));
 
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),

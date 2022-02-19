@@ -31,9 +31,8 @@ public class DoubleContestDtoToGetResponseConverter
 
         destinationContest.setParticipantOne(participantOne);
         destinationContest.setParticipantTwo(participantTwo);
-
         super.convertSuper(sourceContest, destinationContest);
 
-        return mappingContext.getDestination();
+        return destinationContest;
     }
 }

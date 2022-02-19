@@ -27,6 +27,7 @@ public class TournamentDTO {
     private int id;
     @Required(message = "TOURNAMENT_NAME_EMPTY")
     private String name;
+    @Required(message = "TOURNAMENT_TYPE_EMPTY")
     private TournamentType tournamentType;
     private ParticipantType participantType;
     private StatusType status;
