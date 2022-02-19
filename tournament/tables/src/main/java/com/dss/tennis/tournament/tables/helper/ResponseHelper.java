@@ -34,6 +34,10 @@ public class ResponseHelper {
         return createSuccessResponse(tournamentDTO, included, warnings, GetTournament.class);
     }
 
+    public <S, D> SuccessResponse<D> createSuccessResponse(S data, Class<D> responseClass) {
+        return createSuccessResponse(data, null, null, responseClass);
+    }
+
     public <S, D> SuccessResponse<D> createSuccessResponse(S data, Set<ResourceObject> included,
                                                            List<ErrorData> warnings, Class<D> responseClass) {
         SuccessResponse<D> successResponse = new SuccessResponse<>();

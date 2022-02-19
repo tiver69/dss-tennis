@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.INSUFFICIENT_PLAYER_QUANTITY;
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +79,7 @@ class PlayerValidatorTest {
                 () -> assertFalse(result.isEmpty()),
                 () -> assertEquals(1, result.size()),
                 () -> assertTrue(result.stream().map(DetailedErrorData::getErrorConstant)
-                        .anyMatch(tt -> tt.equals(PLAYER_NOT_FOUND)))
+                        .anyMatch(tt -> tt.equals(PLAYER_NOT_FOUND_TOURNAMENT_CREATION)))
         );
     }
 

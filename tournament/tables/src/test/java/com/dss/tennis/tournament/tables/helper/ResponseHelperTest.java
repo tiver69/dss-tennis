@@ -5,10 +5,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject;
-import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
+import com.dss.tennis.tournament.tables.model.response.v1.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,17 +24,11 @@ import static org.mockito.Mockito.when;
 class ResponseHelperTest {
 
     private static final String TOURNAMENT_NAME = "tournamentName";
-    private static final String PLAYER_ONE_FIRST_NAME = "FirstNameOne";
-    private static final String PLAYER_ONE_LAST_NAME = "LastNameOne";
-    private static final String PLAYER_TWO_FIRST_NAME = "FirstNameTwo";
-    private static final String PLAYER_TWO_LAST_NAME = "LastNameTwo";
-    private static final String PLAYER_THREE_FIRST_NAME = "FirstNameThree";
-    private static final String PLAYER_THREE_LAST_NAME = "LastNameThree";
 
     @Mock
     private ConverterHelper converterHelperMock;
     @Spy
-    private GetTournament getTournamentSpy;
+    private GetTournament<GetSingleParticipant> getTournamentSpy;
     @Spy
     private PlayerDTO playerOneDtoSpy;
     @Spy
@@ -103,6 +94,21 @@ class ResponseHelperTest {
                 () -> assertEquals(result.getData(), getTournamentSpy),
                 () -> assertNull(result.getIncluded()),
                 () -> assertTrue(result.getWarnings().contains(errorDataSpy))
+        );
+    }
+
+    @Test
+    public void shouldConvertSuccessfulResponseWithoutWarningsWithoutIncluded() {
+        TournamentDTO tournamentDTO = prepareTournamentDto();
+        when(converterHelperMock.convert(tournamentDTO, GetTournament.class)).thenReturn(getTournamentSpy);
+
+        SuccessResponse<GetTournament> result = testInstance.createSuccessResponse(tournamentDTO, GetTournament.class);
+
+        Assertions.assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals(result.getData(), getTournamentSpy),
+                () -> assertNull(result.getIncluded()),
+                () -> assertNull(result.getWarnings())
         );
     }
 

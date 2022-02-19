@@ -26,7 +26,7 @@ public class PlayerValidator {
 
         if (detailedErrorData.isEmpty() && playerHelper.isPlayerNotExist(playerDTO))
             detailedErrorData
-                    .add(new DetailedErrorData(ErrorConstants.PLAYER_NOT_FOUND, playerDTO.getSequenceNumber()));
+                    .add(new DetailedErrorData(ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION, playerDTO.getSequenceNumber()));
         return detailedErrorData;
     }
 

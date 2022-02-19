@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.helper;
 
+import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PlayerHelperTest {
 
+    private static final Integer PLAYER_ID = 1;
     private static final String PLAYER_FIRST_NAME = "FirstNameOne";
     private static final String PLAYER_LAST_NAME = "LastNameOne";
     private static final String PLAYER_TWO_FIRST_NAME = "FirstNameTwo";
@@ -39,11 +41,41 @@ class PlayerHelperTest {
 
     @Mock
     private PlayerRepository playerRepositoryMock;
+    @Mock
+    private ConverterHelper converterHelperMock;
     @Spy
     private Player playerSpy;
+    @Spy
+    private PlayerDTO playerDtoSpy;
 
     @InjectMocks
     private PlayerHelper testInstance;
+
+    @Test
+    public void shouldGetPlayerByPlayerId() {
+        when(playerRepositoryMock.findById(PLAYER_ID)).thenReturn(Optional.of(playerSpy));
+        when(converterHelperMock.convert(playerSpy, PlayerDTO.class)).thenReturn(playerDtoSpy);
+
+        PlayerDTO result = testInstance.getPlayer(PLAYER_ID);
+
+        Assertions.assertEquals(playerDtoSpy, result);
+    }
+
+    @Test
+    public void shouldNotGetPlayerByPlayerId() {
+        when(playerRepositoryMock.findById(PLAYER_ID)).thenReturn(Optional.empty());
+
+        DetailedException result = Assertions.assertThrows(DetailedException.class, () -> {
+            testInstance.getPlayer(PLAYER_ID);
+        });
+
+        Assertions.assertAll(
+                () -> assertFalse(result.getErrors().isEmpty()),
+                () -> assertEquals(1, result.getErrors().size()),
+                () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
+                        .allMatch(errorConstant -> PLAYER_NOT_FOUND_TOURNAMENT_CREATION == errorConstant))
+        );
+    }
 
     @Test
     public void shouldGetPlayerByPlayerDTO() {
@@ -67,7 +99,7 @@ class PlayerHelperTest {
                 () -> assertFalse(result.getErrors().isEmpty()),
                 () -> assertEquals(1, result.getErrors().size()),
                 () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
-                        .allMatch(errorConstant -> PLAYER_NOT_FOUND == errorConstant))
+                        .allMatch(errorConstant -> PLAYER_NOT_FOUND_TOURNAMENT_CREATION == errorConstant))
         );
     }
 

@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.helper;
 
+import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
@@ -18,12 +19,22 @@ public class PlayerHelper {
 
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private ConverterHelper converterHelper;
+
+    public PlayerDTO getPlayer(Integer playerId) {
+        Optional<Player> repositoryPlayer = playerRepository.findById(playerId);
+        if (!repositoryPlayer.isPresent())
+            throw new DetailedException(ErrorConstants.PLAYER_NOT_FOUND, playerId);
+
+        return converterHelper.convert(repositoryPlayer.get(), PlayerDTO.class);
+    }
 
     public Player getPlayer(PlayerDTO playerDTO) {
         Optional<Player> repositoryPlayer = playerRepository
                 .findByFirstNameAndLastName(playerDTO.getFirstName(), playerDTO.getLastName());
         if (repositoryPlayer.isPresent()) return repositoryPlayer.get();
-        throw new DetailedException(ErrorConstants.PLAYER_NOT_FOUND, playerDTO.getSequenceNumber());
+        throw new DetailedException(ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION, playerDTO.getSequenceNumber());
     }
 
     public boolean isPlayerNotExist(PlayerDTO playerDTO) {
