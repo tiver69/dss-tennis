@@ -21,6 +21,10 @@ public class PlayerDTO extends AbstractSequentialDTO {
         this.lastName = lastName;
     }
 
+    public PlayerDTO(Integer id) {
+        this.id = id;
+    }
+
     private int id;
     @Required(message = "PLAYER_FIRST_NAME_EMPTY")
     private String firstName;

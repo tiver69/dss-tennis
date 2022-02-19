@@ -30,4 +30,9 @@ class RequiredValidatorTest {
     public void shouldNotPassValidationForEmptyValue() {
         assertFalse(testInstance.isValid(EMPTY_NAME, validatorContext));
     }
+
+    @Test
+    public void shouldNotPassValidationForNullValue() {
+        assertFalse(testInstance.isValid(null, validatorContext));
+    }
 }

@@ -8,6 +8,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -19,13 +20,14 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RoundTournamentFactoryTest {
+class RoundContestFactoryTest {
 
     private static final int TOURNAMENT_ID = 1;
 
@@ -39,8 +41,6 @@ class RoundTournamentFactoryTest {
     @Spy
     private Tournament tournamentSpy;
     @Spy
-    private TournamentDTO tournamentDtoSpy;
-    @Spy
     private PlayerDTO playerOneDtoSpy;
     @Spy
     private Player playerOneSpy;
@@ -53,40 +53,37 @@ class RoundTournamentFactoryTest {
     @Spy
     private Contest contestTwoSpy;
     @Spy
-    private ContestDTO contestOneDtoSpy;
+    private SingleContestDTO contestOneDtoSpy;
     @Spy
-    private ContestDTO contestTwoDtoSpy;
+    private SingleContestDTO contestTwoDtoSpy;
 
     @InjectMocks
-    private RoundTournamentFactory testInstance;
-
-    @Test
-    public void shouldBuildExistingRoundTournament() {
-        when(contestHelperMock.getTournamentContests(TOURNAMENT_ID))
-                .thenReturn(Arrays.asList(contestOneSpy, contestTwoSpy));
-        when(converterHelperMock.convert(contestOneSpy, ContestDTO.class)).thenReturn(contestOneDtoSpy);
-        when(converterHelperMock.convert(contestTwoSpy, ContestDTO.class)).thenReturn(contestTwoDtoSpy);
-
-        TournamentDTO result = new TournamentDTO();
-        result.setId(TOURNAMENT_ID);
-        testInstance.buildExistingTournament(result);
-
-        Assertions.assertAll(
-                () -> assertNotNull(result.getContests()),
-                () -> assertTrue(result.getContests().contains(contestOneDtoSpy)),
-                () -> assertTrue(result.getContests().contains(contestTwoDtoSpy))
-        );
-    }
+    private RoundContestFactory testInstance;
 
     @Test
     public void shouldCreateNewContestsForRoundTournament() {
         when(playerHelperMock.getPlayer(playerOneDtoSpy)).thenReturn(playerOneSpy);
         when(playerHelperMock.getPlayer(playerTwoDtoSpy)).thenReturn(playerTwoSpy);
 
-        Tournament result = testInstance.createNewContests(tournamentSpy, Lists.list(playerOneDtoSpy, playerTwoDtoSpy));
+        testInstance.createContests(tournamentSpy, Lists.list(playerOneDtoSpy, playerTwoDtoSpy));
 
-        assertEquals(result, tournamentSpy);
         verify(contestHelperMock).createNewContest(playerOneSpy, playerTwoSpy, tournamentSpy);
+    }
+
+    @Test
+    public void shouldGerContestDTOsForSingleParticipantTournament() {
+        when(contestHelperMock.getTournamentContests(TOURNAMENT_ID))
+                .thenReturn(Arrays.asList(contestOneSpy, contestTwoSpy));
+        when(converterHelperMock.convert(contestOneSpy, SingleContestDTO.class)).thenReturn(contestOneDtoSpy);
+        when(converterHelperMock.convert(contestTwoSpy, SingleContestDTO.class)).thenReturn(contestTwoDtoSpy);
+
+        List<ContestDTO> result = testInstance.getContestDTOs(TOURNAMENT_ID, SingleContestDTO.class);
+
+        Assertions.assertAll(
+                () -> assertNotNull(result),
+                () -> assertTrue(result.contains(contestOneDtoSpy)),
+                () -> assertTrue(result.contains(contestTwoDtoSpy))
+        );
     }
 
 }

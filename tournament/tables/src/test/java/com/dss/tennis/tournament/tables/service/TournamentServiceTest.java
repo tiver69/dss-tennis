@@ -70,7 +70,7 @@ class TournamentServiceTest {
         when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT))
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID))
                 .thenReturn(responseTournamentDtoSpy);
         when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.list(removedPlayerDtoSpy));
         when(warningHandlerMock.createWarning(PLAYER_DUPLICATION, REMOVED_SEQUENTIAL)).thenReturn(errorDataSpy);
@@ -93,7 +93,7 @@ class TournamentServiceTest {
         when(tournamentSpy.getId()).thenReturn(TOURNAMENT_ID);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentHelperMock.createNewTournamentWithContests(tournamentDtoSpy)).thenReturn(tournamentSpy);
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT))
+        when(tournamentHelperMock.getTournament(TOURNAMENT_ID))
                 .thenReturn(responseTournamentDtoSpy);
         when(playerHelperMock.removePlayerDuplicates(players)).thenReturn(Lists.emptyList());
 

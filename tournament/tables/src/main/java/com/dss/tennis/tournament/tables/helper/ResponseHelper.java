@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ResponseHelper {
 
     @Autowired
-    ConverterHelper converterHelper;
+    private ConverterHelper converterHelper;
 
     public <S, D> SuccessResponse<D> createSuccessResponse(SuccessResponseDTO<S> data, Class<D> responseClass) {
         return createSuccessResponse(data.getData(), null, data.getWarnings(), responseClass);

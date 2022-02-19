@@ -1,14 +1,15 @@
 package com.dss.tennis.tournament.tables.helper;
 
-import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.helper.factory.EliminationTournamentFactory;
-import com.dss.tennis.tournament.tables.model.db.v1.*;
+import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
+import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
+import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
+import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -29,7 +29,8 @@ import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TO
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TournamentHelperTest {
@@ -37,15 +38,11 @@ class TournamentHelperTest {
     private static final int TOURNAMENT_ID = 1;
 
     @Mock
-    private PlayerRepository playerRepositoryMock;
+    private TournamentFactory tournamentFactoryMock;
     @Mock
     private TournamentRepository tournamentRepositoryMock;
-    @Mock
-    private EliminationTournamentFactory eliminationTournamentFactoryMock;
-    @Mock
-    private ConverterHelper converterHelperMock;
     @Spy
-    private Player playerSpy;
+    private RequestParameter requestParameterSpy;
     @Spy
     private Tournament tournamentSpy;
     @Spy
@@ -57,7 +54,7 @@ class TournamentHelperTest {
     @Test
     public void shouldCreateNewEliminationTournament() {
         List<PlayerDTO> players = Collections.emptyList();
-        when(tournamentDtoSpy.getType()).thenReturn(TournamentType.ELIMINATION);
+        when(tournamentDtoSpy.getTournamentType()).thenReturn(TournamentType.ELIMINATION);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentRepositoryMock.save(any(Tournament.class))).thenReturn(tournamentSpy);
 
@@ -65,34 +62,31 @@ class TournamentHelperTest {
 
         Assertions.assertEquals(tournamentSpy, result);
         verify(tournamentRepositoryMock).save(any(Tournament.class));
-        verify(eliminationTournamentFactoryMock).createNewContests(tournamentSpy, players);
+        verify(tournamentFactoryMock).createContestsForTournament(tournamentSpy, players, TournamentType.ELIMINATION);
     }
 
     @Test
-    public void shouldGetEliminationTournamentWithContestsWithoutPlayers() {
-        when(tournamentSpy.getType()).thenReturn(TournamentType.ELIMINATION);
+    public void shouldGetEliminationTournamentWithDefaultRequestParameter() {
         when(tournamentRepositoryMock.findById(TOURNAMENT_ID)).thenReturn(Optional.of(tournamentSpy));
-        when(converterHelperMock.convert(tournamentSpy, TournamentDTO.class)).thenReturn(tournamentDtoSpy);
+        when(tournamentFactoryMock.populateTournamentDTO(tournamentSpy, RequestParameter.DEFAULT))
+                .thenReturn(tournamentDtoSpy);
 
-        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT);
+        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID);
 
         Assertions.assertEquals(tournamentDtoSpy, result);
-        verify(eliminationTournamentFactoryMock).buildExistingTournament(tournamentDtoSpy);
-        verify(playerRepositoryMock, never()).findPlayersByTournamentId(TOURNAMENT_ID);
+        verify(tournamentFactoryMock).populateTournamentDTO(tournamentSpy, RequestParameter.DEFAULT);
     }
 
     @Test
-    public void shouldGetEliminationTournamentWithoutContestsWithPlayers() {
+    public void shouldGetEliminationTournamentWithCustomRequestParameter() {
         when(tournamentRepositoryMock.findById(TOURNAMENT_ID)).thenReturn(Optional.of(tournamentSpy));
-        when(converterHelperMock.convert(tournamentSpy, TournamentDTO.class)).thenReturn(tournamentDtoSpy);
-        when(playerRepositoryMock.findPlayersByTournamentId(TOURNAMENT_ID)).thenReturn(List.of(playerSpy));
+        when(tournamentFactoryMock.populateTournamentDTO(tournamentSpy, requestParameterSpy))
+                .thenReturn(tournamentDtoSpy);
 
-        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, new RequestParameter(false, true));
+        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, requestParameterSpy);
 
         Assertions.assertEquals(tournamentDtoSpy, result);
-        verify(eliminationTournamentFactoryMock, never()).buildExistingTournament(tournamentDtoSpy);
-        verify(playerRepositoryMock).findPlayersByTournamentId(TOURNAMENT_ID);
-        verify(converterHelperMock).convert(playerSpy, PlayerDTO.class);
+        verify(tournamentFactoryMock).populateTournamentDTO(tournamentSpy, requestParameterSpy);
     }
 
     @Test

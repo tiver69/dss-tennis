@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +113,7 @@ class ResponseHelperTest {
 
         return TournamentDTO.builder()
                 .name(TOURNAMENT_NAME)
-                .type(TournamentType.ROUND)
+                .tournamentType(TournamentType.ROUND)
                 .players(player)
                 .build();
     }
