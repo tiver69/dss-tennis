@@ -1,7 +1,8 @@
 package com.dss.tennis.tournament.tables.converter;
 
-import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
+import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.GetContest;
+import com.dss.tennis.tournament.tables.model.response.v1.GetDoubleContest;
 import com.dss.tennis.tournament.tables.model.response.v1.GetScore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class ContestDtoToGetResponseConverterTest {
     private static final byte TIE_BREAK_PLAYER_TWO = 2;
 
     @Spy
-    private MappingContext<ContestDTO, GetContest> mappingContextSpy;
+    private MappingContext<DoubleContestDTO, GetDoubleContest> mappingContextSpy;
 
     ContestDtoToGetResponseConverter testInstance = new ContestDtoToGetResponseConverter();
 
@@ -48,8 +49,8 @@ class ContestDtoToGetResponseConverterTest {
         );
     }
 
-    private ContestDTO prepareContestDTO() {
-        return ContestDTO.builder()
+    private DoubleContestDTO prepareContestDTO() {
+        return DoubleContestDTO.builder()
                 .scoreId(ID)
                 .setOnePlayerOne(SET_ONE_PLAYER_ONE)
                 .setOnePlayerTwo(SET_ONE_PLAYER_TWO)
@@ -62,8 +63,8 @@ class ContestDtoToGetResponseConverterTest {
                 .build();
     }
 
-    private GetContest prepareGetContest() {
+    private GetDoubleContest prepareGetContest() {
         GetScore getScore = GetScore.builder().id(ID).build();
-        return GetContest.builder().score(getScore).build();
+        return GetDoubleContest.builder().score(getScore).build();
     }
 }

@@ -7,10 +7,10 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
-public class ContestDtoToGetResponseConverter implements Converter<ContestDTO, GetContest> {
+public class ContestDtoToGetResponseConverter<T extends ContestDTO> implements Converter<T, GetContest> {
     @Override
-    public GetContest convert(MappingContext<ContestDTO, GetContest> mappingContext) {
-        ContestDTO sourceContest = mappingContext.getSource();
+    public GetContest convert(MappingContext<T, GetContest> mappingContext) {
+        T sourceContest = mappingContext.getSource();
         GetScore destinationScore = mappingContext.getDestination().getScore();
 
         destinationScore

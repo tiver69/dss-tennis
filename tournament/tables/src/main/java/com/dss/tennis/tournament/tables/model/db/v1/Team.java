@@ -14,8 +14,8 @@ import java.util.Objects;
 public class Team {
 
     private int id;
-    private Player playerOne;
-    private Player playerTwo;
+    private Integer playerOneId;
+    private Integer playerTwoId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,24 +28,24 @@ public class Team {
         this.id = id;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "player_one_id", nullable = false)
-    public Player getPlayerOne() {
-        return playerOne;
+    @Basic
+    @Column(name = "player_one_id", nullable = false)
+    public Integer getPlayerOneId() {
+        return playerOneId;
     }
 
-    public void setPlayerOne(Player playerOne) {
-        this.playerOne = playerOne;
+    public void setPlayerOneId(Integer playerOneId) {
+        this.playerOneId = playerOneId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "player_two_id", nullable = false)
-    public Player getPlayerTwo() {
-        return playerTwo;
+    @Basic
+    @Column(name = "player_two_id", nullable = false)
+    public Integer getPlayerTwoId() {
+        return playerTwoId;
     }
 
-    public void setPlayerTwo(Player playerTwo) {
-        this.playerTwo = playerTwo;
+    public void setPlayerTwoId(Integer playerTwoId) {
+        this.playerTwoId = playerTwoId;
     }
 
     @Override
@@ -53,11 +53,11 @@ public class Team {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Team team = (Team) o;
-        return id == team.id;
+        return id == team.id && playerOneId.equals(team.playerOneId) && playerTwoId.equals(team.playerTwoId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, playerOneId, playerTwoId);
     }
 }

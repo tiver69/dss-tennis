@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -78,20 +77,20 @@ class TournamentHelperTest {
 
         Assertions.assertEquals(tournamentDtoSpy, result);
         verify(eliminationTournamentFactoryMock).buildExistingTournament(tournamentDtoSpy);
-        verify(playerRepositoryMock, never()).findPlayersByTournamentId(TOURNAMENT_ID);
+        verify(playerRepositoryMock, never()).findPlayersBySingleTournamentId(TOURNAMENT_ID);
     }
 
     @Test
     public void shouldGetEliminationTournamentWithoutContestsWithPlayers() {
         when(tournamentRepositoryMock.findById(TOURNAMENT_ID)).thenReturn(Optional.of(tournamentSpy));
         when(converterHelperMock.convert(tournamentSpy, TournamentDTO.class)).thenReturn(tournamentDtoSpy);
-        when(playerRepositoryMock.findPlayersByTournamentId(TOURNAMENT_ID)).thenReturn(List.of(playerSpy));
+        when(playerRepositoryMock.findPlayersBySingleTournamentId(TOURNAMENT_ID)).thenReturn(List.of(playerSpy));
 
         TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, new RequestParameter(false, true));
 
         Assertions.assertEquals(tournamentDtoSpy, result);
         verify(eliminationTournamentFactoryMock, never()).buildExistingTournament(tournamentDtoSpy);
-        verify(playerRepositoryMock).findPlayersByTournamentId(TOURNAMENT_ID);
+        verify(playerRepositoryMock).findPlayersBySingleTournamentId(TOURNAMENT_ID);
         verify(converterHelperMock).convert(playerSpy, PlayerDTO.class);
     }
 

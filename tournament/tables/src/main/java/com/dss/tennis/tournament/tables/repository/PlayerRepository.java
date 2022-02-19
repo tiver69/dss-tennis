@@ -16,8 +16,17 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 
     @Query("SELECT DISTINCT p FROM Player p " +
             "RIGHT JOIN SingleContest sc ON (sc.playerOneId=p.id OR sc.playerTwoId=p.id) " +
-            "RIGHT JOIN Tournament t ON t.id=sc.tournament.id " +
+            "RIGHT JOIN Tournament t ON t=sc.tournament " +
             "WHERE t.id=:tournamentId")
-    List<Player> findPlayersByTournamentId(@Param("tournamentId") Integer tournamentId);
+    List<Player> findPlayersBySingleTournamentId(@Param("tournamentId") Integer tournamentId);
+
+    @Query("SELECT DISTINCT p FROM Player p " +
+            "RIGHT JOIN Team team ON (team.playerOneId=p.id OR team.playerTwoId=p.id) " +
+            "RIGHT JOIN DoubleContest dc ON (dc.teamOne=team OR dc.teamTwo=team) " +
+            "RIGHT JOIN Tournament t ON t=dc.tournament " +
+            "WHERE t.id=:tournamentId")
+    List<Player> findPlayersByDoubleTournamentId(@Param("tournamentId") Integer tournamentId);
+
+
 
 }

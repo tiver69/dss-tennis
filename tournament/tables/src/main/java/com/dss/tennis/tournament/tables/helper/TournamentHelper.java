@@ -64,8 +64,10 @@ public class TournamentHelper {
             getTournamentFactory(tournament.getType()).buildExistingTournament(tournamentDto);
         }
         if (requestParameters.isIncludePlayers()) {
-            List<PlayerDTO> players = playerRepository.findPlayersByTournamentId(tournamentId)
-                    .stream().map(player -> converterHelper.convert(player, PlayerDTO.class))
+            List<Player> playersr = tournamentDto.getParticipantType() == ParticipantType.SINGLE ?
+                    playerRepository.findPlayersBySingleTournamentId(tournamentId) :
+                    playerRepository.findPlayersByDoubleTournamentId(tournamentId);
+            List<PlayerDTO> players = playersr.stream().map(player -> converterHelper.convert(player, PlayerDTO.class))
                     .collect(Collectors.toList());
             tournamentDto.setPlayers(players);
         }

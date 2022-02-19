@@ -1,8 +1,8 @@
 package com.dss.tennis.tournament.tables.model.response.v1;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -10,8 +10,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class GetContest {
+@EqualsAndHashCode(callSuper = true)
+public class GetSingleContest extends GetContest {
 
-    private Integer id;
-    private GetScore score;
+    private Integer playerOneId;
+    private Integer playerTwoId;
 }

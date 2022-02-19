@@ -1,17 +1,15 @@
 package com.dss.tennis.tournament.tables.model.dto;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContestDTO {
+public abstract class ContestDTO {
 
     private int id;
-    private PlayerDTO playerOne;
-    private PlayerDTO playerTwo;
-
     private int scoreId;
     private Byte setOnePlayerTwo;
     private Byte setOnePlayerOne;
