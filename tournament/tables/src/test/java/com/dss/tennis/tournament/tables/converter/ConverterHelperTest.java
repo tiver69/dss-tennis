@@ -3,11 +3,8 @@ package com.dss.tennis.tournament.tables.converter;
 import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,7 +86,7 @@ class ConverterHelperTest {
 
         return TournamentDTO.builder()
                 .name(TOURNAMENT_NAME)
-                .type(TournamentType.ROUND)
+                .tournamentType(TournamentType.ROUND)
                 .players(player)
                 .build();
     }

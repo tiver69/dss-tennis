@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.model.response.v1;
 
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,10 +10,10 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class GetSingleContest extends GetContest {
+public class GetSingleParticipant extends GetParticipant {
 
-    private Integer playerOneId;
-    private Integer playerTwoId;
+    {
+        this.setType(ResourceObjectType.PLAYER.value);
+    }
 }

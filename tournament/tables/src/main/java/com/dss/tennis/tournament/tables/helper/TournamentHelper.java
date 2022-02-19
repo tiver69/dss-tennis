@@ -39,7 +39,7 @@ public class TournamentHelper {
     public Tournament createNewTournamentWithContests(TournamentDTO tournamentDTO) {
         Tournament tournament = createNewTournament(tournamentDTO);
 
-        AbstractTournamentFactory tournamentFactory = getTournamentFactory(tournamentDTO.getType());
+        AbstractTournamentFactory tournamentFactory = getTournamentFactory(tournamentDTO.getTournamentType());
         tournamentFactory.createNewContests(tournament, tournamentDTO.getPlayers());
 
         return tournament;
@@ -47,7 +47,7 @@ public class TournamentHelper {
 
     public Tournament createNewTournament(TournamentDTO tournamentDTO) {
         Tournament tournament = Tournament.builder().name(tournamentDTO.getName())
-                .type(tournamentDTO.getType())
+                .tournamentType(tournamentDTO.getTournamentType())
                 .participantType(ParticipantType.SINGLE)
                 .status(getStatusBaseOnBeginningDate(tournamentDTO.getBeginningDate()))
                 .beginningDate(tournamentDTO.getBeginningDate())
@@ -61,7 +61,7 @@ public class TournamentHelper {
 
         TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class);
         if (requestParameters.isIncludeContests()) {
-            getTournamentFactory(tournament.getType()).buildExistingTournament(tournamentDto);
+            getTournamentFactory(tournament.getTournamentType()).buildExistingTournament(tournamentDto);
         }
         if (requestParameters.isIncludePlayers()) {
             List<Player> playersr = tournamentDto.getParticipantType() == ParticipantType.SINGLE ?

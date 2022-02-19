@@ -11,12 +11,12 @@ public abstract class ContestDTO {
 
     private int id;
     private int scoreId;
-    private Byte setOnePlayerTwo;
-    private Byte setOnePlayerOne;
-    private Byte setTwoPlayerOne;
-    private Byte setTwoPlayerTwo;
-    private Byte setThreePlayerOne;
-    private Byte setThreePlayerTwo;
-    private Byte tieBreakPlayerOne;
-    private Byte tieBreakPlayerTwo;
+    private Byte setOneParticipantOne;
+    private Byte setOneParticipantTwo;
+    private Byte setTwoParticipantOne;
+    private Byte setTwoParticipantTwo;
+    private Byte setThreeParticipantOne;
+    private Byte setThreeParticipantTwo;
+    private Byte tieBreakParticipantOne;
+    private Byte tieBreakParticipantTwo;
 }

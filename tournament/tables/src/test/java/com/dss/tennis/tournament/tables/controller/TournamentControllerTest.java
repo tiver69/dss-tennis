@@ -131,7 +131,7 @@ class TournamentControllerTest {
     private GetTournament prepareGetTournament() {
         return GetTournament.builder()
                 .name(TOURNAMENT_NAME)
-                .type(TournamentType.ELIMINATION)
+                .tournamentType(TournamentType.ELIMINATION)
                 .build();
     }
 
@@ -139,7 +139,7 @@ class TournamentControllerTest {
         return CreateTournament.builder()
                 .name(TOURNAMENT_NAME)
                 .players(Arrays.asList(PLAYER_ONE, PLAYER_TWO))
-                .type(TournamentType.ELIMINATION)
+                .tournamentType(TournamentType.ELIMINATION)
                 .build();
     }
 }

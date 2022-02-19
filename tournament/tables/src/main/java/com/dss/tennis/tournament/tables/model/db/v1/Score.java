@@ -1,18 +1,19 @@
 package com.dss.tennis.tournament.tables.model.db.v1;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Score {
     private int id;
-    private Byte setOnePlayerOne;
-    private Byte setOnePlayerTwo;
-    private Byte setTwoPlayerOne;
-    private Byte setTwoPlayerTwo;
-    private Byte setThreePlayerOne;
-    private Byte setThreePlayerTwo;
-    private Byte tieBreakPlayerOne;
-    private Byte tieBreakPlayerTwo;
+    private Byte setOneParticipantOne;
+    private Byte setOneParticipantTwo;
+    private Byte setTwoParticipantOne;
+    private Byte setTwoParticipantTwo;
+    private Byte setThreeParticipantOne;
+    private Byte setThreeParticipantTwo;
+    private Byte tieBreakParticipantOne;
+    private Byte tieBreakParticipantTwo;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,83 +27,83 @@ public class Score {
     }
 
     @Basic
-    @Column(name = "set_one_player_one", nullable = true)
-    public Byte getSetOnePlayerOne() {
-        return setOnePlayerOne;
+    @Column(name = "set_one_participant_one")
+    public Byte getSetOneParticipantOne() {
+        return setOneParticipantOne;
     }
 
-    public void setSetOnePlayerOne(Byte setOnePlayerOne) {
-        this.setOnePlayerOne = setOnePlayerOne;
-    }
-
-    @Basic
-    @Column(name = "set_one_player_two", nullable = true)
-    public Byte getSetOnePlayerTwo() {
-        return setOnePlayerTwo;
-    }
-
-    public void setSetOnePlayerTwo(Byte setOnePlayerTwo) {
-        this.setOnePlayerTwo = setOnePlayerTwo;
+    public void setSetOneParticipantOne(Byte setOneParticipantOne) {
+        this.setOneParticipantOne = setOneParticipantOne;
     }
 
     @Basic
-    @Column(name = "set_two_player_one", nullable = true)
-    public Byte getSetTwoPlayerOne() {
-        return setTwoPlayerOne;
+    @Column(name = "set_one_participant_two")
+    public Byte getSetOneParticipantTwo() {
+        return setOneParticipantTwo;
     }
 
-    public void setSetTwoPlayerOne(Byte setTwoPlayerOne) {
-        this.setTwoPlayerOne = setTwoPlayerOne;
-    }
-
-    @Basic
-    @Column(name = "set_two_player_two", nullable = true)
-    public Byte getSetTwoPlayerTwo() {
-        return setTwoPlayerTwo;
-    }
-
-    public void setSetTwoPlayerTwo(Byte setTwoPlayerTwo) {
-        this.setTwoPlayerTwo = setTwoPlayerTwo;
+    public void setSetOneParticipantTwo(Byte setOneParticipantTwo) {
+        this.setOneParticipantTwo = setOneParticipantTwo;
     }
 
     @Basic
-    @Column(name = "set_three_player_one", nullable = true)
-    public Byte getSetThreePlayerOne() {
-        return setThreePlayerOne;
+    @Column(name = "set_two_participant_one")
+    public Byte getSetTwoParticipantOne() {
+        return setTwoParticipantOne;
     }
 
-    public void setSetThreePlayerOne(Byte setThreePlayerOne) {
-        this.setThreePlayerOne = setThreePlayerOne;
-    }
-
-    @Basic
-    @Column(name = "set_three_player_two", nullable = true)
-    public Byte getSetThreePlayerTwo() {
-        return setThreePlayerTwo;
-    }
-
-    public void setSetThreePlayerTwo(Byte setThreePlayerTwo) {
-        this.setThreePlayerTwo = setThreePlayerTwo;
+    public void setSetTwoParticipantOne(Byte setTwoParticipantOne) {
+        this.setTwoParticipantOne = setTwoParticipantOne;
     }
 
     @Basic
-    @Column(name = "tie_break_player_one", nullable = true)
-    public Byte getTieBreakPlayerOne() {
-        return tieBreakPlayerOne;
+    @Column(name = "set_two_participant_two")
+    public Byte getSetTwoParticipantTwo() {
+        return setTwoParticipantTwo;
     }
 
-    public void setTieBreakPlayerOne(Byte tieBreakPlayerOne) {
-        this.tieBreakPlayerOne = tieBreakPlayerOne;
+    public void setSetTwoParticipantTwo(Byte setTwoParticipantTwo) {
+        this.setTwoParticipantTwo = setTwoParticipantTwo;
     }
 
     @Basic
-    @Column(name = "tie_break_player_two", nullable = true)
-    public Byte getTieBreakPlayerTwo() {
-        return tieBreakPlayerTwo;
+    @Column(name = "set_three_participant_one")
+    public Byte getSetThreeParticipantOne() {
+        return setThreeParticipantOne;
     }
 
-    public void setTieBreakPlayerTwo(Byte tieBreakPlayerTwo) {
-        this.tieBreakPlayerTwo = tieBreakPlayerTwo;
+    public void setSetThreeParticipantOne(Byte setThreeParticipantOne) {
+        this.setThreeParticipantOne = setThreeParticipantOne;
+    }
+
+    @Basic
+    @Column(name = "set_three_participant_two")
+    public Byte getSetThreeParticipantTwo() {
+        return setThreeParticipantTwo;
+    }
+
+    public void setSetThreeParticipantTwo(Byte setThreeParticipantTwo) {
+        this.setThreeParticipantTwo = setThreeParticipantTwo;
+    }
+
+    @Basic
+    @Column(name = "tie_break_participant_one")
+    public Byte getTieBreakParticipantOne() {
+        return tieBreakParticipantOne;
+    }
+
+    public void setTieBreakParticipantOne(Byte tieBreakParticipantOne) {
+        this.tieBreakParticipantOne = tieBreakParticipantOne;
+    }
+
+    @Basic
+    @Column(name = "tie_break_participant_two")
+    public Byte getTieBreakParticipantTwo() {
+        return tieBreakParticipantTwo;
+    }
+
+    public void setTieBreakParticipantTwo(Byte tieBreakParticipantTwo) {
+        this.tieBreakParticipantTwo = tieBreakParticipantTwo;
     }
 
     @Override
@@ -113,37 +114,34 @@ public class Score {
         Score score = (Score) o;
 
         if (id != score.id) return false;
-        if (setOnePlayerOne != null ? !setOnePlayerOne.equals(score.setOnePlayerOne) : score.setOnePlayerOne != null)
+        if (!Objects.equals(setOneParticipantOne, score.setOneParticipantOne))
             return false;
-        if (setOnePlayerTwo != null ? !setOnePlayerTwo.equals(score.setOnePlayerTwo) : score.setOnePlayerTwo != null)
+        if (!Objects.equals(setOneParticipantTwo, score.setOneParticipantTwo))
             return false;
-        if (setTwoPlayerOne != null ? !setTwoPlayerOne.equals(score.setTwoPlayerOne) : score.setTwoPlayerOne != null)
+        if (!Objects.equals(setTwoParticipantOne, score.setTwoParticipantOne))
             return false;
-        if (setTwoPlayerTwo != null ? !setTwoPlayerTwo.equals(score.setTwoPlayerTwo) : score.setTwoPlayerTwo != null)
+        if (!Objects.equals(setTwoParticipantTwo, score.setTwoParticipantTwo))
             return false;
-        if (setThreePlayerOne != null ? !setThreePlayerOne.equals(score.setThreePlayerOne) : score.setThreePlayerOne != null)
+        if (!Objects.equals(setThreeParticipantOne, score.setThreeParticipantOne))
             return false;
-        if (setThreePlayerTwo != null ? !setThreePlayerTwo.equals(score.setThreePlayerTwo) : score.setThreePlayerTwo != null)
+        if (!Objects.equals(setThreeParticipantTwo, score.setThreeParticipantTwo))
             return false;
-        if (tieBreakPlayerOne != null ? !tieBreakPlayerOne.equals(score.tieBreakPlayerOne) : score.tieBreakPlayerOne != null)
+        if (!Objects.equals(tieBreakParticipantOne, score.tieBreakParticipantOne))
             return false;
-        if (tieBreakPlayerTwo != null ? !tieBreakPlayerTwo.equals(score.tieBreakPlayerTwo) : score.tieBreakPlayerTwo != null)
-            return false;
-
-        return true;
+        return Objects.equals(tieBreakParticipantTwo, score.tieBreakParticipantTwo);
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (setOnePlayerOne != null ? setOnePlayerOne.hashCode() : 0);
-        result = 31 * result + (setOnePlayerTwo != null ? setOnePlayerTwo.hashCode() : 0);
-        result = 31 * result + (setTwoPlayerOne != null ? setTwoPlayerOne.hashCode() : 0);
-        result = 31 * result + (setTwoPlayerTwo != null ? setTwoPlayerTwo.hashCode() : 0);
-        result = 31 * result + (setThreePlayerOne != null ? setThreePlayerOne.hashCode() : 0);
-        result = 31 * result + (setThreePlayerTwo != null ? setThreePlayerTwo.hashCode() : 0);
-        result = 31 * result + (tieBreakPlayerOne != null ? tieBreakPlayerOne.hashCode() : 0);
-        result = 31 * result + (tieBreakPlayerTwo != null ? tieBreakPlayerTwo.hashCode() : 0);
+        result = 31 * result + (setOneParticipantOne != null ? setOneParticipantOne.hashCode() : 0);
+        result = 31 * result + (setOneParticipantTwo != null ? setOneParticipantTwo.hashCode() : 0);
+        result = 31 * result + (setTwoParticipantOne != null ? setTwoParticipantOne.hashCode() : 0);
+        result = 31 * result + (setTwoParticipantTwo != null ? setTwoParticipantTwo.hashCode() : 0);
+        result = 31 * result + (setThreeParticipantOne != null ? setThreeParticipantOne.hashCode() : 0);
+        result = 31 * result + (setThreeParticipantTwo != null ? setThreeParticipantTwo.hashCode() : 0);
+        result = 31 * result + (tieBreakParticipantOne != null ? tieBreakParticipantOne.hashCode() : 0);
+        result = 31 * result + (tieBreakParticipantTwo != null ? tieBreakParticipantTwo.hashCode() : 0);
         return result;
     }
 }

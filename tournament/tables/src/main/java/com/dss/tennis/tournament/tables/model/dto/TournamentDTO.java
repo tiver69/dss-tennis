@@ -18,16 +18,16 @@ import java.util.List;
 @NoArgsConstructor
 public class TournamentDTO {
 
-    public TournamentDTO(String name, TournamentType type, List<PlayerDTO> players) {
+    public TournamentDTO(String name, TournamentType tournamentType, List<PlayerDTO> players) {
         this.name = name;
-        this.type = type;
+        this.tournamentType = tournamentType;
         this.players = players;
     }
 
     private int id;
     @Required(message = "TOURNAMENT_NAME_EMPTY")
     private String name;
-    private TournamentType type;
+    private TournamentType tournamentType;
     private ParticipantType participantType;
     private StatusType status;
     private LocalDate beginningDate;

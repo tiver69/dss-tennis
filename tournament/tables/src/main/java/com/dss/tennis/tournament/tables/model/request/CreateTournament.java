@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateTournament {
     private String name;
-    private TournamentType type;
+    private TournamentType tournamentType;
     private LocalDate beginningDate;
     private List<CreatePlayer> players;
 }

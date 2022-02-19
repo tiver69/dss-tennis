@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class TeamDTO extends AbstractSequentialDTO {
 
+    private Integer id;
     private PlayerDTO playerOne;
     private PlayerDTO playerTwo;
 }

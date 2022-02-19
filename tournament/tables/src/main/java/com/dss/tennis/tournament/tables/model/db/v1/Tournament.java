@@ -15,7 +15,7 @@ import java.util.Objects;
 public class Tournament {
     private int id;
     private String name;
-    private TournamentType type;
+    private TournamentType tournamentType;
     private ParticipantType participantType;
     private StatusType status;
     private LocalDate beginningDate;
@@ -43,13 +43,13 @@ public class Tournament {
 
     @Basic
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    public TournamentType getType() {
-        return type;
+    @Column(name = "tournament_type", nullable = false)
+    public TournamentType getTournamentType() {
+        return tournamentType;
     }
 
-    public void setType(TournamentType type) {
-        this.type = type;
+    public void setTournamentType(TournamentType tournamentType) {
+        this.tournamentType = tournamentType;
     }
 
     @Basic
@@ -90,7 +90,7 @@ public class Tournament {
         if (o == null || getClass() != o.getClass()) return false;
         Tournament that = (Tournament) o;
         return id == that.id && Objects
-                .equals(name, that.name) && type == that.type && participantType == that.participantType && status == that.status && Objects
+                .equals(name, that.name) && tournamentType == that.tournamentType && participantType == that.participantType && status == that.status && Objects
                 .equals(beginningDate, that.beginningDate);
     }
 
@@ -98,7 +98,7 @@ public class Tournament {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (tournamentType != null ? tournamentType.hashCode() : 0);
         result = 31 * result + (participantType != null ? participantType.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return 31 * result + (beginningDate != null ? beginningDate.hashCode() : 0);

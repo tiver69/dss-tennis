@@ -56,7 +56,7 @@ class TournamentHelperTest {
     @Test
     public void shouldCreateNewEliminationTournament() {
         List<PlayerDTO> players = Collections.emptyList();
-        when(tournamentDtoSpy.getType()).thenReturn(TournamentType.ELIMINATION);
+        when(tournamentDtoSpy.getTournamentType()).thenReturn(TournamentType.ELIMINATION);
         when(tournamentDtoSpy.getPlayers()).thenReturn(players);
         when(tournamentRepositoryMock.save(any(Tournament.class))).thenReturn(tournamentSpy);
 
@@ -69,7 +69,7 @@ class TournamentHelperTest {
 
     @Test
     public void shouldGetEliminationTournamentWithContestsWithoutPlayers() {
-        when(tournamentSpy.getType()).thenReturn(TournamentType.ELIMINATION);
+        when(tournamentSpy.getTournamentType()).thenReturn(TournamentType.ELIMINATION);
         when(tournamentRepositoryMock.findById(TOURNAMENT_ID)).thenReturn(Optional.of(tournamentSpy));
         when(converterHelperMock.convert(tournamentSpy, TournamentDTO.class)).thenReturn(tournamentDtoSpy);
 

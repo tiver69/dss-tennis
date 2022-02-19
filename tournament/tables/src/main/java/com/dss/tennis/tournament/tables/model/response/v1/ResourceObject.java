@@ -16,7 +16,10 @@ public class ResourceObject {
     private Object attributes;
 
     public enum ResourceObjectType {
-        PLAYER("player");
+        PLAYER("player"),
+        TEAM("team"),
+        TOURNAMENT("tournament"),
+        CONTEST("contest");
 
         public final String value;
 
