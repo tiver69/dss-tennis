@@ -44,9 +44,9 @@ public class TournamentService {
         validateCreateTournamentDTO(tournamentDTO);
 
         Tournament tournament = tournamentHelper.createNewTournamentWithContests(tournamentDTO);
-        List<ErrorData> warnings = duplicationPlayers.stream()
+        Set<ErrorData> warnings = duplicationPlayers.stream()
                 .map(tt -> warningHandler.createWarning(PLAYER_DUPLICATION, tt.getSequenceNumber()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         return new SuccessResponseDTO<>(tournamentHelper.getTournament(tournament.getId()), warnings);
     }

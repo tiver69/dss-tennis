@@ -4,15 +4,17 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerHelper {
@@ -28,6 +30,16 @@ public class PlayerHelper {
             throw new DetailedException(ErrorConstants.PLAYER_NOT_FOUND, playerId);
 
         return converterHelper.convert(repositoryPlayer.get(), PlayerDTO.class);
+    }
+
+    public PageableDTO<PlayerDTO> getPlayersPage(Pageable pageableRequestParameter) {
+        Page<Player> playersPage = playerRepository.findAll(pageableRequestParameter);
+        List<PlayerDTO> players = playersPage.getContent().stream()
+                .map(player -> converterHelper.convert(player, PlayerDTO.class))
+                .collect(Collectors.toList());
+
+        return PageableDTO.<PlayerDTO>builder().page(players)
+                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages()).build();
     }
 
     public Player getPlayer(PlayerDTO playerDTO) {

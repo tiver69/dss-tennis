@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Setter
@@ -15,5 +15,5 @@ import java.util.List;
 public class SuccessResponseDTO<D> {
 
     private D data;
-    private List<ErrorData> warnings;
+    private Set<ErrorData> warnings;
 }

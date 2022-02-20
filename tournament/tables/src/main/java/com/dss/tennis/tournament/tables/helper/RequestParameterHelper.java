@@ -5,6 +5,9 @@ import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +15,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.error.WarningConstant.REQUEST_PARAMETER_NOT_ALLOWED;
+import static com.dss.tennis.tournament.tables.exception.error.WarningConstant.*;
 
 @Component
 public class RequestParameterHelper {
@@ -39,7 +42,11 @@ public class RequestParameterHelper {
         requestParameterSetter.put(PLAYERS_VALUE, tmpRequestParameter::setIncludePlayers);
     }
 
-    public List<ErrorData> populateRequestParameter(String key, String value, RequestParameter finalRequestParameter) {
+    public Pageable populatePageableRequestParameter(int page, int pageSize) {
+        return PageRequest.of(page, pageSize, Sort.by("lastName", "firstName"));
+    }
+
+    public Set<ErrorData> populateRequestParameter(String key, String value, RequestParameter finalRequestParameter) {
         List<String> allValues = Arrays.stream(StringUtils.split(StringUtils.defaultString(value), PARAMETER_SEPARATOR))
                 .collect(Collectors.toList());
         Set<String> notAllowedValues = removeNotAllowedValues(key, allValues);
@@ -58,10 +65,10 @@ public class RequestParameterHelper {
         return notAllowedValues;
     }
 
-    private List<ErrorData> createWarningsFromNotAllowedParameters(String key, Set<String> notAllowedValues) {
+    private Set<ErrorData> createWarningsFromNotAllowedParameters(String key, Set<String> notAllowedValues) {
         return notAllowedValues.stream()
                 .map(notAllowedValue -> warningHandler.createWarning(REQUEST_PARAMETER_NOT_ALLOWED, notAllowedValue))
                 .peek(errorData -> errorData.getSource().setPointer(PARAMETER_URL_SEPARATOR + key))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

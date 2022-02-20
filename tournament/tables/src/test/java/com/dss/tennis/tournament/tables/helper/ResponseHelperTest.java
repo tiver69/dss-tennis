@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -51,7 +52,7 @@ class ResponseHelperTest {
         when(converterHelperMock.convert(tournamentDTO, GetTournament.class)).thenReturn(getTournamentSpy);
 
         SuccessResponse<GetTournament> result = testInstance
-                .createSuccessResponse(tournamentDTO, List.of(errorDataSpy));
+                .createSuccessResponse(tournamentDTO, Set.of(errorDataSpy));
 
         Assertions.assertAll(
                 () -> assertNotNull(result),
@@ -70,7 +71,7 @@ class ResponseHelperTest {
         when(converterHelperMock.convert(tournamentDTO, GetTournament.class)).thenReturn(getTournamentSpy);
 
         SuccessResponse<GetTournament> result = testInstance
-                .createSuccessResponse(tournamentDTO, List.of(errorDataSpy));
+                .createSuccessResponse(tournamentDTO, Set.of(errorDataSpy));
 
         Assertions.assertAll(
                 () -> assertNotNull(result),
@@ -84,7 +85,7 @@ class ResponseHelperTest {
     public void shouldConvertSuccessfulResponseWithWarningsWithoutIncluded() {
         TournamentDTO tournamentDTO = prepareTournamentDto();
         when(converterHelperMock.convert(tournamentDTO, GetTournament.class)).thenReturn(getTournamentSpy);
-        SuccessResponseDTO<TournamentDTO> data = new SuccessResponseDTO<>(tournamentDTO, List.of(errorDataSpy));
+        SuccessResponseDTO<TournamentDTO> data = new SuccessResponseDTO<>(tournamentDTO, Set.of(errorDataSpy));
 
         SuccessResponse<GetTournament> result = testInstance
                 .createSuccessResponse(data, GetTournament.class);

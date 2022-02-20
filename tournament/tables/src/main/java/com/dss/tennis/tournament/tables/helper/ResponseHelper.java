@@ -10,7 +10,6 @@ import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,7 @@ public class ResponseHelper {
         return createSuccessResponse(data.getData(), null, data.getWarnings(), responseClass);
     }
 
-    public SuccessResponse<GetTournament> createSuccessResponse(TournamentDTO tournamentDTO, List<ErrorData> warnings) {
+    public SuccessResponse<GetTournament> createSuccessResponse(TournamentDTO tournamentDTO, Set<ErrorData> warnings) {
         Set<ResourceObject> included = null;
         if (tournamentDTO.getPlayers() != null) {
             included = tournamentDTO.getPlayers().stream()
@@ -39,7 +38,7 @@ public class ResponseHelper {
     }
 
     public <S, D> SuccessResponse<D> createSuccessResponse(S data, Set<ResourceObject> included,
-                                                           List<ErrorData> warnings, Class<D> responseClass) {
+                                                           Set<ErrorData> warnings, Class<D> responseClass) {
         SuccessResponse<D> successResponse = new SuccessResponse<>();
         successResponse.setData(converterHelper.convert(data, responseClass));
         successResponse.setIncluded((included == null || included.isEmpty()) ? null : included);

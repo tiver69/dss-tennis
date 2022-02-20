@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
+import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.error.WarningConstant.REQUEST_PARAMETER_NOT_ALLOWED;
 import static com.dss.tennis.tournament.tables.helper.RequestParameterHelper.*;
@@ -48,7 +48,7 @@ class RequestParameterHelperTest {
     public void shouldPopulateRequestParameterWithAllAllowedValues() {
         RequestParameter result = new RequestParameter();
 
-        List<ErrorData> warnings = testInstance
+        Set<ErrorData> warnings = testInstance
                 .populateRequestParameter(INCLUDE_KEY, REQUEST_VALUE_ALL_ALLOWED, result);
 
         verify(warningHandlerMock, never()).createWarning(eq(REQUEST_PARAMETER_NOT_ALLOWED), any(String.class));
@@ -65,7 +65,7 @@ class RequestParameterHelperTest {
         when(errorDataSpy.getSource()).thenReturn(errorDataSourceSpy);
         RequestParameter result = new RequestParameter();
 
-        List<ErrorData> warnings = testInstance
+        Set<ErrorData> warnings = testInstance
                 .populateRequestParameter(INCLUDE_KEY, REQUEST_VALUE_MIX_ALLOWED, result);
 
         verify(warningHandlerMock).createWarning(REQUEST_PARAMETER_NOT_ALLOWED, NOT_ALLOWED_VALUE);
@@ -84,7 +84,7 @@ class RequestParameterHelperTest {
         when(errorDataSpy.getSource()).thenReturn(errorDataSourceSpy);
         RequestParameter result = new RequestParameter();
 
-        List<ErrorData> warnings = testInstance
+        Set<ErrorData> warnings = testInstance
                 .populateRequestParameter(INCLUDE_KEY, REQUEST_VALUE_NOT_ALLOWED, result);
 
         verify(warningHandlerMock).createWarning(REQUEST_PARAMETER_NOT_ALLOWED, NOT_ALLOWED_VALUE);

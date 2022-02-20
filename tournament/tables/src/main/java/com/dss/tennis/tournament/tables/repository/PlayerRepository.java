@@ -1,14 +1,14 @@
 package com.dss.tennis.tournament.tables.repository;
 
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
 
@@ -27,6 +27,5 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
             "WHERE t.id=:tournamentId")
     List<Player> findPlayersByDoubleTournamentId(@Param("tournamentId") Integer tournamentId);
 
-
-
+    Page<Player> findAll(Pageable pageable);
 }

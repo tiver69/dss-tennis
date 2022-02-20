@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
+import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.helper.RequestParameterHelper.INCLUDE_KEY;
 import static org.mockito.ArgumentMatchers.any;
@@ -79,7 +80,7 @@ class TournamentControllerTest {
 
     @Test
     public void shouldPerformNewTournamentCreation() throws Exception {
-        SuccessResponse<GetTournament> response = prepareSuccessGetTournament(List
+        SuccessResponse<GetTournament> response = prepareSuccessGetTournament(Set
                 .of(ErrorData.builder().code(WARNING_CODE).build()));
         when(converterHelperMock.convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true)))
                 .thenReturn(tournamentDtoSpy);
@@ -104,7 +105,7 @@ class TournamentControllerTest {
 
     @Test
     public void shouldPerformGetTournamentWithIncorrectIncludeParameter() throws Exception {
-        List<ErrorData> includeWarnings = List.of(ErrorData.builder().code(WARNING_CODE).build());
+        Set<ErrorData> includeWarnings = Sets.newSet(ErrorData.builder().code(WARNING_CODE).build());
         when(requestParameterHelperMock
                 .populateRequestParameter(eq(INCLUDE_KEY), eq(INCLUDE_PARAMETER), any(RequestParameter.class)))
                 .thenReturn(includeWarnings);
@@ -124,7 +125,7 @@ class TournamentControllerTest {
                 .getResponse().getContentAsString());
     }
 
-    private SuccessResponse<GetTournament> prepareSuccessGetTournament(List<ErrorData> warnings) {
+    private SuccessResponse<GetTournament> prepareSuccessGetTournament(Set<ErrorData> warnings) {
         return new SuccessResponse<>(prepareGetTournament(), warnings);
     }
 
