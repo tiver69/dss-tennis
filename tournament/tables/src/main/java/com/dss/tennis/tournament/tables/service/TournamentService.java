@@ -6,14 +6,14 @@ import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
+import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,6 +31,8 @@ public class TournamentService {
     private TournamentValidator tournamentValidator;
     @Autowired
     private PlayerValidator playerValidator;
+    @Autowired
+    private PageableValidator pageableValidator;
     @Autowired
     private PlayerHelper playerHelper;
     @Autowired
@@ -53,6 +55,22 @@ public class TournamentService {
 
     public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {
         return tournamentHelper.getTournament(tournamentId, requestParameters);
+    }
+
+    public SuccessResponseDTO<PageableDTO<TournamentDTO>> getTournamentPage(int page, byte pageSize) {
+        Set<ErrorData> warnings = new HashSet<>();
+        Pageable pageableRequestParameter = pageableValidator
+                .validatePageableRequest(page, pageSize, warnings, ResourceObjectType.TOURNAMENT);
+
+        PageableDTO<TournamentDTO> tournamentsPage = tournamentHelper.getTournamentsPage(pageableRequestParameter);
+        Pageable newPageableRequestParameter = pageableValidator
+                .validateUpperPage(pageableRequestParameter, tournamentsPage
+                        .getTotalPages(), warnings, ResourceObjectType.TOURNAMENT);
+        if (newPageableRequestParameter != null) {
+            tournamentsPage = tournamentHelper.getTournamentsPage(newPageableRequestParameter);
+        }
+
+        return new SuccessResponseDTO<>(tournamentsPage, warnings);
     }
 
     private void validateCreateTournamentDTO(TournamentDTO tournamentDTO) {

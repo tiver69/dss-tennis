@@ -3,13 +3,9 @@ package com.dss.tennis.tournament.tables.controller;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
-import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
-import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
+import com.dss.tennis.tournament.tables.model.response.v1.*;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+
+import static com.dss.tennis.tournament.tables.validator.PageableValidator.PAGE_DEFAULT_STRING;
+import static com.dss.tennis.tournament.tables.validator.PageableValidator.PAGE_SIZE_DEFAULT_STRING;
 
 @RestController
 @RequestMapping("/tournaments")
@@ -53,5 +52,17 @@ public class TournamentController {
         SuccessResponse<GetTournament> tournamentResponse = responseHelper
                 .createSuccessResponse(tournamentDTO, warnings);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<SuccessResponse<GetPageable>> getPageableTournaments(
+            @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
+            @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
+        SuccessResponseDTO<PageableDTO<TournamentDTO>> pageableTournamentsDto = tournamentService
+                .getTournamentPage(page, pageSize);
+
+        SuccessResponse<GetPageable> tournamentsSuccessResponse = responseHelper
+                .createSuccessResponse(pageableTournamentsDto, GetPageable.class);
+        return new ResponseEntity<>(tournamentsSuccessResponse, HttpStatus.OK);
     }
 }

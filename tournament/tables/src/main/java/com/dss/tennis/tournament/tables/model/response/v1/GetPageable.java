@@ -11,9 +11,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetPageablePlayers {
+public class GetPageable<T> {
 
-    private List<GetPlayer> players;
     private Integer totalPages;
     private Integer currentPage;
+    private List<T> page;
 }

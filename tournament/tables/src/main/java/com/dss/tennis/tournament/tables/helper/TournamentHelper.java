@@ -5,14 +5,19 @@ import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
 
@@ -45,6 +50,17 @@ public class TournamentHelper {
 
     public TournamentDTO getTournament(Integer tournamentId) {
         return getTournament(tournamentId, RequestParameter.DEFAULT);
+    }
+
+    public PageableDTO<TournamentDTO> getTournamentsPage(Pageable pageableRequestParameter) {
+        Page<Tournament> tournamentsPage = tournamentRepository.findAll(pageableRequestParameter);
+        List<TournamentDTO> tournaments = tournamentsPage.getContent().stream()
+                .map(tournament -> tournamentFactory.populateTournamentDTO(tournament))
+                .collect(Collectors.toList());
+
+        return PageableDTO.<TournamentDTO>builder().page(tournaments)
+                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(tournamentsPage.getTotalPages())
+                .build();
     }
 
     public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {

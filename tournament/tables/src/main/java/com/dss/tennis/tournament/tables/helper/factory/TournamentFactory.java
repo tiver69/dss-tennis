@@ -30,8 +30,12 @@ public class TournamentFactory {
         getContestFactory(tournamentType).createContests(tournament, players);
     }
 
+    public TournamentDTO populateTournamentDTO(Tournament tournament) {
+        return converterHelper.convert(tournament, TournamentDTO.class);
+    }
+
     public TournamentDTO populateTournamentDTO(Tournament tournament, RequestParameter requestParameters) {
-        TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class);
+        TournamentDTO tournamentDto = populateTournamentDTO(tournament);
 
         if (requestParameters.isIncludeContests()) {
             Class<? extends ContestDTO> participantClass = getContestParticipantType(tournamentDto

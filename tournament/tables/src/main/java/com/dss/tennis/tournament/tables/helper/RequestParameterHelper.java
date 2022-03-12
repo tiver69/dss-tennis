@@ -3,11 +3,13 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +18,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.dss.tennis.tournament.tables.exception.error.WarningConstant.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Component
 public class RequestParameterHelper {
@@ -27,6 +31,7 @@ public class RequestParameterHelper {
     public static String PLAYERS_VALUE = "players";
 
     private final Map<String, List<String>> allowedParameters = new HashMap<>();
+    private final Map<ResourceObjectType, List<Order>> pageableSortParameters = new HashMap<>();
     private final Map<String, Consumer<Boolean>> requestParameterSetter = new HashMap<>();
     private RequestParameter tmpRequestParameter;
 
@@ -37,13 +42,18 @@ public class RequestParameterHelper {
     protected void initialize() {
         allowedParameters.put(INCLUDE_KEY, List.of(CONTEST_VALUE, PLAYERS_VALUE));
 
+        pageableSortParameters.put(ResourceObjectType.TOURNAMENT, List
+                .of(new Order(DESC, "status"), new Order(DESC, "beginningDate")));
+        pageableSortParameters.put(ResourceObjectType.PLAYER, List
+                .of(new Order(ASC, "lastName"), new Order(ASC, "firstName")));
+
         tmpRequestParameter = new RequestParameter();
         requestParameterSetter.put(CONTEST_VALUE, tmpRequestParameter::setIncludeContests);
         requestParameterSetter.put(PLAYERS_VALUE, tmpRequestParameter::setIncludePlayers);
     }
 
-    public Pageable populatePageableRequestParameter(int page, int pageSize) {
-        return PageRequest.of(page, pageSize, Sort.by("lastName", "firstName"));
+    public Pageable populatePageableRequestParameter(int page, int pageSize, ResourceObjectType resourceType) {
+        return PageRequest.of(page, pageSize, Sort.by(pageableSortParameters.get(resourceType)));
     }
 
     public Set<ErrorData> populateRequestParameter(String key, String value, RequestParameter finalRequestParameter) {

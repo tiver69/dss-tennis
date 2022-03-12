@@ -5,7 +5,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.GetPageablePlayers;
+import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
@@ -37,14 +37,14 @@ public class ParticipantController {
     }
 
     @GetMapping("/players")
-    public ResponseEntity<SuccessResponse<GetPageablePlayers>> getPageablePlayers(
+    public ResponseEntity<SuccessResponse<GetPageable>> getPageablePlayers(
             @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
             @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
         SuccessResponseDTO<PageableDTO<PlayerDTO>> pageablePlayersDto = participantService
                 .getPlayersPage(page, pageSize);
 
-        SuccessResponse<GetPageablePlayers> playersSuccessResponse = responseHelper
-                .createSuccessResponse(pageablePlayersDto, GetPageablePlayers.class);
+        SuccessResponse<GetPageable> playersSuccessResponse = responseHelper
+                .createSuccessResponse(pageablePlayersDto, GetPageable.class);
         return new ResponseEntity<>(playersSuccessResponse, HttpStatus.OK);
     }
 
