@@ -17,6 +17,7 @@ public enum ErrorConstants {
     PLAYER_FIRST_NAME_EMPTY,
     PLAYER_LAST_NAME_EMPTY,
     PLAYER_NOT_FOUND,
+    PLAYER_DUPLICATION,
     INSUFFICIENT_PLAYER_QUANTITY,
 
     //common errors

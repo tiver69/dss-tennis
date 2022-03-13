@@ -60,6 +60,10 @@ public class PlayerHelper {
                 .findByFirstNameAndLastName(playerDTO.getFirstName(), playerDTO.getLastName()).isPresent();
     }
 
+    public Player createNewPlayer(PlayerDTO playerDto) {
+        return createNewPlayer(playerDto.getFirstName(), playerDto.getLastName());
+    }
+
     public Player createNewPlayer(String firstName, String lastName) {
         Player player = Player.builder().firstName(firstName).lastName(lastName).build();
         return playerRepository.save(player);

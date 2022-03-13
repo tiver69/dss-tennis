@@ -21,12 +21,21 @@ public class PlayerValidator {
     @Autowired
     private ValidatorHelper<PlayerDTO> validatorHelper;
 
+    public Set<DetailedErrorData> validateNewPlayer(PlayerDTO playerDTO) {
+        Set<DetailedErrorData> detailedErrorData = validatorHelper.validateObject(playerDTO);
+
+        if (detailedErrorData.isEmpty() && playerHelper.isPlayerExist(playerDTO))
+            detailedErrorData.add(new DetailedErrorData(ErrorConstants.PLAYER_DUPLICATION));
+        return detailedErrorData;
+    }
+
     public Set<DetailedErrorData> validatePlayer(PlayerDTO playerDTO) {
         Set<DetailedErrorData> detailedErrorData = validatorHelper.validateObject(playerDTO);
 
         if (detailedErrorData.isEmpty() && playerHelper.isPlayerNotExist(playerDTO))
             detailedErrorData
-                    .add(new DetailedErrorData(ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION, playerDTO.getSequenceNumber()));
+                    .add(new DetailedErrorData(ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION, playerDTO
+                            .getSequenceNumber()));
         return detailedErrorData;
     }
 

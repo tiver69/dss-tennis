@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 @PropertySource("classpath:warning.properties")
 public class WarningHandler {
 
-    protected final String CODE_SUFFIX = ".code";
-    protected final String DETAIL_SUFFIX = ".detail";
-    protected final String POINTER_SUFFIX = ".pointer";
+    protected final String CODE_SUFFIX = ".warning.code";
+    protected final String DETAIL_SUFFIX = ".warning.detail";
+    protected final String POINTER_SUFFIX = ".warning.pointer";
 
     @Autowired
     private Environment environment;

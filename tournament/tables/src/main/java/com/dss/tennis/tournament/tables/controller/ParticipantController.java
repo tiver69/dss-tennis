@@ -1,14 +1,14 @@
 package com.dss.tennis.tournament.tables.controller;
 
+import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
-import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
-import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,16 +24,20 @@ import static com.dss.tennis.tournament.tables.validator.PageableValidator.PAGE_
 public class ParticipantController {
 
     @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
     private ResponseHelper responseHelper;
     @Autowired
     private ParticipantService participantService;
+    @Autowired
+    private ConverterHelper converterHelper;
 
-    @PostMapping
-    public ResponseEntity<?> createPlayer(@RequestBody Player player) {
-        playerRepository.save(player);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/players")
+    public ResponseEntity<?> createPlayer(@RequestBody CreatePlayer createPlayer) {
+        PlayerDTO playerDto = converterHelper.convert(createPlayer, PlayerDTO.class);
+
+        PlayerDTO newPlayerDto = participantService.createNewPlayer(playerDto);
+        SuccessResponse<GetPlayer> playerResponse = responseHelper
+                .createSuccessResponse(newPlayerDto, GetPlayer.class);
+        return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/players")
