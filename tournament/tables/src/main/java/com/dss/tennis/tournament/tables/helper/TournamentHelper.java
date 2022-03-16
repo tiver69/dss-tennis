@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
@@ -36,6 +37,12 @@ public class TournamentHelper {
         tournamentFactory
                 .createContestsForTournament(tournament, tournamentDTO.getPlayers(), tournamentDTO.getTournamentType());
         return tournament;
+    }
+
+    public void addPlayersToTournament(TournamentDTO tournamentDto, List<Integer> currentPlayerIds,
+                                       Set<Integer> newPlayerIds) {
+        tournamentFactory
+                .createContestForNewPlayers(tournamentDto, currentPlayerIds, newPlayerIds);
     }
 
     public Tournament createNewTournament(TournamentDTO tournamentDTO) {

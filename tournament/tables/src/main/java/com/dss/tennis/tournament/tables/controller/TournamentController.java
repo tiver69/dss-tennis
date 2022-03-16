@@ -5,6 +5,7 @@ import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
+import com.dss.tennis.tournament.tables.model.request.EnrollTournamentParticipant;
 import com.dss.tennis.tournament.tables.model.response.v1.*;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.validator.PageableValidator.PAGE_DEFAULT_STRING;
@@ -36,6 +38,21 @@ public class TournamentController {
         TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class, true);
 
         SuccessResponseDTO<TournamentDTO> tournamentDTO = tournamentService.createNewTournament(tournamentDto);
+        SuccessResponse<GetTournament> tournamentResponse = responseHelper
+                .createSuccessResponse(tournamentDTO, GetTournament.class);
+        return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{tournamentId}/participants")
+    public ResponseEntity<SuccessResponse<GetTournament>> enrollTournamentParticipant(
+            @PathVariable Integer tournamentId,
+            @RequestBody EnrollTournamentParticipant participants) {
+        List<ResourceObjectDTO> participantsDto = converterHelper
+                .convert(participants.getData(), ResourceObjectDTO.class, true);
+
+        SuccessResponseDTO<TournamentDTO> tournamentDTO = tournamentService
+                .addPlayersToTournament(tournamentId, participantsDto);
+
         SuccessResponse<GetTournament> tournamentResponse = responseHelper
                 .createSuccessResponse(tournamentDTO, GetTournament.class);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);

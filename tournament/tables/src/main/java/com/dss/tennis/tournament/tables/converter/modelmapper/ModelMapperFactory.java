@@ -4,6 +4,7 @@ import com.dss.tennis.tournament.tables.converter.*;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.*;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,8 @@ public class ModelMapperFactory {
                 .setPostConverter(new PlayerDtoToResourceObjectConverter());
         modelMapper.createTypeMap(PageableDTO.class, GetPageable.class)
                 .setPostConverter(new PageableDtoToGetPageableConverter(modelMapper));
+        modelMapper.createTypeMap(String.class, ResourceObjectType.class)
+                .setConverter(new ResourceObjectTypeStringToEnumConverter());
         return modelMapper;
     }
 }

@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.dss.tennis.tournament.tables.exception.error.WarningConstant.PLAYER_DUPLICATION;
+import static com.dss.tennis.tournament.tables.model.dto.RequestParameter.BASIC;
 
 @Service
 public class TournamentService {
@@ -51,6 +52,22 @@ public class TournamentService {
                 .collect(Collectors.toSet());
 
         return new SuccessResponseDTO<>(tournamentHelper.getTournament(tournament.getId()), warnings);
+    }
+
+    @Transactional
+    public SuccessResponseDTO<TournamentDTO> addPlayersToTournament(Integer tournamentId,
+                                                                    List<ResourceObjectDTO> participantsDto) {
+        TournamentDTO tournamentDto = tournamentHelper.getTournament(tournamentId, BASIC);
+        List<Integer> currentPlayerIds = playerHelper.getTournamentPlayerIds(tournamentId);
+
+        Set<ErrorData> warnings = new HashSet<>();
+        Set<Integer> newPlayerIds = playerHelper
+                .getPlayerIdsForEnrolling(currentPlayerIds, participantsDto, tournamentDto
+                        .getParticipantType(), warnings);
+        playerValidator.validatePlayerQuantity(currentPlayerIds.size() + newPlayerIds.size());
+
+        tournamentHelper.addPlayersToTournament(tournamentDto, currentPlayerIds, newPlayerIds);
+        return new SuccessResponseDTO<>(tournamentHelper.getTournament(tournamentId), warnings);
     }
 
     public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {

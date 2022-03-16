@@ -12,6 +12,7 @@ import lombok.Setter;
 public class RequestParameter {
 
     public static RequestParameter DEFAULT = new RequestParameter(true, false);
+    public static RequestParameter BASIC = new RequestParameter(false, false);
 
     private boolean includeContests;
     private boolean includePlayers;

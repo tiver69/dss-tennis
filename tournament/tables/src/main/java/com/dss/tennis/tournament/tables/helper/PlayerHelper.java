@@ -3,10 +3,15 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
+import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
+import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +24,8 @@ import java.util.stream.Collectors;
 @Service
 public class PlayerHelper {
 
+    @Autowired
+    private PlayerValidator playerValidator;
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
@@ -53,11 +60,19 @@ public class PlayerHelper {
         return !isPlayerExist(playerDTO);
     }
 
+    public boolean isPlayerNotExist(Integer playerId) {
+        return !isPlayerExist(playerId);
+    }
+
     public boolean isPlayerExist(PlayerDTO playerDTO) {
         if (StringUtils.isBlank(playerDTO.getFirstName()) || StringUtils.isBlank(playerDTO.getLastName()))
             return false;
         return playerRepository
                 .findByFirstNameAndLastName(playerDTO.getFirstName(), playerDTO.getLastName()).isPresent();
+    }
+
+    public boolean isPlayerExist(Integer playerId) {
+        return playerRepository.findById(playerId).isPresent();
     }
 
     public Player createNewPlayer(PlayerDTO playerDto) {
@@ -69,6 +84,30 @@ public class PlayerHelper {
         return playerRepository.save(player);
     }
 
+    public List<Integer> getTournamentPlayerIds(Integer tournamentId) {
+        return playerRepository.findPlayerIdsBySingleTournamentId(tournamentId);
+    }
+
+    public Set<Integer> getPlayerIdsForEnrolling(List<Integer> currentPlayerIds,
+                                                 List<ResourceObjectDTO> newParticipants,
+                                                 ParticipantType participantType,
+                                                 Set<ErrorData> warnings) {
+        List<Integer> currentPlayerIdsCopy = new ArrayList<>(currentPlayerIds);
+        Set<Integer> playerIdsForEnrolling = new HashSet<>();
+
+        ResourceObjectType participantResourceType = participantType == ParticipantType.SINGLE ?
+                ResourceObjectType.PLAYER : ResourceObjectType.TEAM;
+        for (ResourceObjectDTO participant : newParticipants) {
+            ErrorData warning = playerValidator
+                    .validatePlayerForEnrolling(currentPlayerIdsCopy, participant, participantResourceType);
+            if (warning != null) warnings.add(warning);
+            else {
+                currentPlayerIdsCopy.add(participant.getId());
+                playerIdsForEnrolling.add(participant.getId());
+            }
+        }
+        return playerIdsForEnrolling;
+    }
 
     /**
      * @return list of removed players

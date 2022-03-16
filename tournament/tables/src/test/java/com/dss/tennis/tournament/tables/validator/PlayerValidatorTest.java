@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.INSUFFICIENT_PLAYER_QUANTITY;
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.FORBIDDEN_PLAYER_QUANTITY;
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -113,7 +113,7 @@ class PlayerValidatorTest {
 
         Assertions.assertAll(
                 () -> assertTrue(result.isPresent()),
-                () -> assertEquals(INSUFFICIENT_PLAYER_QUANTITY, result.get().getErrorConstant())
+                () -> assertEquals(FORBIDDEN_PLAYER_QUANTITY, result.get().getErrorConstant())
         );
     }
 }

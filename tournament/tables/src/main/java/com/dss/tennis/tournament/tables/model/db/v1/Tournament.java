@@ -20,6 +20,10 @@ public class Tournament {
     private StatusType status;
     private LocalDate beginningDate;
 
+    public Tournament(int id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

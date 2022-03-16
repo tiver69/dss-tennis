@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,12 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
         ErrorData errorData = createErrorData(new DetailedErrorData(INTERNAL_SERVER_ERROR, exception.getMessage()));
         System.out.println(exception);
         return new ResponseEntity<>(new ErrorResponse(errorData), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MappingException.class)
+    public ResponseEntity<ErrorResponse> handleMappingException(MappingException exception) {
+        return exception.getCause() instanceof DetailedException ?
+                handleDetailedException((DetailedException) exception.getCause()) : handleRuntimeException(exception);
     }
 
     @ExceptionHandler(DetailedException.class)
