@@ -20,9 +20,7 @@ import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.error.WarningConstant.PLAYER_DUPLICATION;
 import static com.dss.tennis.tournament.tables.model.dto.RequestParameter.BASIC;
 
 @Service
@@ -41,17 +39,12 @@ public class TournamentService {
     @Autowired
     private WarningHandler warningHandler;
 
-    @Transactional
-    public SuccessResponseDTO<TournamentDTO> createNewTournament(TournamentDTO tournamentDTO) {
-        List<PlayerDTO> duplicationPlayers = playerHelper.removePlayerDuplicates(tournamentDTO.getPlayers());
+    public TournamentDTO createNewTournament(TournamentDTO tournamentDTO) {
         validateCreateTournamentDTO(tournamentDTO);
 
-        Tournament tournament = tournamentHelper.createNewTournamentWithContests(tournamentDTO);
-        Set<ErrorData> warnings = duplicationPlayers.stream()
-                .map(tt -> warningHandler.createWarning(PLAYER_DUPLICATION, tt.getSequenceNumber()))
-                .collect(Collectors.toSet());
+        Tournament tournament = tournamentHelper.createNewTournament(tournamentDTO);
 
-        return new SuccessResponseDTO<>(tournamentHelper.getTournament(tournament.getId()), warnings);
+        return tournamentHelper.getTournament(tournament.getId(), BASIC);
     }
 
     @Transactional
@@ -93,11 +86,6 @@ public class TournamentService {
     private void validateCreateTournamentDTO(TournamentDTO tournamentDTO) {
         Set<DetailedErrorData> errorSet = new HashSet<>(tournamentValidator
                 .validateCreateTournament(tournamentDTO));
-        tournamentDTO.getPlayers().stream().map(playerValidator::validatePlayer)
-                .forEach(errorSet::addAll);
-        playerValidator.validatePlayerQuantity(tournamentDTO.getPlayers()).ifPresent(errorSet::add);
-        if (!errorSet.isEmpty()) {
-            throw new DetailedException(errorSet);
-        }
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
     }
 }

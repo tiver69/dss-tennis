@@ -51,19 +51,19 @@ class TournamentHelperTest {
     @InjectMocks
     private TournamentHelper testInstance;
 
-    @Test
-    public void shouldCreateNewEliminationTournament() {
-        List<PlayerDTO> players = Collections.emptyList();
-        when(tournamentDtoSpy.getTournamentType()).thenReturn(TournamentType.ELIMINATION);
-        when(tournamentDtoSpy.getPlayers()).thenReturn(players);
-        when(tournamentRepositoryMock.save(any(Tournament.class))).thenReturn(tournamentSpy);
-
-        Tournament result = testInstance.createNewTournamentWithContests(tournamentDtoSpy);
-
-        Assertions.assertEquals(tournamentSpy, result);
-        verify(tournamentRepositoryMock).save(any(Tournament.class));
-        verify(tournamentFactoryMock).createContestsForTournament(tournamentSpy, players, TournamentType.ELIMINATION);
-    }
+//    @Test
+//    public void shouldCreateNewEliminationTournament() {
+//        List<PlayerDTO> players = Collections.emptyList();
+//        when(tournamentDtoSpy.getTournamentType()).thenReturn(TournamentType.ELIMINATION);
+//        when(tournamentDtoSpy.getPlayers()).thenReturn(players);
+//        when(tournamentRepositoryMock.save(any(Tournament.class))).thenReturn(tournamentSpy);
+//
+//        Tournament result = testInstance.createNewTournamentWithContests(tournamentDtoSpy);
+//
+//        Assertions.assertEquals(tournamentSpy, result);
+//        verify(tournamentRepositoryMock).save(any(Tournament.class));
+//        verify(tournamentFactoryMock).createContestsForTournament(tournamentSpy, players, TournamentType.ELIMINATION);
+//    }
 
     @Test
     public void shouldGetEliminationTournamentWithDefaultRequestParameter() {

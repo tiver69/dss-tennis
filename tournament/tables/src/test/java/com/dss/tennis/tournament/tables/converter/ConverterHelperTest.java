@@ -42,40 +42,40 @@ class ConverterHelperTest {
     @InjectMocks
     private ConverterHelper testInstance;
 
-    @Test
-    public void shouldConvertCreateTournamentWithSequential() {
-        TournamentDTO destination = prepareTournamentDto();
+//    @Test
+//    public void shouldConvertCreateTournamentWithSequential() {
+//        TournamentDTO destination = prepareTournamentDto();
+//
+//        when(modelMapperFactoryMock.getCustomizedModelMapper()).thenReturn(modelMapperMock);
+//        when(modelMapperMock.map(createTournamentSpy, TournamentDTO.class)).thenReturn(destination);
+//
+//        TournamentDTO result = testInstance.convert(createTournamentSpy, TournamentDTO.class, true);
+//
+//        Assertions.assertAll(
+//                () -> assertNotNull(result),
+//                () -> assertEquals(result, destination),
+//                () -> assertTrue(result.getPlayers().stream().anyMatch(player -> player.getSequenceNumber() != null)),
+//                () -> assertEquals((byte) 0, result.getPlayers().get(0).getSequenceNumber()),
+//                () -> assertEquals((byte) 1, result.getPlayers().get(1).getSequenceNumber()),
+//                () -> assertEquals((byte) 2, result.getPlayers().get(2).getSequenceNumber())
+//        );
+//    }
 
-        when(modelMapperFactoryMock.getCustomizedModelMapper()).thenReturn(modelMapperMock);
-        when(modelMapperMock.map(createTournamentSpy, TournamentDTO.class)).thenReturn(destination);
-
-        TournamentDTO result = testInstance.convert(createTournamentSpy, TournamentDTO.class, true);
-
-        Assertions.assertAll(
-                () -> assertNotNull(result),
-                () -> assertEquals(result, destination),
-                () -> assertTrue(result.getPlayers().stream().anyMatch(player -> player.getSequenceNumber() != null)),
-                () -> assertEquals((byte) 0, result.getPlayers().get(0).getSequenceNumber()),
-                () -> assertEquals((byte) 1, result.getPlayers().get(1).getSequenceNumber()),
-                () -> assertEquals((byte) 2, result.getPlayers().get(2).getSequenceNumber())
-        );
-    }
-
-    @Test
-    public void shouldConvertCreateTournamentWithoutSequential() {
-        TournamentDTO destination = prepareTournamentDto();
-
-        when(modelMapperFactoryMock.getCustomizedModelMapper()).thenReturn(modelMapperMock);
-        when(modelMapperMock.map(createTournamentSpy, TournamentDTO.class)).thenReturn(destination);
-
-        TournamentDTO result = testInstance.convert(createTournamentSpy, TournamentDTO.class);
-
-        Assertions.assertAll(
-                () -> assertNotNull(result),
-                () -> assertEquals(result, destination),
-                () -> assertTrue(result.getPlayers().stream().allMatch(player -> player.getSequenceNumber() == null))
-        );
-    }
+//    @Test
+//    public void shouldConvertCreateTournamentWithoutSequential() {
+//        TournamentDTO destination = prepareTournamentDto();
+//
+//        when(modelMapperFactoryMock.getCustomizedModelMapper()).thenReturn(modelMapperMock);
+//        when(modelMapperMock.map(createTournamentSpy, TournamentDTO.class)).thenReturn(destination);
+//
+//        TournamentDTO result = testInstance.convert(createTournamentSpy, TournamentDTO.class);
+//
+//        Assertions.assertAll(
+//                () -> assertNotNull(result),
+//                () -> assertEquals(result, destination),
+//                () -> assertTrue(result.getPlayers().stream().allMatch(player -> player.getSequenceNumber() == null))
+//        );
+//    }
 
     private TournamentDTO prepareTournamentDto() {
         List<PlayerDTO> player = new ArrayList<>();

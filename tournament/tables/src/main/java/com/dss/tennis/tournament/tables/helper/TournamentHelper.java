@@ -31,20 +31,6 @@ public class TournamentHelper {
     private TournamentFactory tournamentFactory;
 
     @Transactional
-    public Tournament createNewTournamentWithContests(TournamentDTO tournamentDTO) {
-        Tournament tournament = createNewTournament(tournamentDTO);
-
-        tournamentFactory
-                .createContestsForTournament(tournament, tournamentDTO.getPlayers(), tournamentDTO.getTournamentType());
-        return tournament;
-    }
-
-    public void addPlayersToTournament(TournamentDTO tournamentDto, List<Integer> currentPlayerIds,
-                                       Set<Integer> newPlayerIds) {
-        tournamentFactory
-                .createContestForNewPlayers(tournamentDto, currentPlayerIds, newPlayerIds);
-    }
-
     public Tournament createNewTournament(TournamentDTO tournamentDTO) {
         Tournament tournament = Tournament.builder().name(tournamentDTO.getName())
                 .tournamentType(tournamentDTO.getTournamentType())
@@ -53,6 +39,12 @@ public class TournamentHelper {
                 .beginningDate(tournamentDTO.getBeginningDate())
                 .build();
         return tournamentRepository.save(tournament);
+    }
+
+    public void addPlayersToTournament(TournamentDTO tournamentDto, List<Integer> currentPlayerIds,
+                                       Set<Integer> newPlayerIds) {
+        tournamentFactory
+                .createContestForNewPlayers(tournamentDto, currentPlayerIds, newPlayerIds);
     }
 
     public TournamentDTO getTournament(Integer tournamentId) {

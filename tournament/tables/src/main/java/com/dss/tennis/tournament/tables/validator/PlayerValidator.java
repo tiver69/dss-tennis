@@ -38,16 +38,6 @@ public class PlayerValidator {
         return detailedErrorData;
     }
 
-    public Set<DetailedErrorData> validatePlayer(PlayerDTO playerDTO) {
-        Set<DetailedErrorData> detailedErrorData = validatorHelper.validateObject(playerDTO);
-
-        if (detailedErrorData.isEmpty() && playerHelper.isPlayerNotExist(playerDTO))
-            detailedErrorData
-                    .add(new DetailedErrorData(ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION, playerDTO
-                            .getSequenceNumber()));
-        return detailedErrorData;
-    }
-
     public ErrorData validatePlayerForEnrolling(List<Integer> currentPlayers, ResourceObjectDTO newParticipant,
                                                 ResourceObjectType requiredType) {
         Integer participantId = newParticipant.getId();
@@ -70,10 +60,5 @@ public class PlayerValidator {
     public void validatePlayerQuantity(int playersSize) {
         if (playersSize <= 2 || playersSize > 20)
             throw new DetailedException(FORBIDDEN_PLAYER_QUANTITY, playersSize);
-    }
-
-    public Optional<DetailedErrorData> validatePlayerQuantity(List<PlayerDTO> players) {
-        return players.size() <= 1 ? Optional.of(new DetailedErrorData(FORBIDDEN_PLAYER_QUANTITY)) : Optional
-                .empty();
     }
 }

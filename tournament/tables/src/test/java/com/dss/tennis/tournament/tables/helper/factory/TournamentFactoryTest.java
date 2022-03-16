@@ -55,23 +55,23 @@ class TournamentFactoryTest {
     @InjectMocks
     private TournamentFactory testInstance;
 
-    @Test
-    public void shouldCreateNewContestsForRoundTournament() {
-        List<PlayerDTO> players = Lists.newArrayList(playerOneDtoSpy, playerTwoDtoSpy);
+//    @Test
+//    public void shouldCreateNewContestsForRoundTournament() {
+//        List<PlayerDTO> players = Lists.newArrayList(playerOneDtoSpy, playerTwoDtoSpy);
+//
+//        testInstance.createContestsForTournament(tournamentSpy, players, TournamentType.ROUND);
+//
+//        verify(roundTournamentFactoryMock).createContests(tournamentSpy, players);
+//    }
 
-        testInstance.createContestsForTournament(tournamentSpy, players, TournamentType.ROUND);
-
-        verify(roundTournamentFactoryMock).createContests(tournamentSpy, players);
-    }
-
-    @Test
-    public void shouldCreateNewContestsForEliminationTournament() {
-        List<PlayerDTO> players = Lists.newArrayList(playerOneDtoSpy, playerTwoDtoSpy);
-
-        testInstance.createContestsForTournament(tournamentSpy, players, TournamentType.ELIMINATION);
-
-        verify(eliminationTournamentFactoryMock).createContests(tournamentSpy, players);
-    }
+//    @Test
+//    public void shouldCreateNewContestsForEliminationTournament() {
+//        List<PlayerDTO> players = Lists.newArrayList(playerOneDtoSpy, playerTwoDtoSpy);
+//
+//        testInstance.createContestsForTournament(tournamentSpy, players, TournamentType.ELIMINATION);
+//
+//        verify(eliminationTournamentFactoryMock).createContests(tournamentSpy, players);
+//    }
 
     @Test
     public void shouldPopulateRoundTournamentDtoWithContestsAndSingleParticipants() {

@@ -45,25 +45,25 @@ class ValidatorHelperTest {
         assertTrue(result.isEmpty());
     }
 
-    @Test
-    public void shouldReturnDetailedErrorDataWithSequentialNumber() {
-        PlayerDTO playerDTO = new PlayerDTO("", VALID_LAST_NAME);
-        playerDTO.setSequenceNumber(SEQUENCE_NUMBER);
-
-        when(constraintViolationMock.getMessage()).thenReturn(PLAYER_FIRST_NAME_EMPTY.name());
-        when(javaxValidatorMock.validate(playerDTO)).thenReturn(Sets.newSet(constraintViolationMock));
-
-        Set<DetailedErrorData> result = testInstance.validateObject(playerDTO);
-
-        Assertions.assertAll(
-                () -> assertFalse(result.isEmpty()),
-                () -> assertEquals(1, result.size()),
-                () -> assertTrue(result.stream()
-                        .anyMatch(tt -> tt.getErrorConstant().equals(PLAYER_FIRST_NAME_EMPTY))),
-                () -> assertTrue(result.stream()
-                        .anyMatch(tt -> tt.getSequentNumber() == SEQUENCE_NUMBER))
-        );
-    }
+//    @Test
+//    public void shouldReturnDetailedErrorDataWithSequentialNumber() {
+//        PlayerDTO playerDTO = new PlayerDTO("", VALID_LAST_NAME);
+//        playerDTO.setSequenceNumber(SEQUENCE_NUMBER);
+//
+//        when(constraintViolationMock.getMessage()).thenReturn(PLAYER_FIRST_NAME_EMPTY.name());
+//        when(javaxValidatorMock.validate(playerDTO)).thenReturn(Sets.newSet(constraintViolationMock));
+//
+//        Set<DetailedErrorData> result = testInstance.validateObject(playerDTO);
+//
+//        Assertions.assertAll(
+//                () -> assertFalse(result.isEmpty()),
+//                () -> assertEquals(1, result.size()),
+//                () -> assertTrue(result.stream()
+//                        .anyMatch(tt -> tt.getErrorConstant().equals(PLAYER_FIRST_NAME_EMPTY))),
+//                () -> assertTrue(result.stream()
+//                        .anyMatch(tt -> tt.getSequentNumber() == SEQUENCE_NUMBER))
+//        );
+//    }
 
     @Test
     public void shouldReturnDetailedErrorDataWithoutSequentialNumber() {
