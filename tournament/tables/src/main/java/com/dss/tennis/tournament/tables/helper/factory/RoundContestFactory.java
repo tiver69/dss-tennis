@@ -26,19 +26,6 @@ public class RoundContestFactory implements AbstractContestFactory {
     private ConverterHelper converterHelper;
 
     @Override
-    public void createContests(Tournament tournament, List<PlayerDTO> players) {
-        List<Player> repositoryPlayers = players.stream().map(player -> playerHelper.getPlayer(player))
-                .collect(Collectors.toList());
-
-        for (int i = 0; i < repositoryPlayers.size(); i++) {
-            for (int j = i + 1; j < repositoryPlayers.size(); j++) {
-                contestHelper.createNewContest(repositoryPlayers.get(i), repositoryPlayers.get(j), tournament);
-            }
-        }
-    }
-
-
-    @Override
     public void createContestsForNewPlayers(Integer tournamentId, List<Integer> currentPlayers,
                                             Set<Integer> newPlayers) {
         newPlayers.forEach(newPlayerId -> {

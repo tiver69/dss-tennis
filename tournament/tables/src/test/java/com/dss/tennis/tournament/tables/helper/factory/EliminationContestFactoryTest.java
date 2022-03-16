@@ -4,8 +4,6 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,16 +38,16 @@ class EliminationContestFactoryTest {
         );
     }
 
-    @Test
-    public void shouldThrowUnsupportedErrorWhenCreateContestsForNewTournament() {
-        DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
-                .createContests(tournamentSpy, Lists.emptyList()));
-
-        Assertions.assertAll(
-                () -> assertFalse(result.getErrors().isEmpty()),
-                () -> assertEquals(1, result.getErrors().size()),
-                () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
-                        .allMatch(errorConstant -> TOURNAMENT_TYPE_NOT_SUPPORTED == errorConstant))
-        );
-    }
+//    @Test
+//    public void shouldThrowUnsupportedErrorWhenCreateContestsForNewTournament() {
+//        DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
+//                .createContests(tournamentSpy, Lists.emptyList()));
+//
+//        Assertions.assertAll(
+//                () -> assertFalse(result.getErrors().isEmpty()),
+//                () -> assertEquals(1, result.getErrors().size()),
+//                () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
+//                        .allMatch(errorConstant -> TOURNAMENT_TYPE_NOT_SUPPORTED == errorConstant))
+//        );
+//    }
 }

@@ -68,7 +68,7 @@ class TournamentControllerTest {
     @Spy
     private TournamentDTO tournamentDtoSpy;
     @Spy
-    private SuccessResponseDTO<TournamentDTO> createdTournamentDtoSpy;
+    private TournamentDTO createdTournamentDtoSpy;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -139,7 +139,6 @@ class TournamentControllerTest {
     private CreateTournament prepareCreateTournament() {
         return CreateTournament.builder()
                 .name(TOURNAMENT_NAME)
-                .players(Arrays.asList(PLAYER_ONE, PLAYER_TWO))
                 .tournamentType(TournamentType.ELIMINATION)
                 .build();
     }

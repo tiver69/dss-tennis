@@ -49,17 +49,6 @@ public class PlayerHelper {
                 .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages()).build();
     }
 
-    public Player getPlayer(PlayerDTO playerDTO) {
-        Optional<Player> repositoryPlayer = playerRepository
-                .findByFirstNameAndLastName(playerDTO.getFirstName(), playerDTO.getLastName());
-        if (repositoryPlayer.isPresent()) return repositoryPlayer.get();
-        throw new DetailedException(ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION, playerDTO.getSequenceNumber());
-    }
-
-    public boolean isPlayerNotExist(PlayerDTO playerDTO) {
-        return !isPlayerExist(playerDTO);
-    }
-
     public boolean isPlayerNotExist(Integer playerId) {
         return !isPlayerExist(playerId);
     }
@@ -107,25 +96,6 @@ public class PlayerHelper {
             }
         }
         return playerIdsForEnrolling;
-    }
-
-    /**
-     * @return list of removed players
-     */
-    public List<PlayerDTO> removePlayerDuplicates(List<PlayerDTO> players) {
-        List<PlayerDTO> duplicatePlayers = new ArrayList<>();
-        for (int i = 0; i < players.size() - 1; i++) {
-            PlayerDTO currentPlayer = players.get(i);
-            for (int j = i + 1; j < players.size(); j++) {
-                if (isSamePlayer(currentPlayer, players.get(j))) {
-                    duplicatePlayers.add(players.get(j));
-                }
-            }
-        }
-        if (duplicatePlayers.size() != 0) {
-            players.removeAll(duplicatePlayers);
-        }
-        return duplicatePlayers;
     }
 
     public boolean isSamePlayer(PlayerDTO playerOne, PlayerDTO playerTwo) {

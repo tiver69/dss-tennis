@@ -60,15 +60,15 @@ class RoundContestFactoryTest {
     @InjectMocks
     private RoundContestFactory testInstance;
 
-    @Test
-    public void shouldCreateNewContestsForRoundTournament() {
-        when(playerHelperMock.getPlayer(playerOneDtoSpy)).thenReturn(playerOneSpy);
-        when(playerHelperMock.getPlayer(playerTwoDtoSpy)).thenReturn(playerTwoSpy);
-
-        testInstance.createContests(tournamentSpy, Lists.list(playerOneDtoSpy, playerTwoDtoSpy));
-
-        verify(contestHelperMock).createNewContest(playerOneSpy, playerTwoSpy, tournamentSpy);
-    }
+//    @Test
+//    public void shouldCreateNewContestsForRoundTournament() {
+//        when(playerHelperMock.getPlayer(playerOneDtoSpy)).thenReturn(playerOneSpy);
+//        when(playerHelperMock.getPlayer(playerTwoDtoSpy)).thenReturn(playerTwoSpy);
+//
+//        testInstance.createContests(tournamentSpy, Lists.list(playerOneDtoSpy, playerTwoDtoSpy));
+//
+//        verify(contestHelperMock).createNewContest(playerOneSpy, playerTwoSpy, tournamentSpy);
+//    }
 
     @Test
     public void shouldGerContestDTOsForSingleParticipantTournament() {

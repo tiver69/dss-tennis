@@ -37,7 +37,7 @@ public class TournamentController {
     public ResponseEntity<SuccessResponse<GetTournament>> createTournament(@RequestBody CreateTournament tournament) {
         TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class, true);
 
-        SuccessResponseDTO<TournamentDTO> tournamentDTO = tournamentService.createNewTournament(tournamentDto);
+        TournamentDTO tournamentDTO = tournamentService.createNewTournament(tournamentDto);
         SuccessResponse<GetTournament> tournamentResponse = responseHelper
                 .createSuccessResponse(tournamentDTO, GetTournament.class);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);

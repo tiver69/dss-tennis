@@ -23,7 +23,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND;
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND_TOURNAMENT_CREATION;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -78,31 +77,31 @@ class PlayerHelperTest {
         );
     }
 
-    @Test
-    public void shouldGetPlayerByPlayerDTO() {
-        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
-                .thenReturn(Optional.of(playerSpy));
-
-        Player result = testInstance.getPlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME));
-
-        Assertions.assertEquals(playerSpy, result);
-    }
-
-    @Test
-    public void shouldThrowErrorWhenPlayerNotFoundByPlayerDTO() {
-        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
-                .thenReturn(Optional.empty());
-
-        DetailedException result = Assertions.assertThrows(DetailedException.class, () -> {
-            testInstance.getPlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME));
-        });
-        Assertions.assertAll(
-                () -> assertFalse(result.getErrors().isEmpty()),
-                () -> assertEquals(1, result.getErrors().size()),
-                () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
-                        .allMatch(errorConstant -> PLAYER_NOT_FOUND_TOURNAMENT_CREATION == errorConstant))
-        );
-    }
+//    @Test
+//    public void shouldGetPlayerByPlayerDTO() {
+//        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
+//                .thenReturn(Optional.of(playerSpy));
+//
+//        Player result = testInstance.getPlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME));
+//
+//        Assertions.assertEquals(playerSpy, result);
+//    }
+//
+//    @Test
+//    public void shouldThrowErrorWhenPlayerNotFoundByPlayerDTO() {
+//        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
+//                .thenReturn(Optional.empty());
+//
+//        DetailedException result = Assertions.assertThrows(DetailedException.class, () -> {
+//            testInstance.getPlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME));
+//        });
+//        Assertions.assertAll(
+//                () -> assertFalse(result.getErrors().isEmpty()),
+//                () -> assertEquals(1, result.getErrors().size()),
+//                () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
+//                        .allMatch(errorConstant -> PLAYER_NOT_FOUND_TOURNAMENT_CREATION == errorConstant))
+//        );
+//    }
 
     @Test
     public void shouldCheckIfPlayerExistsWithBothNameProvided() {
@@ -112,25 +111,25 @@ class PlayerHelperTest {
         Assertions.assertTrue(testInstance.isPlayerExist(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME)));
     }
 
-    @Test
-    public void shouldCheckIfPlayerNotExistsWithBothNameProvided() {
-        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
-                .thenReturn(Optional.of(playerSpy));
+//    @Test
+//    public void shouldCheckIfPlayerNotExistsWithBothNameProvided() {
+//        when(playerRepositoryMock.findByFirstNameAndLastName(PLAYER_FIRST_NAME, PLAYER_LAST_NAME))
+//                .thenReturn(Optional.of(playerSpy));
+//
+//        Assertions.assertFalse(testInstance.isPlayerNotExist(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME)));
+//    }
 
-        Assertions.assertFalse(testInstance.isPlayerNotExist(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME)));
-    }
+//    @ParameterizedTest
+//    @MethodSource("withoutBothNameProvided")
+//    public void shouldCheckIfPlayerExistsWithoutBothNameProvided(String firstName, String lastName) {
+//        Assertions.assertFalse(testInstance.isPlayerExist(new PlayerDTO(firstName, lastName)));
+//    }
 
-    @ParameterizedTest
-    @MethodSource("withoutBothNameProvided")
-    public void shouldCheckIfPlayerExistsWithoutBothNameProvided(String firstName, String lastName) {
-        Assertions.assertFalse(testInstance.isPlayerExist(new PlayerDTO(firstName, lastName)));
-    }
-
-    @ParameterizedTest
-    @MethodSource("withoutBothNameProvided")
-    public void shouldCheckIfPlayerNotExistsWithoutBothNameProvided(String firstName, String lastName) {
-        Assertions.assertTrue(testInstance.isPlayerNotExist(new PlayerDTO(firstName, lastName)));
-    }
+//    @ParameterizedTest
+//    @MethodSource("withoutBothNameProvided")
+//    public void shouldCheckIfPlayerNotExistsWithoutBothNameProvided(String firstName, String lastName) {
+//        Assertions.assertTrue(testInstance.isPlayerNotExist(new PlayerDTO(firstName, lastName)));
+//    }
 
     private static Stream<Arguments> withoutBothNameProvided() {
         return Stream.of(
@@ -148,24 +147,24 @@ class PlayerHelperTest {
         verify(playerRepositoryMock).save(any(Player.class));
     }
 
-    @Test
-    public void shouldRemoveAllPlayerDuplicates() {
-        List<PlayerDTO> players = preparePlayers();
-        List<PlayerDTO> result = testInstance.removePlayerDuplicates(players);
-
-        Assertions.assertAll(
-                () -> assertEquals(2, result.size()),
-                () -> assertEquals(3, players.size()),
-                () -> assertEquals(PLAYER_FIRST_NAME, result.get(0).getFirstName()),
-                () -> assertEquals(PLAYER_TWO_FIRST_NAME, result.get(1).getFirstName())
-        );
-    }
+//    @Test
+//    public void shouldRemoveAllPlayerDuplicates() {
+//        List<PlayerDTO> players = preparePlayers();
+//        List<PlayerDTO> result = testInstance.removePlayerDuplicates(players);
+//
+//        Assertions.assertAll(
+//                () -> assertEquals(2, result.size()),
+//                () -> assertEquals(3, players.size()),
+//                () -> assertEquals(PLAYER_FIRST_NAME, result.get(0).getFirstName()),
+//                () -> assertEquals(PLAYER_TWO_FIRST_NAME, result.get(1).getFirstName())
+//        );
+//    }
 
     @Test
     public void shouldCompareEqualsPlayerDtoByNames() {
         boolean result = testInstance
-                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 0),
-                        new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 2));
+                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME),
+                        new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME));
 
         Assertions.assertTrue(result);
     }
@@ -173,8 +172,8 @@ class PlayerHelperTest {
     @Test
     public void shouldCompareNotEqualsPlayerDtoByNames() {
         boolean result = testInstance
-                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 0),
-                        new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME, (byte) 2));
+                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME),
+                        new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME));
 
         Assertions.assertFalse(result);
     }
@@ -182,11 +181,11 @@ class PlayerHelperTest {
     private List<PlayerDTO> preparePlayers() {
         List<PlayerDTO> players = new ArrayList<>();
         players.add(
-                (new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 0)));
-        players.add(new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME, (byte) 1));
-        players.add(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME, (byte) 2));
-        players.add(new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME, (byte) 3));
-        players.add(new PlayerDTO(PLAYER_THREE_FIRST_NAME, PLAYER_THREE_LAST_NAME, (byte) 4));
+                (new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME)));
+        players.add(new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME));
+        players.add(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME));
+        players.add(new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME));
+        players.add(new PlayerDTO(PLAYER_THREE_FIRST_NAME, PLAYER_THREE_LAST_NAME));
         return players;
     }
 }
