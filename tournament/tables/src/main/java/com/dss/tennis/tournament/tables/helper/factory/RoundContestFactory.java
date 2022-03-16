@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +35,17 @@ public class RoundContestFactory implements AbstractContestFactory {
                 contestHelper.createNewContest(repositoryPlayers.get(i), repositoryPlayers.get(j), tournament);
             }
         }
+    }
+
+
+    @Override
+    public void createContestsForNewPlayers(Integer tournamentId, List<Integer> currentPlayers,
+                                            Set<Integer> newPlayers) {
+        newPlayers.forEach(newPlayerId -> {
+            for (Integer currentPlayerId : currentPlayers)
+                contestHelper.createNewContest(newPlayerId, currentPlayerId, tournamentId);
+            currentPlayers.add(newPlayerId);
+        });
     }
 
     @Override

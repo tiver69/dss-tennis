@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TournamentFactory {
@@ -28,6 +29,12 @@ public class TournamentFactory {
                                             TournamentType tournamentType) {
 
         getContestFactory(tournamentType).createContests(tournament, players);
+    }
+
+    public void createContestForNewPlayers(TournamentDTO tournamentDto, List<Integer> currentPlayerIds,
+                                           Set<Integer> newPlayerIds) {
+        getContestFactory(tournamentDto.getTournamentType())
+                .createContestsForNewPlayers(tournamentDto.getId(), currentPlayerIds, newPlayerIds);
     }
 
     public TournamentDTO populateTournamentDTO(Tournament tournament) {

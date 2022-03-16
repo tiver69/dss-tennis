@@ -26,6 +26,17 @@ public class ContestHelper {
         return contests;
     }
 
+    public Contest createNewContest(Integer playerOneId, Integer playerTwoId, Integer tournamentId) {
+        Contest contest = SingleContest.builder()
+                .playerOneId(playerOneId)
+                .playerTwoId(playerTwoId)
+                .tournament(new Tournament(tournamentId))
+                .score(new Score())
+                .build();
+
+        return contestRepository.save(contest);
+    }
+
     public Contest createNewContest(Player playerOne, Player playerTwo, Tournament tournament) {
         Contest contest = SingleContest.builder()
                 .playerOneId(playerOne.getId())

@@ -4,8 +4,10 @@ public enum WarningConstant {
 
     //player warnings
     PLAYER_DUPLICATION,
+    PLAYER_NOT_FOUND,
 
     //common warnings
+    UNSUPPORTED_RESOURCE_TYPE,
     REQUEST_PARAMETER_NOT_ALLOWED,
     PAGE_OUT_OF_LOWER_RANGE,
     PAGE_OUT_OF_UPPER_RANGE,

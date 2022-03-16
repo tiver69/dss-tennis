@@ -2,8 +2,6 @@ package com.dss.tennis.tournament.tables.converter;
 
 import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
 import com.dss.tennis.tournament.tables.model.dto.AbstractSequentialDTO;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,6 +31,15 @@ public class ConverterHelper {
             addSequential(destinationObject);
         }
         return destinationClass.cast(destinationObject);
+    }
+
+    public <S, D> List<D> convert(Collection<S> sourceIterable, Class<D> destinationClass, boolean includeSequential) {
+        List<D> destinationList = sourceIterable.stream()
+                .map(source -> convert(source, destinationClass, includeSequential))
+                .collect(Collectors.toList());
+        if (includeSequential && AbstractSequentialDTO.class.isAssignableFrom(destinationClass))
+            addSequentialToList((List<? extends AbstractSequentialDTO>) destinationList);
+        return destinationList;
     }
 
     private <D> void addSequential(D destinationObject) {

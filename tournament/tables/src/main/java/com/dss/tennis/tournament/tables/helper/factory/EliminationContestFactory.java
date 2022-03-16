@@ -8,6 +8,7 @@ import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_TYPE_NOT_SUPPORTED;
 
@@ -16,6 +17,12 @@ public class EliminationContestFactory implements AbstractContestFactory {
 
     @Override
     public void createContests(Tournament tournament, List<PlayerDTO> players) {
+        throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
+    }
+
+    @Override
+    public void createContestsForNewPlayers(Integer tournamentId, List<Integer> currentPlayers,
+                                            Set<Integer> newPlayers) {
         throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
     }
 
