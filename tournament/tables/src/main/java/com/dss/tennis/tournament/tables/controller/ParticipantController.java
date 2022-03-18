@@ -54,7 +54,7 @@ public class ParticipantController {
 
     @GetMapping("/players/{playerId}")
     public ResponseEntity<SuccessResponse<GetPlayer>> getPlayerById(@PathVariable Integer playerId) {
-        PlayerDTO player = participantService.getPlayer(playerId);
+        PlayerDTO player = participantService.getPlayerDTO(playerId);
 
         SuccessResponse<GetPlayer> playerResponse = responseHelper.createSuccessResponse(player, GetPlayer.class);
         return new ResponseEntity<>(playerResponse, HttpStatus.OK);

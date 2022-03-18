@@ -7,7 +7,9 @@ import java.util.Set;
 
 public interface AbstractContestFactory {
 
-    void createContestsForNewPlayers(Integer tournamentId, List<Integer> currentPlayers, Set<Integer> newPlayers);
+    boolean createContestsForSingleTournament(Integer tournamentId, Set<Integer> newPlayerIds);
+
+    boolean createContestsForDoubleTournament(Integer tournamentId, Set<Integer> newTeamIds);
 
     List<ContestDTO> getContestDTOs(Integer tournamentId,
                                     Class<? extends ContestDTO> contestParticipantType);

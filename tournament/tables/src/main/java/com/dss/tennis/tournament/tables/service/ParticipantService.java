@@ -3,7 +3,7 @@ package com.dss.tennis.tournament.tables.service;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.helper.PlayerHelper;
+import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
@@ -11,7 +11,7 @@ import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
-import com.dss.tennis.tournament.tables.validator.PlayerValidator;
+import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,8 +43,8 @@ public class ParticipantService {
         return converterHelper.convert(player, PlayerDTO.class);
     }
 
-    public PlayerDTO getPlayer(Integer playerId) {
-        return playerHelper.getPlayer(playerId);
+    public PlayerDTO getPlayerDTO(Integer playerId) {
+        return playerHelper.getParticipantDto(playerId);
     }
 
     public SuccessResponseDTO<PageableDTO<PlayerDTO>> getPlayersPage(int page, byte pageSize) {

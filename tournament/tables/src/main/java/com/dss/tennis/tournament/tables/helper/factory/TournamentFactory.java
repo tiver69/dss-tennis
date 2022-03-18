@@ -1,6 +1,9 @@
 package com.dss.tennis.tournament.tables.helper.factory;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
+import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
+import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
@@ -21,14 +24,17 @@ public class TournamentFactory {
     @Autowired
     private EliminationContestFactory eliminationTournamentFactory;
     @Autowired
-    private SingleParticipantFactory singleParticipantFactory;
+    private PlayerHelper playerHelper;
     @Autowired
-    private DoubleParticipantFactory doubleParticipantFactory;
+    private TeamHelper teamHelper;
 
-    public void createContestForNewPlayers(TournamentDTO tournamentDto, List<Integer> currentPlayerIds,
-                                           Set<Integer> newPlayerIds) {
-        getContestFactory(tournamentDto.getTournamentType())
-                .createContestsForNewPlayers(tournamentDto.getId(), currentPlayerIds, newPlayerIds);
+    public boolean createContestForNewParticipants(TournamentDTO tournamentDto, Set<Integer> newParticipantIds) {
+        AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType());
+        if (tournamentDto.getParticipantType() == ParticipantType.SINGLE) {
+            return contestFactory.createContestsForSingleTournament(tournamentDto.getId(), newParticipantIds);
+        } else {
+            return contestFactory.createContestsForDoubleTournament(tournamentDto.getId(), newParticipantIds);
+        }
     }
 
     public TournamentDTO populateTournamentDTO(Tournament tournament) {
@@ -46,8 +52,8 @@ public class TournamentFactory {
             tournamentDto.setContests(contests);
         }
         if (requestParameters.isIncludePlayers()) {
-            List<PlayerDTO> players = getParticipantFactory(tournamentDto.getParticipantType())
-                    .getTournamentPlayers(tournamentDto.getId());
+            List<PlayerDTO> players = getParticipantHelper(tournamentDto.getParticipantType())
+                    .getTournamentPlayerDTOs(tournamentDto.getId());
             tournamentDto.setPlayers(players);
         }
         return tournamentDto;
@@ -63,7 +69,7 @@ public class TournamentFactory {
         return type == TournamentType.ELIMINATION ? eliminationTournamentFactory : roundTournamentFactory;
     }
 
-    private AbstractParticipantFactory getParticipantFactory(ParticipantType type) {
-        return type == ParticipantType.SINGLE ? singleParticipantFactory : doubleParticipantFactory;
+    private ParticipantHelper<?> getParticipantHelper(ParticipantType type) {
+        return type == ParticipantType.SINGLE ? playerHelper : teamHelper;
     }
 }

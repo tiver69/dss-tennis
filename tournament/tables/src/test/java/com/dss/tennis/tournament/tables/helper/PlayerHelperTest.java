@@ -3,15 +3,14 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
+import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -56,7 +55,7 @@ class PlayerHelperTest {
         when(playerRepositoryMock.findById(PLAYER_ID)).thenReturn(Optional.of(playerSpy));
         when(converterHelperMock.convert(playerSpy, PlayerDTO.class)).thenReturn(playerDtoSpy);
 
-        PlayerDTO result = testInstance.getPlayer(PLAYER_ID);
+        PlayerDTO result = testInstance.getParticipantDto(PLAYER_ID);
 
         Assertions.assertEquals(playerDtoSpy, result);
     }
@@ -66,7 +65,7 @@ class PlayerHelperTest {
         when(playerRepositoryMock.findById(PLAYER_ID)).thenReturn(Optional.empty());
 
         DetailedException result = Assertions.assertThrows(DetailedException.class, () -> {
-            testInstance.getPlayer(PLAYER_ID);
+            testInstance.getParticipant(PLAYER_ID);
         });
 
         Assertions.assertAll(
@@ -159,24 +158,6 @@ class PlayerHelperTest {
 //                () -> assertEquals(PLAYER_TWO_FIRST_NAME, result.get(1).getFirstName())
 //        );
 //    }
-
-    @Test
-    public void shouldCompareEqualsPlayerDtoByNames() {
-        boolean result = testInstance
-                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME),
-                        new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME));
-
-        Assertions.assertTrue(result);
-    }
-
-    @Test
-    public void shouldCompareNotEqualsPlayerDtoByNames() {
-        boolean result = testInstance
-                .isSamePlayer(new PlayerDTO(PLAYER_FIRST_NAME, PLAYER_LAST_NAME),
-                        new PlayerDTO(PLAYER_TWO_FIRST_NAME, PLAYER_TWO_LAST_NAME));
-
-        Assertions.assertFalse(result);
-    }
 
     private List<PlayerDTO> preparePlayers() {
         List<PlayerDTO> players = new ArrayList<>();

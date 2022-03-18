@@ -2,7 +2,6 @@ package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
-import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.FORBIDDEN_PARTICIPANT_QUANTITY;
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
 
 @Service
@@ -34,17 +34,19 @@ public class TournamentHelper {
     public Tournament createNewTournament(TournamentDTO tournamentDTO) {
         Tournament tournament = Tournament.builder().name(tournamentDTO.getName())
                 .tournamentType(tournamentDTO.getTournamentType())
-                .participantType(ParticipantType.SINGLE)
+                .participantType(tournamentDTO.getParticipantType())
                 .status(getStatusBaseOnBeginningDate(tournamentDTO.getBeginningDate()))
                 .beginningDate(tournamentDTO.getBeginningDate())
                 .build();
         return tournamentRepository.save(tournament);
     }
 
-    public void addPlayersToTournament(TournamentDTO tournamentDto, List<Integer> currentPlayerIds,
-                                       Set<Integer> newPlayerIds) {
-        tournamentFactory
-                .createContestForNewPlayers(tournamentDto, currentPlayerIds, newPlayerIds);
+    public void addParticipantsToTournament(TournamentDTO tournamentDto, Set<Integer> newParticipantIds) {
+        boolean isCreated = tournamentFactory.createContestForNewParticipants(tournamentDto, newParticipantIds);
+
+        if (!isCreated) {
+            throw new DetailedException(FORBIDDEN_PARTICIPANT_QUANTITY);
+        }
     }
 
     public TournamentDTO getTournament(Integer tournamentId) {

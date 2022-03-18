@@ -29,6 +29,7 @@ public class TournamentDTO {
     private String name;
     @Required(message = "TOURNAMENT_TYPE_EMPTY")
     private TournamentType tournamentType;
+    @Required(message = "PARTICIPANT_TYPE_EMPTY")
     private ParticipantType participantType;
     private StatusType status;
     private LocalDate beginningDate;

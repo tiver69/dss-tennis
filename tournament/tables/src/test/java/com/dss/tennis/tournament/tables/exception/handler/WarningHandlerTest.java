@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class WarningHandlerTest {
 
-    private static final WarningConstant TEST_CONSTANT = WarningConstant.PLAYER_DUPLICATION;
+    private static final WarningConstant TEST_CONSTANT = WarningConstant.PARTICIPANT_DUPLICATION;
     private static final String ANY_DETAIL = "Detail";
     private static final String POINTER_SUFFIX = ".warning.pointer";
     private static final String WARNING_PARAMETER = "parameter";

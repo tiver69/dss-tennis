@@ -14,8 +14,12 @@ import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TO
 public class EliminationContestFactory implements AbstractContestFactory {
 
     @Override
-    public void createContestsForNewPlayers(Integer tournamentId, List<Integer> currentPlayers,
-                                            Set<Integer> newPlayers) {
+    public boolean createContestsForSingleTournament(Integer tournamentId, Set<Integer> newPlayerIds) {
+        throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
+    }
+
+    @Override
+    public boolean createContestsForDoubleTournament(Integer tournamentId, Set<Integer> newTeamIds) {
         throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
     }
 
