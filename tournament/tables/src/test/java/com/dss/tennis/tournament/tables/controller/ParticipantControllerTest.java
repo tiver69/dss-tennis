@@ -55,7 +55,7 @@ class ParticipantControllerTest {
     @Test
     public void shouldPerformGetPlayer() throws Exception {
         SuccessResponse<GetPlayer> successResponse = prepareSuccessGetPlayer();
-        when(participantServiceMock.getPlayer(PLAYER_ID)).thenReturn(playerDtoSpy);
+        when(participantServiceMock.getPlayerDTO(PLAYER_ID)).thenReturn(playerDtoSpy);
         when(responseHelperMock.createSuccessResponse(playerDtoSpy, GetPlayer.class))
                 .thenReturn(successResponse);
 
@@ -64,7 +64,7 @@ class ParticipantControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        verify(participantServiceMock).getPlayer(PLAYER_ID);
+        verify(participantServiceMock).getPlayerDTO(PLAYER_ID);
         verify(responseHelperMock).createSuccessResponse(playerDtoSpy, GetPlayer.class);
         Assertions.assertEquals(objectMapper.writeValueAsString(successResponse), content
                 .getResponse().getContentAsString());

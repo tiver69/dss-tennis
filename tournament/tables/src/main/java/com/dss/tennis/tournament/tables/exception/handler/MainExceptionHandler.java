@@ -49,7 +49,7 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
         ErrorData errorData = createErrorData(new DetailedErrorData(INTERNAL_SERVER_ERROR, exception.getMessage()));
-        System.out.println(exception);
+        System.out.println(exception.getStackTrace()); //todo: temp
         return new ResponseEntity<>(new ErrorResponse(errorData), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

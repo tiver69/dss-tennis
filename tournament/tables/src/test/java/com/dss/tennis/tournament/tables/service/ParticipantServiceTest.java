@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.service;
 
-import com.dss.tennis.tournament.tables.helper.PlayerHelper;
+import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,9 +27,9 @@ class ParticipantServiceTest {
 
     @Test
     public void shouldGetPlayer() {
-        when(playerHelperMock.getPlayer(PLAYER_ID)).thenReturn(playerDtoSpy);
+        when(playerHelperMock.getParticipantDto(PLAYER_ID)).thenReturn(playerDtoSpy);
 
-        Assertions.assertEquals(playerDtoSpy, testInstance.getPlayer(PLAYER_ID));
+        Assertions.assertEquals(playerDtoSpy, testInstance.getPlayerDTO(PLAYER_ID));
     }
 
 }

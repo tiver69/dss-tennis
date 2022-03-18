@@ -51,7 +51,7 @@ public class TournamentController {
                 .convert(participants.getData(), ResourceObjectDTO.class, true);
 
         SuccessResponseDTO<TournamentDTO> tournamentDTO = tournamentService
-                .addPlayersToTournament(tournamentId, participantsDto);
+                .addParticipantsToTournament(tournamentId, participantsDto);
 
         SuccessResponse<GetTournament> tournamentResponse = responseHelper
                 .createSuccessResponse(tournamentDTO, GetTournament.class);

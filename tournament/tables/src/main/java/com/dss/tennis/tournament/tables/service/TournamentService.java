@@ -3,15 +3,18 @@ package com.dss.tennis.tournament.tables.service;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
-import com.dss.tennis.tournament.tables.helper.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
+import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
+import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
+import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
+import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
-import com.dss.tennis.tournament.tables.validator.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
+import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,8 @@ public class TournamentService {
     @Autowired
     private PlayerHelper playerHelper;
     @Autowired
+    private TeamHelper teamHelper;
+    @Autowired
     private TournamentHelper tournamentHelper;
     @Autowired
     private WarningHandler warningHandler;
@@ -48,18 +53,16 @@ public class TournamentService {
     }
 
     @Transactional
-    public SuccessResponseDTO<TournamentDTO> addPlayersToTournament(Integer tournamentId,
-                                                                    List<ResourceObjectDTO> participantsDto) {
+    public SuccessResponseDTO<TournamentDTO> addParticipantsToTournament(Integer tournamentId,
+                                                                         List<ResourceObjectDTO> newParticipantsDto) {
         TournamentDTO tournamentDto = tournamentHelper.getTournament(tournamentId, BASIC);
-        List<Integer> currentPlayerIds = playerHelper.getTournamentPlayerIds(tournamentId);
 
         Set<ErrorData> warnings = new HashSet<>();
-        Set<Integer> newPlayerIds = playerHelper
-                .getPlayerIdsForEnrolling(currentPlayerIds, participantsDto, tournamentDto
-                        .getParticipantType(), warnings);
-        playerValidator.validatePlayerQuantity(currentPlayerIds.size() + newPlayerIds.size());
+        ParticipantHelper<?> participantHelper = getParticipantHelper(tournamentDto.getParticipantType());
+        Set<Integer> newParticipantIds = participantHelper
+                .getParticipantIdsForEnrolling(tournamentId, newParticipantsDto, warnings);
 
-        tournamentHelper.addPlayersToTournament(tournamentDto, currentPlayerIds, newPlayerIds);
+        tournamentHelper.addParticipantsToTournament(tournamentDto, newParticipantIds);
         return new SuccessResponseDTO<>(tournamentHelper.getTournament(tournamentId), warnings);
     }
 
@@ -87,5 +90,9 @@ public class TournamentService {
         Set<DetailedErrorData> errorSet = new HashSet<>(tournamentValidator
                 .validateCreateTournament(tournamentDTO));
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+    }
+
+    private ParticipantHelper<?> getParticipantHelper(ParticipantType participantType) {
+        return participantType == ParticipantType.DOUBLE ? teamHelper : playerHelper;
     }
 }

@@ -1,7 +1,6 @@
 package com.dss.tennis.tournament.tables.model.db.v2;
 
 import com.dss.tennis.tournament.tables.model.db.v1.Score;
-import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -20,7 +19,7 @@ public class Contest {
     private int id;
     private byte round;
     private Score score;
-    private Tournament tournament;
+    private Integer tournamentId;
     private Byte winner;
     private Date date;
 
@@ -55,14 +54,14 @@ public class Contest {
         this.score = score;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "tournament_id", nullable = false)
-    public Tournament getTournament() {
-        return tournament;
+    @Basic
+    @Column(name = "tournament_id", nullable = false)
+    public Integer getTournamentId() {
+        return tournamentId;
     }
 
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
+    public void setTournamentId(Integer tournamentId) {
+        this.tournamentId = tournamentId;
     }
 
     @Basic
@@ -95,6 +94,8 @@ public class Contest {
         if (id != contest.id) return false;
         if (round != contest.round) return false;
         if (winner != null ? !winner.equals(contest.winner) : contest.winner != null) return false;
+        if (tournamentId != null ? !tournamentId.equals(contest.tournamentId) : contest.tournamentId != null)
+            return false;
         return date != null ? date.equals(contest.date) : contest.date == null;
     }
 
@@ -104,6 +105,7 @@ public class Contest {
         result = 31 * result + (int) round;
         result = 31 * result + (winner != null ? winner.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (tournamentId != null ? tournamentId.hashCode() : 0);
         return result;
     }
 }

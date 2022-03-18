@@ -2,9 +2,11 @@ package com.dss.tennis.tournament.tables.exception.error;
 
 public enum WarningConstant {
 
-    //player warnings
-    PLAYER_DUPLICATION,
+    //participant warnings
+    PARTICIPANT_DUPLICATION,
+    PLAYER_DUPLICATION_IN_TOURNAMENT,
     PLAYER_NOT_FOUND,
+    TEAM_NOT_FOUND,
 
     //common warnings
     UNSUPPORTED_RESOURCE_TYPE,

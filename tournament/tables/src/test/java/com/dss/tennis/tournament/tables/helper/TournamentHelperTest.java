@@ -3,11 +3,8 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
-import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
@@ -20,15 +17,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -126,12 +120,10 @@ class TournamentHelperTest {
 
     private Tournament preparePlannedTournament() {
         return Tournament.builder().status(StatusType.PLANNED).beginningDate(LocalDate.now().plus(1, DAYS))
-                .participantType(ParticipantType.SINGLE)
                 .build();
     }
 
     private Tournament prepareInProgressTournament() {
-        return Tournament.builder().status(StatusType.IN_PROGRESS).beginningDate(LocalDate.now())
-                .participantType(ParticipantType.SINGLE).build();
+        return Tournament.builder().status(StatusType.IN_PROGRESS).beginningDate(LocalDate.now()).build();
     }
 }
