@@ -1,6 +1,8 @@
 package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
@@ -18,12 +20,15 @@ public class ResponseHelper {
 
     @Autowired
     private ConverterHelper converterHelper;
+    @Autowired
+    private WarningHandler warningHandler;
 
     public <S, D> SuccessResponse<D> createSuccessResponse(SuccessResponseDTO<S> data, Class<D> responseClass) {
         return createSuccessResponse(data.getData(), null, data.getWarnings(), responseClass);
     }
 
-    public SuccessResponse<GetTournament> createSuccessResponse(TournamentDTO tournamentDTO, Set<ErrorData> warnings) {
+    public SuccessResponse<GetTournament> createSuccessResponse(TournamentDTO tournamentDTO,
+                                                                Set<ErrorDataDTO> warnings) {
         Set<ResourceObject> included = null;
         if (tournamentDTO.getPlayers() != null) {
             included = tournamentDTO.getPlayers().stream()
@@ -38,11 +43,13 @@ public class ResponseHelper {
     }
 
     public <S, D> SuccessResponse<D> createSuccessResponse(S data, Set<ResourceObject> included,
-                                                           Set<ErrorData> warnings, Class<D> responseClass) {
+                                                           Set<ErrorDataDTO> warnings, Class<D> responseClass) {
         SuccessResponse<D> successResponse = new SuccessResponse<>();
         successResponse.setData(converterHelper.convert(data, responseClass));
         successResponse.setIncluded((included == null || included.isEmpty()) ? null : included);
-        successResponse.setWarnings((warnings == null || warnings.isEmpty()) ? null : warnings);
+        Set<ErrorData> warningsResponse = warnings == null || warnings.isEmpty() ? null :
+                warnings.stream().map(warningHandler::createErrorData).collect(Collectors.toSet());
+        successResponse.setWarnings(warningsResponse);
 
         return successResponse;
     }

@@ -1,11 +1,16 @@
 package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.*;
+import com.dss.tennis.tournament.tables.model.response.v1.GetSingleParticipant;
+import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject;
+import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +33,8 @@ class ResponseHelperTest {
 
     @Mock
     private ConverterHelper converterHelperMock;
+    @Mock
+    private WarningHandler warningHandlerMock;
     @Spy
     private GetTournament<GetSingleParticipant> getTournamentSpy;
     @Spy
@@ -39,7 +46,7 @@ class ResponseHelperTest {
     @Spy
     private ResourceObject playerTwoResourceObjectSpy;
     @Spy
-    private ErrorData errorDataSpy;
+    private ErrorDataDTO errorDataSpy;
 
     @InjectMocks
     private ResponseHelper testInstance;
@@ -60,7 +67,7 @@ class ResponseHelperTest {
                 () -> assertEquals(result.getIncluded().size(), 2),
                 () -> assertTrue(result.getIncluded().contains(playerOneResourceObjectSpy)),
                 () -> assertTrue(result.getIncluded().contains(playerTwoResourceObjectSpy)),
-                () -> assertTrue(result.getWarnings().contains(errorDataSpy))
+                () -> assertFalse(result.getWarnings().isEmpty())
         );
     }
 
@@ -77,7 +84,7 @@ class ResponseHelperTest {
                 () -> assertNotNull(result),
                 () -> assertEquals(result.getData(), getTournamentSpy),
                 () -> assertNull(result.getIncluded()),
-                () -> assertTrue(result.getWarnings().contains(errorDataSpy))
+                () -> assertFalse(result.getWarnings().isEmpty())
         );
     }
 
@@ -94,7 +101,7 @@ class ResponseHelperTest {
                 () -> assertNotNull(result),
                 () -> assertEquals(result.getData(), getTournamentSpy),
                 () -> assertNull(result.getIncluded()),
-                () -> assertTrue(result.getWarnings().contains(errorDataSpy))
+                () -> assertFalse(result.getWarnings().isEmpty())
         );
     }
 

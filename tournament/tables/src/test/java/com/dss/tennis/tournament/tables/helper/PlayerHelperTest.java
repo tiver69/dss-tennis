@@ -2,9 +2,9 @@ package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.PLAYER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -71,7 +71,7 @@ class PlayerHelperTest {
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),
                 () -> assertEquals(1, result.getErrors().size()),
-                () -> assertTrue(result.getErrors().stream().map(DetailedErrorData::getErrorConstant)
+                () -> assertTrue(result.getErrors().stream().map(ErrorDataDTO::getErrorConstant)
                         .allMatch(errorConstant -> PLAYER_NOT_FOUND == errorConstant))
         );
     }

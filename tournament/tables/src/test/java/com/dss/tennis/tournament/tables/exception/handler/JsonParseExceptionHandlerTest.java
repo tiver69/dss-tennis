@@ -12,11 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.GENERAL_BAD_REQUEST;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.GENERAL_BAD_REQUEST;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class JsonParseExceptionHandlerTest {

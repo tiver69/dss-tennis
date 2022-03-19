@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.validator;
 
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.model.dto.AbstractSequentialDTO;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class ValidatorHelper<V> {
     @Autowired
     private Validator javaxValidator;
 
-    public Set<DetailedErrorData> validateObject(V validationObject) {
+    public Set<ErrorDataDTO> validateObject(V validationObject) {
         Set<String> errorMessages = javaxValidator.validate(validationObject).stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toSet());
@@ -27,14 +27,14 @@ public class ValidatorHelper<V> {
                 collectErrorDetails(errorMessages);
     }
 
-    private Set<DetailedErrorData> collectErrorDetailsWithSequentialNumber(Set<String> errorMessages,
+    private Set<ErrorDataDTO> collectErrorDetailsWithSequentialNumber(Set<String> errorMessages,
                                                                            Byte sequenceNumber) {
-        Set<DetailedErrorData> detailedErrorData = collectErrorDetails(errorMessages);
+        Set<ErrorDataDTO> detailedErrorData = collectErrorDetails(errorMessages);
         detailedErrorData.forEach(detail -> detail.setSequentNumber(sequenceNumber));
         return detailedErrorData;
     }
 
-    private Set<DetailedErrorData> collectErrorDetails(Set<String> errorMessages) {
-        return errorMessages.stream().map(DetailedErrorData::new).collect(Collectors.toSet());
+    private Set<ErrorDataDTO> collectErrorDetails(Set<String> errorMessages) {
+        return errorMessages.stream().map(ErrorDataDTO::new).collect(Collectors.toSet());
     }
 }

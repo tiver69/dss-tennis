@@ -2,12 +2,12 @@ package com.dss.tennis.tournament.tables.helper.participant;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
-import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +79,12 @@ public class PlayerHelper extends ParticipantHelper<Player> {
     @Override
     public Set<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
                                                       List<ResourceObjectDTO> newPlayers,
-                                                      Set<ErrorData> warnings) {
+                                                      Set<ErrorDataDTO> warnings) {
         List<Integer> currentPlayerIds = getTournamentPlayerIds(tournamentId);
         Set<Integer> participantIdsForEnrolling = new HashSet<>();
 
         for (ResourceObjectDTO newPlayer : newPlayers) {
-            ErrorData warning = playerValidator.validateParticipantForEnrolling(currentPlayerIds, newPlayer);
+            ErrorDataDTO warning = playerValidator.validateParticipantForEnrolling(currentPlayerIds, newPlayer);
             if (warning != null) warnings.add(warning);
             else {
                 currentPlayerIds.add(newPlayer.getId());

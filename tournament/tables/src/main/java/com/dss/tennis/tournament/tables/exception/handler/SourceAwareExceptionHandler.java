@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData.ErrorDataSource;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Autowired
-    private Environment environment;
+    protected Environment environment;
 
     protected final String STATUS_SUFFIX = ".status";
     protected final String CODE_SUFFIX = ".code";
@@ -22,10 +22,10 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
     protected final String DETAIL_SUFFIX = ".detail";
     protected final String POINTER_SUFFIX = ".pointer";
 
-    protected ErrorData createErrorData(DetailedErrorData currentError) {
+    public ErrorData createErrorData(ErrorDataDTO currentError) {
         String errorConstant = currentError.getErrorConstant().toString();
         ErrorDataSource errorDataSource = constructErrorDataSource(errorConstant, currentError
-                .getDetailParameter(), currentError.getSequentNumber());
+                .getDetailParameter(), currentError.getPointer(), currentError.getSequentNumber());
 
         ErrorData errorData = createErrorDataBase(errorConstant);
         errorData.setSource(errorDataSource);
@@ -33,14 +33,12 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
     }
 
     protected ErrorData createErrorData(ErrorConstants errorConstantEnum, String detailParameter, String pointer) {
-        String errorConstant = errorConstantEnum.toString();
-
-        ErrorData errorData = createErrorDataBase(errorConstant);
+        ErrorData errorData = createErrorDataBase(errorConstantEnum.toString());
         errorData.setSource(constructErrorDataSource(detailParameter, pointer));
         return errorData;
     }
 
-    private ErrorData createErrorDataBase(String errorConstant) {
+    protected ErrorData createErrorDataBase(String errorConstant) {
         return ErrorData.builder()
                 .status(environment.getProperty(errorConstant + STATUS_SUFFIX))
                 .code(environment.getProperty(errorConstant + CODE_SUFFIX))
@@ -49,24 +47,30 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
                 .build();
     }
 
-    private ErrorDataSource constructErrorDataSource(String errorConstant, String detailParameter, Byte sequentNumber) {
-        String sequentialPointerString = constructSequentialPointer(errorConstant, sequentNumber);
-        return constructErrorDataSource(detailParameter, sequentialPointerString);
+    protected ErrorDataSource constructErrorDataSource(String errorConstant, String detailParameter,
+                                                       String customPointer, Byte sequentNumber) {
+        String pointer = customPointer == null ? constructPointer(errorConstant, sequentNumber) :
+                customPointer;
+
+        return constructErrorDataSource(detailParameter, pointer);
     }
 
     private ErrorDataSource constructErrorDataSource(String detailParameter, String pointer) {
-        if (StringUtils.isBlank(detailParameter) && StringUtils.isBlank(pointer))
-            return null;
-
-        return ErrorDataSource.builder()
-                .parameter(detailParameter)
-                .pointer(pointer)
-                .build();
+        return StringUtils.isBlank(detailParameter) && StringUtils.isBlank(pointer) ?
+                null :
+                ErrorDataSource.builder()
+                        .parameter(detailParameter)
+                        .pointer(pointer)
+                        .build();
     }
 
-    private String constructSequentialPointer(String errorConstant, Byte pointer) {
-        String sequentialPointerFormat = environment.getProperty(errorConstant + POINTER_SUFFIX);
+    protected String constructPointer(String errorConstant, Byte pointer) {
+        String sequentialPointerFormat = environment.getProperty(errorConstant + getPointerSuffix());
         return pointer == null ? sequentialPointerFormat :
                 String.format(sequentialPointerFormat, pointer);
+    }
+
+    protected String getPointerSuffix() {
+        return POINTER_SUFFIX;
     }
 }

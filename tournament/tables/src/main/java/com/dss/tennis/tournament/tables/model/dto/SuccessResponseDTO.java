@@ -1,6 +1,5 @@
 package com.dss.tennis.tournament.tables.model.dto;
 
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +14,5 @@ import java.util.Set;
 public class SuccessResponseDTO<D> {
 
     private D data;
-    private Set<ErrorData> warnings;
+    private Set<ErrorDataDTO> warnings;
 }

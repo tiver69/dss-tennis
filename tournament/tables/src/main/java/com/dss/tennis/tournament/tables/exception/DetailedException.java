@@ -1,7 +1,8 @@
 package com.dss.tennis.tournament.tables.exception;
 
-import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
-import lombok.*;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.Set;
 @Setter
 public class DetailedException extends RuntimeException {
 
-    private Set<DetailedErrorData> errors = new HashSet<>();
+    private Set<ErrorDataDTO> errors = new HashSet<>();
 
     public DetailedException(ErrorConstants error) {
         this(error, null);
@@ -21,43 +22,14 @@ public class DetailedException extends RuntimeException {
     }
 
     public DetailedException(ErrorConstants error, String detailParameter) {
-        this.errors.add(new DetailedErrorData(error, detailParameter, null));
+        this.errors.add(new ErrorDataDTO(error, detailParameter, null));
     }
 
     public DetailedException(ErrorConstants error, String detailParameter, byte sequentialNumber) {
-        this.errors.add(new DetailedErrorData(error, detailParameter, sequentialNumber));
+        this.errors.add(new ErrorDataDTO(error, detailParameter, sequentialNumber));
     }
 
-    public DetailedException(Set<DetailedErrorData> errors) {
+    public DetailedException(Set<ErrorDataDTO> errors) {
         this.errors = errors;
-    }
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class DetailedErrorData {
-
-        public DetailedErrorData(String errorConstantString) {
-            this.errorConstant = ErrorConstants.valueOf(errorConstantString);
-        }
-
-        public DetailedErrorData(ErrorConstants errorConstant) {
-            this.errorConstant = errorConstant;
-        }
-
-        public DetailedErrorData(ErrorConstants errorConstant, String detailParameter) {
-            this.errorConstant = errorConstant;
-            this.detailParameter = detailParameter;
-        }
-
-        public DetailedErrorData(ErrorConstants errorConstant, Byte sequentNumber) {
-            this.errorConstant = errorConstant;
-            this.sequentNumber = sequentNumber;
-        }
-
-        private ErrorConstants errorConstant;
-        private String detailParameter;
-        private Byte sequentNumber;
     }
 }

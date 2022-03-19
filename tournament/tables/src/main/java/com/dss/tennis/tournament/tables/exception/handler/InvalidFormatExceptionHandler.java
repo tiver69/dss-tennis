@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.GENERAL_BAD_REQUEST;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.GENERAL_BAD_REQUEST;
 
 @Service
 public class InvalidFormatExceptionHandler extends SourceAwareExceptionHandler implements JacksonExceptionHandler {

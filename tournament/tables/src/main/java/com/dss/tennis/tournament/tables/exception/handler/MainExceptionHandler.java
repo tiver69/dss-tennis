@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.INTERNAL_SERVER_ERROR;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 public class MainExceptionHandler extends SourceAwareExceptionHandler {
@@ -48,7 +48,7 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
-        ErrorData errorData = createErrorData(new DetailedErrorData(INTERNAL_SERVER_ERROR, exception.getMessage()));
+        ErrorData errorData = createErrorData(new ErrorDataDTO(INTERNAL_SERVER_ERROR, exception.getMessage()));
         System.out.println(exception.getStackTrace()); //todo: temp
         return new ResponseEntity<>(new ErrorResponse(errorData), HttpStatus.INTERNAL_SERVER_ERROR);
     }

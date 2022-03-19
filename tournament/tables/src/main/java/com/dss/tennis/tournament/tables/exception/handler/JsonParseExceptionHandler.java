@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
-import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.apache.commons.lang3.StringUtils;

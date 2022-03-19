@@ -1,4 +1,4 @@
-package com.dss.tennis.tournament.tables.exception.error;
+package com.dss.tennis.tournament.tables.exception;
 
 public enum ErrorConstants {
 
@@ -13,14 +13,25 @@ public enum ErrorConstants {
 
     //contest errors
 
-    //player errors
+    //participant errors
     PLAYER_FIRST_NAME_EMPTY,
     PLAYER_LAST_NAME_EMPTY,
     PLAYER_NOT_FOUND,
     PLAYER_DUPLICATION,
 
+    //participant warnings
+    PARTICIPANT_DUPLICATION,
+    PLAYER_DUPLICATION_IN_TOURNAMENT,
+    TEAM_NOT_FOUND,
+
     //common errors
     UNSUPPORTED_RESOURCE_TYPE,
     GENERAL_BAD_REQUEST,
-    INTERNAL_SERVER_ERROR
+    INTERNAL_SERVER_ERROR,
+
+    //common warnings
+    REQUEST_PARAMETER_NOT_ALLOWED,
+    PAGE_OUT_OF_LOWER_RANGE,
+    PAGE_OUT_OF_UPPER_RANGE,
+    PAGE_SIZE_OUT_OF_RANGE
 }

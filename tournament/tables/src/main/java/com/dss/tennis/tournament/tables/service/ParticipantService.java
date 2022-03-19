@@ -2,13 +2,12 @@ package com.dss.tennis.tournament.tables.service;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
@@ -34,7 +33,7 @@ public class ParticipantService {
 
     @Transactional
     public PlayerDTO createNewPlayer(PlayerDTO playerDto) {
-        Set<DetailedErrorData> errorSet = playerValidator.validateNewPlayer(playerDto);
+        Set<ErrorDataDTO> errorSet = playerValidator.validateNewPlayer(playerDto);
         if (!errorSet.isEmpty()) {
             throw new DetailedException(errorSet);
         }
@@ -48,7 +47,7 @@ public class ParticipantService {
     }
 
     public SuccessResponseDTO<PageableDTO<PlayerDTO>> getPlayersPage(int page, byte pageSize) {
-        Set<ErrorData> warnings = new HashSet<>();
+        Set<ErrorDataDTO> warnings = new HashSet<>();
         Pageable pageableRequestParameter = pageableValidator.validatePageableRequest(page, pageSize, warnings,
                 ResourceObjectType.PLAYER);
 

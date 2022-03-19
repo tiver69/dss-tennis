@@ -1,9 +1,9 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.exception.error.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.exception.handler.MainExceptionHandler.ErrorResponse;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorData.ErrorDataSource;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_FIRST_NAME_EMPTY;
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NAME_EMPTY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.PLAYER_FIRST_NAME_EMPTY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NAME_EMPTY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -122,10 +122,10 @@ class MainExceptionHandlerTest {
         when(environmentMock.getProperty(any(String.class))).thenReturn(ANY_DETAIL);
 
         when(environmentMock.getProperty(TEST_CONSTANT + testInstance.CODE_SUFFIX)).thenReturn(CODE);
-        Set<DetailedErrorData> detailedErrorDataSet = Sets
-                .newSet(new DetailedErrorData(TEST_CONSTANT, ERROR_DETAIL_DATA),
-                        new DetailedErrorData(TOURNAMENT_NAME_EMPTY, ERROR_DETAIL_DATA_2),
-                        new DetailedErrorData(PLAYER_FIRST_NAME_EMPTY));
+        Set<ErrorDataDTO> detailedErrorDataSet = Sets
+                .newSet(new ErrorDataDTO(TEST_CONSTANT, ERROR_DETAIL_DATA),
+                        new ErrorDataDTO(TOURNAMENT_NAME_EMPTY, ERROR_DETAIL_DATA_2),
+                        new ErrorDataDTO(PLAYER_FIRST_NAME_EMPTY));
         ArrayList<String> parameters = new ArrayList<>();
         parameters.add(ERROR_DETAIL_DATA);
         parameters.add(ERROR_DETAIL_DATA_2);

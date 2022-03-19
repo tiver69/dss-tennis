@@ -14,8 +14,9 @@ import org.springframework.core.env.Environment;
 
 import java.util.List;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.GENERAL_BAD_REQUEST;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.GENERAL_BAD_REQUEST;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 

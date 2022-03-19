@@ -1,9 +1,9 @@
 package com.dss.tennis.tournament.tables.helper.participant;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,5 +34,5 @@ public abstract class ParticipantHelper<T> {
 
     public abstract Set<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
                                                                List<ResourceObjectDTO> newParticipants,
-                                                               Set<ErrorData> warnings);
+                                                               Set<ErrorDataDTO> warnings);
 }

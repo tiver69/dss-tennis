@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.FORBIDDEN_PARTICIPANT_QUANTITY;
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.FORBIDDEN_PARTICIPANT_QUANTITY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NOT_FOUND;
 
 @Service
 public class TournamentHelper {

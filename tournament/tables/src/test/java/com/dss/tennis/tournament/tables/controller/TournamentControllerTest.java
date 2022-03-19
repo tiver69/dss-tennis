@@ -4,8 +4,8 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
@@ -29,9 +29,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Arrays;
 import java.util.Set;
 
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.INTERNAL_SERVER_ERROR;
 import static com.dss.tennis.tournament.tables.helper.RequestParameterHelper.INCLUDE_KEY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -49,7 +49,6 @@ class TournamentControllerTest {
 
     private static final int TOURNAMENT_ID = 111;
     private static final String TOURNAMENT_NAME = "TOURNAMENT_NAME";
-    private static final String WARNING_CODE = "WARNING_CODE";
     private static final String INCLUDE_PARAMETER = "INCLUDE_PARAMETER";
     private static final CreatePlayer PLAYER_ONE = new CreatePlayer();
     private static final CreatePlayer PLAYER_TWO = new CreatePlayer();
@@ -80,8 +79,7 @@ class TournamentControllerTest {
 
     @Test
     public void shouldPerformNewTournamentCreation() throws Exception {
-        SuccessResponse<GetTournament> response = prepareSuccessGetTournament(Set
-                .of(ErrorData.builder().code(WARNING_CODE).build()));
+        SuccessResponse<GetTournament> response = prepareSuccessGetTournament();
         when(converterHelperMock.convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true)))
                 .thenReturn(tournamentDtoSpy);
         when(tournamentServiceMock.createNewTournament(tournamentDtoSpy)).thenReturn(createdTournamentDtoSpy);
@@ -105,14 +103,14 @@ class TournamentControllerTest {
 
     @Test
     public void shouldPerformGetTournamentWithIncorrectIncludeParameter() throws Exception {
-        Set<ErrorData> includeWarnings = Sets.newSet(ErrorData.builder().code(WARNING_CODE).build());
+        Set<ErrorDataDTO> includeWarnings = Sets.newSet(new ErrorDataDTO(INTERNAL_SERVER_ERROR));
         when(requestParameterHelperMock
                 .populateRequestParameter(eq(INCLUDE_KEY), eq(INCLUDE_PARAMETER), any(RequestParameter.class)))
                 .thenReturn(includeWarnings);
         when(tournamentServiceMock.getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class)))
                 .thenReturn(tournamentDtoSpy);
         when(responseHelperMock.createSuccessResponse(tournamentDtoSpy, includeWarnings))
-                .thenReturn(prepareSuccessGetTournament(includeWarnings));
+                .thenReturn(prepareSuccessGetTournament());
 
         MvcResult content = mockMvc
                 .perform(get("/tournaments/" + TOURNAMENT_ID + "?include=" + INCLUDE_PARAMETER))
@@ -121,12 +119,13 @@ class TournamentControllerTest {
 
         verify(tournamentServiceMock).getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class));
         verify(responseHelperMock).createSuccessResponse(any(TournamentDTO.class), eq(includeWarnings));
-        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament(includeWarnings)), content
+        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament()), content
                 .getResponse().getContentAsString());
     }
 
-    private SuccessResponse<GetTournament> prepareSuccessGetTournament(Set<ErrorData> warnings) {
-        return new SuccessResponse<>(prepareGetTournament(), warnings);
+    private SuccessResponse<GetTournament> prepareSuccessGetTournament() {
+        return new SuccessResponse<>(prepareGetTournament(), Set
+                .of(ErrorData.builder().code("INTERNAL_SERVER_ERROR").build()));
     }
 
     private GetTournament prepareGetTournament() {

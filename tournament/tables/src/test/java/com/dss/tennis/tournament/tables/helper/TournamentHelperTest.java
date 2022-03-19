@@ -1,10 +1,10 @@
 package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NOT_FOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -90,12 +90,12 @@ class TournamentHelperTest {
         DetailedException resultError = Assertions
                 .assertThrows(DetailedException.class, () -> testInstance
                         .getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT));
-        Set<DetailedErrorData> result = resultError.getErrors();
+        Set<ErrorDataDTO> result = resultError.getErrors();
 
         Assertions.assertAll(
                 () -> assertFalse(result.isEmpty()),
                 () -> assertEquals(1, result.size()),
-                () -> assertTrue(result.stream().map(DetailedErrorData::getErrorConstant)
+                () -> assertTrue(result.stream().map(ErrorDataDTO::getErrorConstant)
                         .anyMatch(tt -> tt.equals(TOURNAMENT_NOT_FOUND)))
         );
     }

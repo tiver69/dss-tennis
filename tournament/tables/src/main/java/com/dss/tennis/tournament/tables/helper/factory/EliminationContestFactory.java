@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_TYPE_NOT_SUPPORTED;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_TYPE_NOT_SUPPORTED;
 
 @Service
 public class EliminationContestFactory implements AbstractContestFactory {

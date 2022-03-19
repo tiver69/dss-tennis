@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.validator;
 
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ class PlayerValidatorTest {
     private ValidatorHelper<PlayerDTO> validatorHelperMock;
 
     @Spy
-    private DetailedErrorData detailedErrorDataSpy;
+    private ErrorDataDTO detailedErrorDataSpy;
 
     @InjectMocks
     private PlayerValidator testInstance;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.UNSUPPORTED_RESOURCE_TYPE;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.UNSUPPORTED_RESOURCE_TYPE;
 
 @Data
 @Builder

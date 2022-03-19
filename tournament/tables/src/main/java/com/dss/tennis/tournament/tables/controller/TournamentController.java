@@ -6,7 +6,9 @@ import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
 import com.dss.tennis.tournament.tables.model.request.EnrollTournamentParticipant;
-import com.dss.tennis.tournament.tables.model.response.v1.*;
+import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
+import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,7 +64,7 @@ public class TournamentController {
     public ResponseEntity<SuccessResponse<GetTournament>> getTournamentById(@PathVariable Integer tournamentId,
                                                                             @RequestParam(required = false) String include) {
         RequestParameter requestParameters = new RequestParameter();
-        Set<ErrorData> warnings = requestParameterHelper
+        Set<ErrorDataDTO> warnings = requestParameterHelper
                 .populateRequestParameter(RequestParameterHelper.INCLUDE_KEY, include, requestParameters);
         TournamentDTO tournamentDTO = tournamentService.getTournament(tournamentId, requestParameters);
 

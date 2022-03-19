@@ -1,8 +1,8 @@
 package com.dss.tennis.tournament.tables.validator;
 
-import com.dss.tennis.tournament.tables.exception.DetailedException.DetailedErrorData;
-import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +15,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.PLAYER_FIRST_NAME_EMPTY;
-import static com.dss.tennis.tournament.tables.exception.error.ErrorConstants.TOURNAMENT_NAME_EMPTY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NAME_EMPTY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +39,7 @@ class ValidatorHelperTest {
         PlayerDTO playerDTO = new PlayerDTO(VALID_FIRST_NAME, VALID_LAST_NAME);
         when(javaxValidatorMock.validate(playerDTO)).thenReturn(Sets.newSet());
 
-        Set<DetailedErrorData> result = testInstance.validateObject(playerDTO);
+        Set<ErrorDataDTO> result = testInstance.validateObject(playerDTO);
 
         assertTrue(result.isEmpty());
     }
@@ -71,7 +70,7 @@ class ValidatorHelperTest {
         when(constraintViolationMock.getMessage()).thenReturn(TOURNAMENT_NAME_EMPTY.name());
         when(javaxValidatorMock.validate(tournamentDTO)).thenReturn(Sets.newSet(constraintViolationMock));
 
-        Set<DetailedErrorData> result = testInstance.validateObject(tournamentDTO);
+        Set<ErrorDataDTO> result = testInstance.validateObject(tournamentDTO);
 
         Assertions.assertAll(
                 () -> assertFalse(result.isEmpty()),

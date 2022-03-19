@@ -2,9 +2,9 @@ package com.dss.tennis.tournament.tables.helper.participant;
 
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
+import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
 import com.dss.tennis.tournament.tables.repository.TeamRepository;
 import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,12 +59,12 @@ public class TeamHelper extends ParticipantHelper<Team> {
     @Override
     public Set<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
                                                       List<ResourceObjectDTO> newParticipants,
-                                                      Set<ErrorData> warnings) {
+                                                      Set<ErrorDataDTO> warnings) {
         ArrayList<Integer> currentPlayerIds = getTournamentPlayerIds(tournamentId);
         Set<Integer> participantIdsForEnrolling = new HashSet<>();
 
         for (ResourceObjectDTO newTeam : newParticipants) {
-            ErrorData warning = teamValidator.validateParticipantForEnrolling(currentPlayerIds, newTeam);
+            ErrorDataDTO warning = teamValidator.validateParticipantForEnrolling(currentPlayerIds, newTeam);
             if (warning == null) {
                 Team team = getParticipant(newTeam.getId());
                 currentPlayerIds.add(team.getPlayerOneId());
