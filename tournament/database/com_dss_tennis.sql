@@ -209,7 +209,7 @@ CREATE TABLE `tournament` (
   `tournament_type` enum('ROUND','ELIMINATION') COLLATE utf8_unicode_ci NOT NULL,
   `participant_type` enum('SINGLE','DOUBLE') COLLATE utf8_unicode_ci NOT NULL,
   `status` enum('PLANNED','IN_PROGRESS','PLAYED') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'PLANNED',
-  `beginning_date` date NOT NULL,
+  `beginning_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -234,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-19 17:56:26
+-- Dump completed on 2022-03-19 22:39:22
