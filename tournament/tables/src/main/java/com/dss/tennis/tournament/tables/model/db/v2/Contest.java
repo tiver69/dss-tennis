@@ -1,6 +1,5 @@
 package com.dss.tennis.tournament.tables.model.db.v2;
 
-import com.dss.tennis.tournament.tables.model.db.v1.Score;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -8,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -18,10 +18,10 @@ import java.sql.Date;
 public class Contest {
     private int id;
     private byte round;
-    private Score score;
     private Integer tournamentId;
-    private Byte winner;
+    private Integer winner;
     private Date date;
+    private Set<SetScore> sets;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,16 +44,6 @@ public class Contest {
         this.round = round;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "score_id", nullable = false)
-    public Score getScore() {
-        return score;
-    }
-
-    public void setScore(Score score) {
-        this.score = score;
-    }
-
     @Basic
     @Column(name = "tournament_id", nullable = false)
     public Integer getTournamentId() {
@@ -65,12 +55,12 @@ public class Contest {
     }
 
     @Basic
-    @Column(name = "winner")
-    public Byte getWinner() {
+    @Column(name = "winner_id")
+    public Integer getWinner() {
         return winner;
     }
 
-    public void setWinner(Byte winner) {
+    public void setWinner(Integer winner) {
         this.winner = winner;
     }
 
@@ -82,6 +72,15 @@ public class Contest {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @OneToMany(mappedBy = "contest")
+    public Set<SetScore> getSets() {
+        return sets;
+    }
+
+    public void setSets(Set<SetScore> sets) {
+        this.sets = sets;
     }
 
     @Override

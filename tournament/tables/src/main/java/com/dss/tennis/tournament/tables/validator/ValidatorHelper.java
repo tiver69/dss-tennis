@@ -17,24 +17,29 @@ public class ValidatorHelper<V> {
     private Validator javaxValidator;
 
     public Set<ErrorDataDTO> validateObject(V validationObject) {
+        return validateObject(validationObject, null);
+    }
+
+    public Set<ErrorDataDTO> validateObject(V validationObject, String customPointer) {
         Set<String> errorMessages = javaxValidator.validate(validationObject).stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toSet());
 
         return validationObject instanceof AbstractSequentialDTO ?
-                collectErrorDetailsWithSequentialNumber(errorMessages,
+                collectErrorDetailsWithSequentialNumber(errorMessages, customPointer,
                         ((AbstractSequentialDTO) validationObject).getSequenceNumber()) :
-                collectErrorDetails(errorMessages);
+                collectErrorDetails(errorMessages, customPointer);
     }
 
-    private Set<ErrorDataDTO> collectErrorDetailsWithSequentialNumber(Set<String> errorMessages,
-                                                                           Byte sequenceNumber) {
-        Set<ErrorDataDTO> detailedErrorData = collectErrorDetails(errorMessages);
+    private Set<ErrorDataDTO> collectErrorDetailsWithSequentialNumber(Set<String> errorMessages, String customPointer,
+                                                                      Byte sequenceNumber) {
+        Set<ErrorDataDTO> detailedErrorData = collectErrorDetails(errorMessages, customPointer);
         detailedErrorData.forEach(detail -> detail.setSequentNumber(sequenceNumber));
         return detailedErrorData;
     }
 
-    private Set<ErrorDataDTO> collectErrorDetails(Set<String> errorMessages) {
-        return errorMessages.stream().map(ErrorDataDTO::new).collect(Collectors.toSet());
+    private Set<ErrorDataDTO> collectErrorDetails(Set<String> errorMessages, String customPointer) {
+        return errorMessages.stream().map(ErrorDataDTO::new).peek(errorData -> errorData.setPointer(customPointer))
+                .collect(Collectors.toSet());
     }
 }

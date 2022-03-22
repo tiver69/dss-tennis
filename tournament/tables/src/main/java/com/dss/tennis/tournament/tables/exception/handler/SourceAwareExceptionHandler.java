@@ -22,6 +22,9 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
     protected final String DETAIL_SUFFIX = ".detail";
     protected final String POINTER_SUFFIX = ".pointer";
 
+    protected final String SEQUENTIAL_POINTER_KEY = "%o";
+    protected final String STRING_POINTER_KEY = "%s";
+
     public ErrorData createErrorData(ErrorDataDTO currentError) {
         String errorConstant = currentError.getErrorConstant().toString();
         ErrorDataSource errorDataSource = constructErrorDataSource(errorConstant, currentError
@@ -33,8 +36,9 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
     }
 
     protected ErrorData createErrorData(ErrorConstants errorConstantEnum, String detailParameter, String pointer) {
-        ErrorData errorData = createErrorDataBase(errorConstantEnum.toString());
-        errorData.setSource(constructErrorDataSource(detailParameter, pointer));
+        String errorConstant = errorConstantEnum.toString();
+        ErrorData errorData = createErrorDataBase(errorConstant);
+        errorData.setSource(constructErrorDataSource(errorConstant, detailParameter, pointer, null));
         return errorData;
     }
 
@@ -49,13 +53,7 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
 
     protected ErrorDataSource constructErrorDataSource(String errorConstant, String detailParameter,
                                                        String customPointer, Byte sequentNumber) {
-        String pointer = customPointer == null ? constructPointer(errorConstant, sequentNumber) :
-                customPointer;
-
-        return constructErrorDataSource(detailParameter, pointer);
-    }
-
-    private ErrorDataSource constructErrorDataSource(String detailParameter, String pointer) {
+        String pointer = constructPointer(errorConstant, customPointer, sequentNumber);
         return StringUtils.isBlank(detailParameter) && StringUtils.isBlank(pointer) ?
                 null :
                 ErrorDataSource.builder()
@@ -64,10 +62,16 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
                         .build();
     }
 
-    protected String constructPointer(String errorConstant, Byte pointer) {
-        String sequentialPointerFormat = environment.getProperty(errorConstant + getPointerSuffix());
-        return pointer == null ? sequentialPointerFormat :
-                String.format(sequentialPointerFormat, pointer);
+    protected String constructPointer(String errorConstant, String pointerString, Byte sequenceNumber) {
+        String pointerFormat = environment.getProperty(errorConstant + getPointerSuffix());
+        if (pointerFormat == null) return pointerString;
+        if (pointerString == null && sequenceNumber == null) return pointerFormat;
+        if (pointerFormat.contains(SEQUENTIAL_POINTER_KEY) && sequenceNumber != null)
+            return String.format(pointerFormat, sequenceNumber);
+        if (pointerFormat.contains(STRING_POINTER_KEY) && pointerString != null && !pointerString.isEmpty())
+            return String.format(pointerFormat, pointerString);
+
+        throw new IllegalArgumentException("Error pointer misconfiguration, please check property file and error data");
     }
 
     protected String getPointerSuffix() {

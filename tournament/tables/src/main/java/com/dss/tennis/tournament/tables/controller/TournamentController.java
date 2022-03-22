@@ -4,8 +4,10 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.*;
+import com.dss.tennis.tournament.tables.model.request.CreateScore;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
 import com.dss.tennis.tournament.tables.model.request.EnrollTournamentParticipant;
+import com.dss.tennis.tournament.tables.model.response.v1.GetContest;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
@@ -39,9 +41,9 @@ public class TournamentController {
     public ResponseEntity<SuccessResponse<GetTournament>> createTournament(@RequestBody CreateTournament tournament) {
         TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class, true);
 
-        TournamentDTO tournamentDTO = tournamentService.createNewTournament(tournamentDto);
+        TournamentDTO createdTournamentDto = tournamentService.createNewTournament(tournamentDto);
         SuccessResponse<GetTournament> tournamentResponse = responseHelper
-                .createSuccessResponse(tournamentDTO, GetTournament.class);
+                .createSuccessResponse(createdTournamentDto, GetTournament.class);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
     }
 
@@ -58,6 +60,18 @@ public class TournamentController {
         SuccessResponse<GetTournament> tournamentResponse = responseHelper
                 .createSuccessResponse(tournamentDTO, GetTournament.class);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{tournamentId}/contest/{contestId}/score")
+    public ResponseEntity<SuccessResponse<?>> createScore(@PathVariable Integer tournamentId,
+                                                          @PathVariable Integer contestId,
+                                                          @RequestBody CreateScore score) {
+        ScoreDTO scoreDto = converterHelper.convert(score, ScoreDTO.class);
+
+        ContestDTO contestDto = tournamentService.createContestScore(contestId, tournamentId, scoreDto);
+        SuccessResponse<GetContest> contestResponse = responseHelper
+                .createSuccessResponse(contestDto, GetContest.class);
+        return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/{tournamentId}")
@@ -84,4 +98,6 @@ public class TournamentController {
                 .createSuccessResponse(pageableTournamentsDto, GetPageable.class);
         return new ResponseEntity<>(tournamentsSuccessResponse, HttpStatus.OK);
     }
+
+
 }

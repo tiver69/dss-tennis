@@ -2,7 +2,6 @@ package com.dss.tennis.tournament.tables.model.response.v1;
 
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -19,17 +18,8 @@ public class GetContest<T extends GetParticipant> {
 
     private Integer id;
     private String type;
+    private Integer winner;
     private T participantOne;
     private T participantTwo;
-    private Set setOne;
-    private Set setTwo;
-    private Set setThree;
-    private Set tieBreak;
-
-    @Data
-    @AllArgsConstructor
-    public static class Set {
-        private byte participantOneScore;
-        private byte participantTwoScore;
-    }
+    private GetScore score;
 }

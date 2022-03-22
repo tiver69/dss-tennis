@@ -14,9 +14,9 @@ import org.modelmapper.spi.MappingContext;
 public class PlayerDtoToResourceObjectConverter implements Converter<PlayerDTO, ResourceObject> {
 
     @Override
-    public ResourceObject convert(MappingContext<PlayerDTO, ResourceObject> context) {
+    public ResourceObject<GetPlayer> convert(MappingContext<PlayerDTO, ResourceObject> context) {
         PlayerDTO playerDTO = context.getSource();
-        ResourceObject resourceObject = context.getDestination();
+        ResourceObject<GetPlayer> resourceObject = context.getDestination();
 
         GetPlayer playerAttributes = GetPlayer.builder()
                 .firstName(playerDTO.getFirstName())

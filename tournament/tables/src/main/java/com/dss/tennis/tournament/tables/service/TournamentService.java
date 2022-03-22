@@ -2,6 +2,8 @@ package com.dss.tennis.tournament.tables.service;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
+import com.dss.tennis.tournament.tables.helper.ContestHelper;
+import com.dss.tennis.tournament.tables.helper.ScoreHelper;
 import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
@@ -11,6 +13,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
+import com.dss.tennis.tournament.tables.validator.ScoreValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_SCORE_EXISTS;
 import static com.dss.tennis.tournament.tables.model.dto.RequestParameter.BASIC;
 
 @Service
@@ -35,6 +39,12 @@ public class TournamentService {
     private PageableValidator pageableValidator;
     @Autowired
     private PlayerHelper playerHelper;
+    @Autowired
+    private ContestHelper contestHelper;
+    @Autowired
+    private ScoreHelper scoreHelper;
+    @Autowired
+    private ScoreValidator scoreValidator;
     @Autowired
     private TeamHelper teamHelper;
     @Autowired
@@ -62,6 +72,17 @@ public class TournamentService {
 
         tournamentHelper.addParticipantsToTournament(tournamentDto, newParticipantIds);
         return new SuccessResponseDTO<>(tournamentHelper.getTournament(tournamentId), warnings);
+    }
+
+    @Transactional
+    public ContestDTO createContestScore(Integer contestId, Integer tournamentId, ScoreDTO scoreDto) {
+        ContestDTO contest = contestHelper.getTournamentContest(contestId, tournamentId);
+        if (!scoreHelper.getContestSetScores(contestId).isEmpty()) throw new DetailedException(CONTEST_SCORE_EXISTS);
+        Set<ErrorDataDTO> errorSet = scoreValidator.validateCreateScore(scoreDto);
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+
+        contestHelper.createContestScore(contest, scoreDto);
+        return contestHelper.getContestWithScore(contestId);
     }
 
     public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {

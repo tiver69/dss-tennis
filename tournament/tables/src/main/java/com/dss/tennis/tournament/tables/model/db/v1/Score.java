@@ -3,7 +3,7 @@ package com.dss.tennis.tournament.tables.model.db.v1;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
+@Deprecated
 public class Score {
     private int id;
     private Byte setOneParticipantOne;

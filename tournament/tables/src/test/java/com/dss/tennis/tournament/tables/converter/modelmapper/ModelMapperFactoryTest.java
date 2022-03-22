@@ -1,7 +1,5 @@
 package com.dss.tennis.tournament.tables.converter.modelmapper;
 
-import com.dss.tennis.tournament.tables.model.db.v2.Contest;
-import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
@@ -11,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ModelMapperFactoryTest {
 
@@ -31,7 +29,6 @@ class ModelMapperFactoryTest {
         Assertions.assertAll(
                 () -> assertNotNull(result.getTypeMap(SingleContestDTO.class, GetContest.class).getPostConverter()),
                 () -> assertNotNull(result.getTypeMap(DoubleContestDTO.class, GetContest.class).getPostConverter()),
-                () -> assertNotNull(result.getTypeMap(Contest.class, ContestDTO.class).getPostConverter()),
                 () -> assertNotNull(result.getTypeMap(PlayerDTO.class, ResourceObject.class).getPostConverter())
         );
     }

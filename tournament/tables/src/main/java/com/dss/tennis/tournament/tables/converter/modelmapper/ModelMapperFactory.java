@@ -1,9 +1,12 @@
 package com.dss.tennis.tournament.tables.converter.modelmapper;
 
 import com.dss.tennis.tournament.tables.converter.*;
-import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.dto.*;
-import com.dss.tennis.tournament.tables.model.response.v1.*;
+import com.dss.tennis.tournament.tables.model.request.CreateScore;
+import com.dss.tennis.tournament.tables.model.response.v1.GetContest;
+import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
+import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -30,14 +33,14 @@ public class ModelMapperFactory {
                 .setPostConverter(new SingleContestDtoToGetResponseConverter());
         modelMapper.createTypeMap(DoubleContestDTO.class, GetContest.class)
                 .setPostConverter(new DoubleContestDtoToGetResponseConverter());
-        modelMapper.createTypeMap(Contest.class, ContestDTO.class)
-                .setPostConverter(new ContestToDtoConverter(modelMapper));
         modelMapper.createTypeMap(PlayerDTO.class, ResourceObject.class)
                 .setPostConverter(new PlayerDtoToResourceObjectConverter());
         modelMapper.createTypeMap(PageableDTO.class, GetPageable.class)
                 .setPostConverter(new PageableDtoToGetPageableConverter(modelMapper));
         modelMapper.createTypeMap(String.class, ResourceObjectType.class)
                 .setConverter(new ResourceObjectTypeStringToEnumConverter());
+        modelMapper.createTypeMap(CreateScore.class, ScoreDTO.class)
+                .setConverter(new CreateScoreToScoreDtoConverter());
         return modelMapper;
     }
 }

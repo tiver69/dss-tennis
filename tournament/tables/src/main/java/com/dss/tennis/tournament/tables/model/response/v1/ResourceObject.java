@@ -15,21 +15,22 @@ import static com.dss.tennis.tournament.tables.exception.ErrorConstants.UNSUPPOR
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResourceObject {
+public class ResourceObject<T> {
 
     private Integer id;
     private String type;
-    private Object attributes;
+    private T attributes;
 
     public enum ResourceObjectType {
         PLAYER("player"),
         TEAM("team"),
         TOURNAMENT("tournament"),
-        CONTEST("contest");
+        CONTEST("contest"),
+        SET_SCORE("setScore");
 
         public final String value;
 
-        private ResourceObjectType(String value) {
+        ResourceObjectType(String value) {
             this.value = value;
         }
 
