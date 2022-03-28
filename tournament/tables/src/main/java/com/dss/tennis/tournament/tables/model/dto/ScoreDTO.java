@@ -17,6 +17,7 @@ public class ScoreDTO {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class SetScoreDTO {
         private Integer id;
 
@@ -25,6 +26,10 @@ public class ScoreDTO {
 
         @Required(message = "PARTICIPANT_TWO_SCORE_EMPTY")
         private Byte participantTwoScore;
+
+        public SetScoreDTO(Integer id) {
+            this.id = id;
+        }
 
         public SetScoreDTO(Byte participantOneScore, Byte participantTwoScore) {
             this.participantOneScore = participantOneScore;

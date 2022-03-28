@@ -40,7 +40,9 @@ public class ModelMapperFactory {
         modelMapper.createTypeMap(String.class, ResourceObjectType.class)
                 .setConverter(new ResourceObjectTypeStringToEnumConverter());
         modelMapper.createTypeMap(CreateScore.class, ScoreDTO.class)
-                .setConverter(new CreateScoreToScoreDtoConverter());
+                .setConverter(new CreateScoreToScoreDtoConverter(ResourceObjectType.SET_SCORE.value));
+        modelMapper.createTypeMap(CreateScore.class, ScorePatchDTO.class)
+                .setConverter(new CreateScoreToScorePatchDtoConverter(ResourceObjectType.SET_SCORE.value));
         return modelMapper;
     }
 }

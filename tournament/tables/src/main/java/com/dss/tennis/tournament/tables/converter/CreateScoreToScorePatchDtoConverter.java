@@ -3,8 +3,8 @@ package com.dss.tennis.tournament.tables.converter;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.model.db.v2.SetType;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
+import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO;
+import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO.SetScorePatchDTO;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
 import com.dss.tennis.tournament.tables.model.request.CreateScore.SetScoreAttributes;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject;
@@ -19,17 +19,17 @@ import static com.dss.tennis.tournament.tables.model.db.v2.SetType.*;
 
 @Getter
 @Setter
-public class CreateScoreToScoreDtoConverter extends AbstractResourceObjectConverter implements Converter<CreateScore,
-        ScoreDTO> {
+public class CreateScoreToScorePatchDtoConverter extends AbstractResourceObjectConverter implements Converter<CreateScore,
+        ScorePatchDTO> {
 
-    public CreateScoreToScoreDtoConverter(String allowedResourceType) {
+    public CreateScoreToScorePatchDtoConverter(String allowedResourceType) {
         super(allowedResourceType);
     }
 
     @Override
-    public ScoreDTO convert(MappingContext<CreateScore, ScoreDTO> context) {
+    public ScorePatchDTO convert(MappingContext<CreateScore, ScorePatchDTO> context) {
         CreateScore createScore = context.getSource();
-        Map<SetType, SetScoreDTO> sets = new HashMap<>();
+        Map<SetType, SetScorePatchDTO> sets = new HashMap<>();
         Set<ErrorDataDTO> errors = new HashSet<>();
 
         mapSetScoreDto(createScore.getSetOne(), SET_ONE, errors).ifPresent(setScore -> sets.put(SET_ONE, setScore));
@@ -39,15 +39,15 @@ public class CreateScoreToScoreDtoConverter extends AbstractResourceObjectConver
         mapSetScoreDto(createScore.getTieBreak(), TIE_BREAK, errors)
                 .ifPresent(setScore -> sets.put(TIE_BREAK, setScore));
         if (!errors.isEmpty()) throw new DetailedException(errors);
-        return new ScoreDTO(sets);
+        return new ScorePatchDTO(sets);
     }
 
-    private Optional<SetScoreDTO> mapSetScoreDto(ResourceObject<SetScoreAttributes> set, SetType type,
+    private Optional<SetScorePatchDTO> mapSetScoreDto(ResourceObject<SetScoreAttributes> set, SetType type,
                                                  Set<ErrorDataDTO> errors) {
         if (set == null) return Optional.empty();
         errors.addAll(validateResponseObjectMappingWitAttributes(set, type.value));
         if (set.getAttributes() == null) return Optional.empty();
-        return Optional.of(new SetScoreDTO(set.getId(), set.getAttributes().getParticipantOne(), set
+        return Optional.of(new SetScorePatchDTO(set.getId(), set.getAttributes().getParticipantOne(), set
                 .getAttributes().getParticipantTwo()));
     }
 }

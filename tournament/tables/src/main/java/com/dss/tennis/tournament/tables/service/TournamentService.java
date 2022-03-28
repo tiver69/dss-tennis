@@ -10,6 +10,7 @@ import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
+import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_SCORE_EXISTS;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_SCORE_NOT_FOUND;
 import static com.dss.tennis.tournament.tables.model.dto.RequestParameter.BASIC;
 
 @Service
@@ -82,6 +84,24 @@ public class TournamentService {
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
         contestHelper.createContestScore(contest, scoreDto);
+        return contestHelper.getContestWithScore(contestId);
+    }
+
+    @Transactional
+    public ContestDTO updateContestScore(Integer contestId, Integer tournamentId, ScorePatchDTO scorePatchDto) {
+        ContestDTO contest = contestHelper.getTournamentContest(contestId, tournamentId);
+        List<SetScore> sets = scoreHelper.getContestSetScores(contestId);
+        if (sets.isEmpty()) throw new DetailedException(CONTEST_SCORE_NOT_FOUND);
+        ScoreDTO scoreDTO = scoreHelper.mapSetScoreToDto(sets);
+        Set<ErrorDataDTO> errorSet = scoreValidator.validateUpdateScorePatch(scoreDTO, scorePatchDto);
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+
+        ScorePatchDTO patchedScoreDTO = scoreHelper.applyPatch(scoreDTO, scorePatchDto);
+
+        errorSet = scoreValidator.validateUpdateScore(patchedScoreDTO);
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+
+        contestHelper.updateContestScore(patchedScoreDTO, contest);
         return contestHelper.getContestWithScore(contestId);
     }
 

@@ -6,10 +6,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
 import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
-import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
-import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import com.dss.tennis.tournament.tables.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +46,8 @@ public class ContestHelper {
         return contestDto;
     }
 
-    private ContestDTO getBaseContestDTO(Supplier<Optional<Contest>> getContest) {
-        Contest contest = getContest.get().orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND));
+    private ContestDTO getBaseContestDTO(Supplier<Optional<Contest>> contestSupplier) {
+        Contest contest = contestSupplier.get().orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND));
         Class<? extends ContestDTO> destinationClass = contest instanceof SingleContest ? SingleContestDTO.class :
                 DoubleContestDTO.class;
         return converterHelper.convert(contest, destinationClass);
@@ -77,8 +74,14 @@ public class ContestHelper {
     }
 
     public void createContestScore(ContestDTO contestDto, ScoreDTO scoreDto) {
-        scoreHelper.createScoreForContest(scoreDto, contestDto.getId());
-        Integer winnerId = scoreHelper.determineWinnerId(scoreDto.getSets()).apply(contestDto);
+        scoreHelper.createContestScore(scoreDto, contestDto.getId());
+        Integer winnerId = scoreHelper.getWinnerIdFunction(scoreDto.getSets()).apply(contestDto);
+        contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
+    }
+
+    public void updateContestScore(ScorePatchDTO scoreDto, ContestDTO contestDto) {
+        scoreHelper.updateContestScore(scoreDto, contestDto.getId());
+        Integer winnerId = scoreHelper.getWinnerIdFunction(scoreDto.getSets()).apply(contestDto);
         contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
     }
 }

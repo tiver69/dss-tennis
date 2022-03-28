@@ -19,7 +19,7 @@ public class DoubleContest extends Contest {
     private Team teamOne;
     private Team teamTwo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_one_id", nullable = false)
     public Team getTeamOne() {
         return teamOne;
@@ -29,7 +29,7 @@ public class DoubleContest extends Contest {
         this.teamOne = teamOne;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_two_id", nullable = false)
     public Team getTeamTwo() {
         return teamTwo;

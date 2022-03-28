@@ -1,6 +1,7 @@
 package com.dss.tennis.tournament.tables.model.response.v1;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,5 +40,10 @@ public class ResourceObject<T> {
                     .filter(tt -> value.equals(tt.value)).findFirst();
             return result.orElseThrow(() -> new DetailedException(UNSUPPORTED_RESOURCE_TYPE, value));
         }
+    }
+
+    @JsonIgnore
+    public boolean isInitializedEmpty() {
+        return id == null && type == null && attributes == null;
     }
 }

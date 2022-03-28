@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ContestRepository extends CrudRepository<Contest, Integer> {
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Contest c set c.winner = ?1 where c.id = ?2")
     void updateWinnerIdByContestId(Integer winnerId, Integer contestId);
 

@@ -74,6 +74,18 @@ public class TournamentController {
         return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{tournamentId}/contest/{contestId}/score")
+    public ResponseEntity<SuccessResponse<?>> updateScore(@PathVariable Integer tournamentId,
+                                                          @PathVariable Integer contestId,
+                                                          @RequestBody CreateScore score) {
+        ScorePatchDTO scorePatchDto = converterHelper.convert(score, ScorePatchDTO.class);
+
+        ContestDTO contestDto = tournamentService.updateContestScore(contestId, tournamentId, scorePatchDto);
+        SuccessResponse<GetContest> contestResponse = responseHelper
+                .createSuccessResponse(contestDto, GetContest.class);
+        return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{tournamentId}")
     public ResponseEntity<SuccessResponse<GetTournament>> getTournamentById(@PathVariable Integer tournamentId,
                                                                             @RequestParam(required = false) String include) {
