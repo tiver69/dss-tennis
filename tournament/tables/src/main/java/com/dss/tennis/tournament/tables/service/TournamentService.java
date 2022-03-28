@@ -13,6 +13,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
+import com.dss.tennis.tournament.tables.validator.ContestValidator;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.ScoreValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
@@ -43,6 +44,8 @@ public class TournamentService {
     private PlayerHelper playerHelper;
     @Autowired
     private ContestHelper contestHelper;
+    @Autowired
+    private ContestValidator contestValidator;
     @Autowired
     private ScoreHelper scoreHelper;
     @Autowired
@@ -83,7 +86,7 @@ public class TournamentService {
         Set<ErrorDataDTO> errorSet = scoreValidator.validateCreateScore(scoreDto);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
-        contestHelper.createContestScore(contest, scoreDto);
+        contestHelper.createContestScore(scoreDto, contest);
         return contestHelper.getContestWithScore(contestId);
     }
 
@@ -102,6 +105,16 @@ public class TournamentService {
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
         contestHelper.updateContestScore(patchedScoreDTO, contest);
+        return contestHelper.getContestWithScore(contestId);
+    }
+
+    @Transactional
+    public ContestDTO updateContestTechDefeat(Integer contestId, Integer tournamentId, TechDefeatDTO techDefeatDto) {
+        ContestDTO contest = contestHelper.getTournamentContest(contestId, tournamentId);
+        Set<ErrorDataDTO> errorSet = contestValidator.validateTechDefeat(techDefeatDto);
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+
+        contestHelper.updateContestTechDefeat(techDefeatDto, contest);
         return contestHelper.getContestWithScore(contestId);
     }
 

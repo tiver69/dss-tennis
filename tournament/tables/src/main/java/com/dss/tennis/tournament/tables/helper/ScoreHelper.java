@@ -8,6 +8,7 @@ import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO.SetScorePatchDTO;
+import com.dss.tennis.tournament.tables.model.dto.TechDefeatDTO;
 import com.dss.tennis.tournament.tables.repository.SetScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -89,7 +90,7 @@ public class ScoreHelper {
         return isSimpleScoreValid || isExtraSetScoreValid;
     }
 
-    public Function<ContestDTO, Integer> getWinnerIdFunction(Map<SetType, ? extends SetScoreDTO> setScores) {
+    public Function<ContestDTO, Integer> getScoreWinnerIdFunction(Map<SetType, ? extends SetScoreDTO> setScores) {
         byte result = 0;
         for (SetType key : setScores.keySet()) {
             if (key == SetType.TIE_BREAK) continue;
@@ -108,6 +109,13 @@ public class ScoreHelper {
         if (result == 0 || setScores.get(SetType.TIE_BREAK) != null)
             return getTieBreakSetWinner(setScores.get(SetType.TIE_BREAK));
         return result < 0 ? ContestDTO::participantOneId : ContestDTO::participantTwoId;
+    }
+
+    public Function<ContestDTO, Integer> getTechDefeatWinnerIdFunction(TechDefeatDTO techDefeatDto) {
+        if (techDefeatDto.getParticipantOne() && techDefeatDto.getParticipantTwo()) return (ContestDTO cc) -> null;
+        if (techDefeatDto.getParticipantOne()) return ContestDTO::participantTwoId;
+        if (techDefeatDto.getParticipantTwo()) return ContestDTO::participantOneId;
+        return (ContestDTO cc) -> null;
     }
 
     private Function<ContestDTO, Integer> getTieBreakSetWinner(SetScoreDTO tieBreakSetScore) {

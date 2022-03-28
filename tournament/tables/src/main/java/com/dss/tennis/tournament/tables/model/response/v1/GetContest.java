@@ -19,6 +19,7 @@ public class GetContest<T extends GetParticipant> {
     private Integer id;
     private String type;
     private Integer winner;
+    private boolean techDefeat;
     private T participantOne;
     private T participantTwo;
     private GetScore score;

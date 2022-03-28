@@ -13,6 +13,7 @@ public abstract class ContestDTO {
 
     private int id;
     private Integer winner;
+    private boolean techDefeat;
     private ScoreDTO scoreDto;
 
     //get word is missing due to model mapper which is trying to access GetParticipant constructor

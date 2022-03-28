@@ -7,6 +7,7 @@ import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
 import com.dss.tennis.tournament.tables.model.request.EnrollTournamentParticipant;
+import com.dss.tennis.tournament.tables.model.request.PatchTechDefeat;
 import com.dss.tennis.tournament.tables.model.response.v1.GetContest;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
@@ -81,6 +82,18 @@ public class TournamentController {
         ScorePatchDTO scorePatchDto = converterHelper.convert(score, ScorePatchDTO.class);
 
         ContestDTO contestDto = tournamentService.updateContestScore(contestId, tournamentId, scorePatchDto);
+        SuccessResponse<GetContest> contestResponse = responseHelper
+                .createSuccessResponse(contestDto, GetContest.class);
+        return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{tournamentId}/contest/{contestId}/techDefeat")
+    public ResponseEntity<SuccessResponse<?>> updateTechDefeat(@PathVariable Integer tournamentId,
+                                                          @PathVariable Integer contestId,
+                                                          @RequestBody PatchTechDefeat techDefeat) {
+        TechDefeatDTO techDefeatDto = converterHelper.convert(techDefeat, TechDefeatDTO.class);
+
+        ContestDTO contestDto = tournamentService.updateContestTechDefeat(contestId, tournamentId, techDefeatDto);
         SuccessResponse<GetContest> contestResponse = responseHelper
                 .createSuccessResponse(contestDto, GetContest.class);
         return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);

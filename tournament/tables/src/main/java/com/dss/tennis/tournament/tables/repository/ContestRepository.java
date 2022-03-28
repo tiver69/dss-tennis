@@ -14,6 +14,10 @@ public interface ContestRepository extends CrudRepository<Contest, Integer> {
     @Query("update Contest c set c.winner = ?1 where c.id = ?2")
     void updateWinnerIdByContestId(Integer winnerId, Integer contestId);
 
+    @Modifying(clearAutomatically = true)
+    @Query("update Contest c set c.winner = ?1, c.techDefeat = ?2 where c.id = ?3")
+    void updateTechDefeatByContestId(Integer winnerId, boolean isTechDefeat, Integer contestId);
+
     Optional<Contest> findByIdAndTournamentId(Integer id, Integer tournamentId);
 
     List<Contest> findByTournamentId(Integer TournamentId);

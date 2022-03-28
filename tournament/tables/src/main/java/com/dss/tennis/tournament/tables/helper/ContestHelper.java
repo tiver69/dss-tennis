@@ -5,6 +5,7 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
+import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
@@ -73,15 +74,33 @@ public class ContestHelper {
         return contestRepository.save(contest);
     }
 
-    public void createContestScore(ContestDTO contestDto, ScoreDTO scoreDto) {
+    public void createContestScore(ScoreDTO scoreDto, ContestDTO contestDto) {
         scoreHelper.createContestScore(scoreDto, contestDto.getId());
-        Integer winnerId = scoreHelper.getWinnerIdFunction(scoreDto.getSets()).apply(contestDto);
-        contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
+        if (!contestDto.isTechDefeat()) {
+            Integer winnerId = scoreHelper.getScoreWinnerIdFunction(scoreDto.getSets()).apply(contestDto);
+            contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
+        }
     }
 
     public void updateContestScore(ScorePatchDTO scoreDto, ContestDTO contestDto) {
         scoreHelper.updateContestScore(scoreDto, contestDto.getId());
-        Integer winnerId = scoreHelper.getWinnerIdFunction(scoreDto.getSets()).apply(contestDto);
-        contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
+        if (!contestDto.isTechDefeat()) {
+            Integer winnerId = scoreHelper.getScoreWinnerIdFunction(scoreDto.getSets()).apply(contestDto);
+            contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
+        }
+    }
+
+    public void updateContestTechDefeat(TechDefeatDTO techDefeatDto, ContestDTO contestDto) {
+        if (techDefeatDto.isTechDefeat()) {
+            Integer winnerId = scoreHelper.getTechDefeatWinnerIdFunction(techDefeatDto).apply(contestDto);
+            contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
+        }
+        if (contestDto.isTechDefeat() && !techDefeatDto.isTechDefeat()) {
+            List<SetScore> sets = scoreHelper.getContestSetScores(contestDto.getId());
+            ScoreDTO scoreDTO = scoreHelper.mapSetScoreToDto(sets);
+
+            Integer winnerId = scoreHelper.getScoreWinnerIdFunction(scoreDTO.getSets()).apply(contestDto);
+            contestRepository.updateTechDefeatByContestId(winnerId, false, contestDto.getId());
+        }
     }
 }

@@ -20,6 +20,7 @@ public class Contest {
     private byte round;
     private Integer tournamentId;
     private Integer winner;
+    private boolean techDefeat;
     private Date date;
     private Set<SetScore> sets;
 
@@ -62,6 +63,16 @@ public class Contest {
 
     public void setWinner(Integer winner) {
         this.winner = winner;
+    }
+
+    @Basic
+    @Column(name = "tech_defeat")
+    public boolean isTechDefeat() {
+        return techDefeat;
+    }
+
+    public void setTechDefeat(boolean techDefeat) {
+        this.techDefeat = techDefeat;
     }
 
     @Basic
