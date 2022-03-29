@@ -23,8 +23,6 @@ import java.util.stream.Stream;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.PLAYER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -139,12 +137,12 @@ class PlayerHelperTest {
         );
     }
 
-    @Test
-    public void shouldCreateNewPlayer() {
-        testInstance.createNewPlayer(PLAYER_FIRST_NAME, PLAYER_LAST_NAME);
-
-        verify(playerRepositoryMock).save(any(Player.class));
-    }
+//    @Test
+//    public void shouldCreateNewPlayer() {
+//        testInstance.createNewPlayer(PLAYER_FIRST_NAME, PLAYER_LAST_NAME);
+//
+//        verify(playerRepositoryMock).save(any(Player.class));
+//    }
 
 //    @Test
 //    public void shouldRemoveAllPlayerDuplicates() {

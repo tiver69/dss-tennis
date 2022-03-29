@@ -1,7 +1,10 @@
 package com.dss.tennis.tournament.tables.model.dto;
 
+import com.dss.tennis.tournament.tables.model.db.v1.LeadingHand;
 import com.dss.tennis.tournament.tables.validator.anotation.Required;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,10 +23,15 @@ public class PlayerDTO {
     }
 
     private int id;
+
     @Required(message = "PLAYER_FIRST_NAME_EMPTY")
     private String firstName;
     @Required(message = "PLAYER_LAST_NAME_EMPTY")
     private String lastName;
+
+    private LocalDate birthDate;
+    private Integer experienceYear;
+    private LeadingHand leadingHand;
 
     public boolean equals(final Object o) {
         if (o == this) return true;
@@ -53,8 +61,15 @@ public class PlayerDTO {
         return result * PRIME + ($lastName == null ? 43 : $lastName.hashCode());
     }
 
+    @Override
     public String toString() {
-        return "PlayerDTO(id=" + this.getId() + ", firstName=" + this.getFirstName() + ", lastName=" + this
-                .getLastName() + ")";
+        return "PlayerDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", experienceYear=" + experienceYear +
+                ", leadingHand=" + leadingHand +
+                '}';
     }
 }

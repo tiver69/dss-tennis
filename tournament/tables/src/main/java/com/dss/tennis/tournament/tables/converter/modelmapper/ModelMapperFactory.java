@@ -3,10 +3,7 @@ package com.dss.tennis.tournament.tables.converter.modelmapper;
 import com.dss.tennis.tournament.tables.converter.*;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
-import com.dss.tennis.tournament.tables.model.response.v1.GetContest;
-import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
-import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject;
+import com.dss.tennis.tournament.tables.model.response.v1.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -35,6 +32,8 @@ public class ModelMapperFactory {
                 .setPostConverter(new DoubleContestDtoToGetResponseConverter());
         modelMapper.createTypeMap(PlayerDTO.class, ResourceObject.class)
                 .setPostConverter(new PlayerDtoToResourceObjectConverter());
+        modelMapper.createTypeMap(PlayerDTO.class, GetPlayer.class)
+                .setPostConverter(new PlayerDtoToGetPlayerConverter());
         modelMapper.createTypeMap(PageableDTO.class, GetPageable.class)
                 .setPostConverter(new PageableDtoToGetPageableConverter(modelMapper));
         modelMapper.createTypeMap(String.class, ResourceObjectType.class)

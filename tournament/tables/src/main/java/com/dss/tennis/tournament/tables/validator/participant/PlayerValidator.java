@@ -11,6 +11,7 @@ import com.dss.tennis.tournament.tables.validator.ValidatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +47,11 @@ public class PlayerValidator extends ParticipantValidator<Player> {
 
         if (detailedErrorData.isEmpty() && playerHelper.isPlayerExist(playerDTO))
             detailedErrorData.add(new ErrorDataDTO(ErrorConstants.PLAYER_DUPLICATION));
+        if (playerDTO.getBirthDate() != null && LocalDate.now().isBefore(playerDTO.getBirthDate()))
+            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.BIRTH_DATE_ILLEGAL));
+        if (playerDTO.getExperienceYear() != null && LocalDate.now().getYear() < playerDTO.getExperienceYear())
+            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.EXPERIENCE_YEAR_ILLEGAL));
+
         return detailedErrorData;
     }
 }

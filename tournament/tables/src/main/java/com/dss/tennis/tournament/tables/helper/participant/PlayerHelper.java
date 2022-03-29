@@ -105,11 +105,7 @@ public class PlayerHelper extends ParticipantHelper<Player> {
     }
 
     public Player createNewPlayer(PlayerDTO playerDto) {
-        return createNewPlayer(playerDto.getFirstName(), playerDto.getLastName());
-    }
-
-    public Player createNewPlayer(String firstName, String lastName) {
-        Player player = Player.builder().firstName(firstName).lastName(lastName).build();
+        Player player = converterHelper.convert(playerDto, Player.class);
         return playerRepository.save(player);
     }
 }

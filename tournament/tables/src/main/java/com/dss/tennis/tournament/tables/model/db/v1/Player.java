@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -14,6 +15,9 @@ public class Player {
     private int id;
     private String firstName;
     private String lastName;
+    private LocalDate birthDate;
+    private Integer experienceYear;
+    private LeadingHand leadingHand;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +48,37 @@ public class Player {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Basic
+    @Column(name = "birth_date", nullable = false)
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    @Basic
+    @Column(name = "experience_year", nullable = false)
+    public Integer getExperienceYear() {
+        return experienceYear;
+    }
+
+    public void setExperienceYear(Integer experienceYear) {
+        this.experienceYear = experienceYear;
+    }
+
+    @Basic
+    @Enumerated(EnumType.STRING)
+    @Column(name = "leading_hand", nullable = false)
+    public LeadingHand getLeadingHand() {
+        return leadingHand;
+    }
+
+    public void setLeadingHand(LeadingHand leadingHand) {
+        this.leadingHand = leadingHand;
     }
 
     @Override

@@ -29,6 +29,8 @@ public enum ErrorConstants {
     PLAYER_LAST_NAME_EMPTY,
     PLAYER_NOT_FOUND,
     PLAYER_DUPLICATION,
+    BIRTH_DATE_ILLEGAL,
+    EXPERIENCE_YEAR_ILLEGAL,
 
     //participant warnings
     PARTICIPANT_DUPLICATION,

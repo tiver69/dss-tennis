@@ -33,7 +33,7 @@ public class PageableDtoToGetPageableConverter<T, E> implements Converter<Pageab
     @Override
     public GetPageable<E> convert(MappingContext<PageableDTO<T>, GetPageable<E>> context) {
         PageableDTO<T> pageableDto = context.getSource();
-        GetPageable<E> pageablePlayers = context.getDestination();
+        GetPageable<E> pageableData = context.getDestination();
 
         List<E> page = pageableDto.getPage().stream()
                 .map(pageItem -> {
@@ -41,7 +41,7 @@ public class PageableDtoToGetPageableConverter<T, E> implements Converter<Pageab
                     return modelMapper.map(pageItem, className);
                 })
                 .collect(Collectors.toList());
-        pageablePlayers.setPage(page);
-        return pageablePlayers;
+        pageableData.setPage(page);
+        return pageableData;
     }
 }
