@@ -2,12 +2,13 @@ package com.dss.tennis.tournament.tables.service;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.dss.tennis.tournament.tables.helper.PatchApplierHelper;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
-import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
@@ -30,16 +31,30 @@ public class ParticipantService {
     private PlayerValidator playerValidator;
     @Autowired
     private ConverterHelper converterHelper;
+    @Autowired
+    private PatchApplierHelper patchApplierHelper;
 
     @Transactional
     public PlayerDTO createNewPlayer(PlayerDTO playerDto) {
-        Set<ErrorDataDTO> errorSet = playerValidator.validateNewPlayer(playerDto);
+        Set<ErrorDataDTO> errorSet = playerValidator.validatePlayer(playerDto);
         if (!errorSet.isEmpty()) {
             throw new DetailedException(errorSet);
         }
 
-        Player player = playerHelper.createNewPlayer(playerDto);
-        return converterHelper.convert(player, PlayerDTO.class);
+        Integer playerId = playerHelper.savePlayer(playerDto);
+        return playerHelper.getParticipantDto(playerId);
+    }
+
+    public PlayerDTO updatePlayer(PatchPlayer patch, Integer playerId) {
+        PlayerDTO player = playerHelper.getParticipantDto(playerId);
+        PlayerDTO updatedPlayer = patchApplierHelper.applyPatch(patch, player);
+        Set<ErrorDataDTO> errorSet = playerValidator.validatePlayer(updatedPlayer);
+        if (!errorSet.isEmpty()) {
+            throw new DetailedException(errorSet);
+        }
+
+        playerHelper.savePlayer(updatedPlayer);
+        return playerHelper.getParticipantDto(playerId);
     }
 
     public PlayerDTO getPlayerDTO(Integer playerId) {

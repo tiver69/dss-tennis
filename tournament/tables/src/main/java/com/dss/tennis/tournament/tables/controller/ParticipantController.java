@@ -6,6 +6,7 @@ import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
+import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
@@ -37,6 +38,14 @@ public class ParticipantController {
         PlayerDTO newPlayerDto = participantService.createNewPlayer(playerDto);
         SuccessResponse<GetPlayer> playerResponse = responseHelper
                 .createSuccessResponse(newPlayerDto, GetPlayer.class);
+        return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/players/{playerId}")
+    public ResponseEntity<?> updatePlayer(@RequestBody PatchPlayer patch, @PathVariable Integer playerId) {
+        PlayerDTO updatedPlayer = participantService.updatePlayer(patch, playerId);
+        SuccessResponse<GetPlayer> playerResponse = responseHelper
+                .createSuccessResponse(updatedPlayer, GetPlayer.class);
         return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
     }
 

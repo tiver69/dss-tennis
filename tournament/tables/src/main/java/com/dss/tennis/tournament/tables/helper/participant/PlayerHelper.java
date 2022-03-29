@@ -104,8 +104,10 @@ public class PlayerHelper extends ParticipantHelper<Player> {
                 .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages()).build();
     }
 
-    public Player createNewPlayer(PlayerDTO playerDto) {
+    public Integer savePlayer(PlayerDTO playerDto) {
         Player player = converterHelper.convert(playerDto, Player.class);
-        return playerRepository.save(player);
+        Player savedPlayer = playerRepository.save(player);
+
+        return savedPlayer.getId();
     }
 }

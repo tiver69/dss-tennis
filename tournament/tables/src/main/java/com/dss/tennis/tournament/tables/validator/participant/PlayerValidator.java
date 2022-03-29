@@ -42,7 +42,7 @@ public class PlayerValidator extends ParticipantValidator<Player> {
         return null;
     }
 
-    public Set<ErrorDataDTO> validateNewPlayer(PlayerDTO playerDTO) {
+    public Set<ErrorDataDTO> validatePlayer(PlayerDTO playerDTO) {
         Set<ErrorDataDTO> detailedErrorData = validatorHelper.validateObject(playerDTO);
 
         if (detailedErrorData.isEmpty() && playerHelper.isPlayerExist(playerDTO))

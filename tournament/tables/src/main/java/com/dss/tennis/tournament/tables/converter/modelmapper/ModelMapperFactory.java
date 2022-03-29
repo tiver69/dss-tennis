@@ -1,8 +1,10 @@
 package com.dss.tennis.tournament.tables.converter.modelmapper;
 
 import com.dss.tennis.tournament.tables.converter.*;
+import com.dss.tennis.tournament.tables.converter.patch.PlayerDtoPathApplier;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
+import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.modelmapper.ModelMapper;
@@ -26,6 +28,7 @@ public class ModelMapperFactory {
             }
         });
 
+        // converters
         modelMapper.createTypeMap(SingleContestDTO.class, GetContest.class)
                 .setPostConverter(new SingleContestDtoToGetResponseConverter());
         modelMapper.createTypeMap(DoubleContestDTO.class, GetContest.class)
@@ -42,6 +45,10 @@ public class ModelMapperFactory {
                 .setConverter(new CreateScoreToScoreDtoConverter(ResourceObjectType.SET_SCORE.value));
         modelMapper.createTypeMap(CreateScore.class, ScorePatchDTO.class)
                 .setConverter(new CreateScoreToScorePatchDtoConverter(ResourceObjectType.SET_SCORE.value));
+
+        //patch appliers
+        modelMapper.createTypeMap(PatchPlayer.class, PlayerDTO.class)
+                .setConverter(new PlayerDtoPathApplier());
         return modelMapper;
     }
 }
