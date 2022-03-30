@@ -102,7 +102,7 @@ class TournamentServiceTest {
     @Test
     public void shouldGetTournament() {
         RequestParameter requestParameter = new RequestParameter();
-        when(tournamentHelperMock.getTournament(TOURNAMENT_ID, requestParameter)).thenReturn(responseTournamentDtoSpy);
+        when(tournamentHelperMock.getTournamentDto(TOURNAMENT_ID, requestParameter)).thenReturn(responseTournamentDtoSpy);
 
         Assertions.assertEquals(responseTournamentDtoSpy, testInstance.getTournament(TOURNAMENT_ID, requestParameter));
     }

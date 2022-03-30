@@ -4,10 +4,7 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.*;
-import com.dss.tennis.tournament.tables.model.request.CreateScore;
-import com.dss.tennis.tournament.tables.model.request.CreateTournament;
-import com.dss.tennis.tournament.tables.model.request.EnrollTournamentParticipant;
-import com.dss.tennis.tournament.tables.model.request.PatchTechDefeat;
+import com.dss.tennis.tournament.tables.model.request.*;
 import com.dss.tennis.tournament.tables.model.response.v1.GetContest;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
@@ -43,6 +40,15 @@ public class TournamentController {
         TournamentDTO tournamentDto = converterHelper.convert(tournament, TournamentDTO.class, true);
 
         TournamentDTO createdTournamentDto = tournamentService.createNewTournament(tournamentDto);
+        SuccessResponse<GetTournament> tournamentResponse = responseHelper
+                .createSuccessResponse(createdTournamentDto, GetTournament.class);
+        return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{tournamentId}")
+    public ResponseEntity<SuccessResponse<GetTournament>> updateTournament(@RequestBody PatchTournament patch,
+                                                                           @PathVariable Integer tournamentId) {
+        TournamentDTO createdTournamentDto = tournamentService.updateTournament(patch, tournamentId);
         SuccessResponse<GetTournament> tournamentResponse = responseHelper
                 .createSuccessResponse(createdTournamentDto, GetTournament.class);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
@@ -89,8 +95,8 @@ public class TournamentController {
 
     @PatchMapping("/{tournamentId}/contest/{contestId}/techDefeat")
     public ResponseEntity<SuccessResponse<?>> updateTechDefeat(@PathVariable Integer tournamentId,
-                                                          @PathVariable Integer contestId,
-                                                          @RequestBody PatchTechDefeat techDefeat) {
+                                                               @PathVariable Integer contestId,
+                                                               @RequestBody PatchTechDefeat techDefeat) {
         TechDefeatDTO techDefeatDto = converterHelper.convert(techDefeat, TechDefeatDTO.class);
 
         ContestDTO contestDto = tournamentService.updateContestTechDefeat(contestId, tournamentId, techDefeatDto);

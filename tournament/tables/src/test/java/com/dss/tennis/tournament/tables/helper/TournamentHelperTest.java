@@ -65,7 +65,7 @@ class TournamentHelperTest {
         when(tournamentFactoryMock.populateTournamentDTO(tournamentSpy, RequestParameter.DEFAULT))
                 .thenReturn(tournamentDtoSpy);
 
-        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID);
+        TournamentDTO result = testInstance.getTournamentDto(TOURNAMENT_ID);
 
         Assertions.assertEquals(tournamentDtoSpy, result);
         verify(tournamentFactoryMock).populateTournamentDTO(tournamentSpy, RequestParameter.DEFAULT);
@@ -77,7 +77,7 @@ class TournamentHelperTest {
         when(tournamentFactoryMock.populateTournamentDTO(tournamentSpy, requestParameterSpy))
                 .thenReturn(tournamentDtoSpy);
 
-        TournamentDTO result = testInstance.getTournament(TOURNAMENT_ID, requestParameterSpy);
+        TournamentDTO result = testInstance.getTournamentDto(TOURNAMENT_ID, requestParameterSpy);
 
         Assertions.assertEquals(tournamentDtoSpy, result);
         verify(tournamentFactoryMock).populateTournamentDTO(tournamentSpy, requestParameterSpy);
@@ -89,7 +89,7 @@ class TournamentHelperTest {
 
         DetailedException resultError = Assertions
                 .assertThrows(DetailedException.class, () -> testInstance
-                        .getTournament(TOURNAMENT_ID, RequestParameter.DEFAULT));
+                        .getTournamentDto(TOURNAMENT_ID, RequestParameter.DEFAULT));
         Set<ErrorDataDTO> result = resultError.getErrors();
 
         Assertions.assertAll(
@@ -104,7 +104,7 @@ class TournamentHelperTest {
     public void shouldCreateNewTournamentWithBeginningDateInFuture() {
         when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now().plus(1, DAYS));
 
-        testInstance.createNewTournament(tournamentDtoSpy);
+        testInstance.saveTournament(tournamentDtoSpy);
 
         verify(tournamentRepositoryMock).save(preparePlannedTournament());
     }
@@ -113,7 +113,7 @@ class TournamentHelperTest {
     public void shouldCreateNewTournamentWithCurrentBeginningDate() {
         when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now());
 
-        testInstance.createNewTournament(tournamentDtoSpy);
+        testInstance.saveTournament(tournamentDtoSpy);
 
         verify(tournamentRepositoryMock).save(prepareInProgressTournament());
     }

@@ -1,6 +1,5 @@
 package com.dss.tennis.tournament.tables.validator;
 
-import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
@@ -13,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NAME_DUPLICATE;
@@ -38,7 +36,7 @@ class TournamentValidatorTest {
     public void shouldPassValidation() {
         TournamentDTO tournamentDTO = new TournamentDTO(TOURNAMENT_NAME, TournamentType.ROUND, null);
         when(validatorHelper.validateObject(tournamentDTO)).thenReturn(Sets.newSet());
-        when(tournamentRepository.findByName(TOURNAMENT_NAME)).thenReturn(Optional.empty());
+        when(tournamentRepository.getTournamentIdByName(TOURNAMENT_NAME)).thenReturn(null);
 
         Set<ErrorDataDTO> result = testInstance.validateCreateTournament(tournamentDTO);
 
@@ -50,7 +48,7 @@ class TournamentValidatorTest {
         TournamentDTO tournamentDTO = new TournamentDTO(EMPTY_NAME, TournamentType.ROUND, null);
         ErrorDataDTO detailedErrorData = new ErrorDataDTO();
         when(validatorHelper.validateObject(tournamentDTO)).thenReturn(Sets.newSet(detailedErrorData));
-        when(tournamentRepository.findByName(EMPTY_NAME)).thenReturn(Optional.empty());
+        when(tournamentRepository.getTournamentIdByName(EMPTY_NAME)).thenReturn(null);
 
         Set<ErrorDataDTO> result = testInstance.validateCreateTournament(tournamentDTO);
 
@@ -66,7 +64,7 @@ class TournamentValidatorTest {
     public void shouldFailValidationExistingTournamentName() {
         TournamentDTO tournamentDTO = new TournamentDTO(TOURNAMENT_NAME, TournamentType.ROUND, null);
         when(validatorHelper.validateObject(tournamentDTO)).thenReturn(Sets.newSet());
-        when(tournamentRepository.findByName(TOURNAMENT_NAME)).thenReturn(Optional.of(new Tournament()));
+        when(tournamentRepository.getTournamentIdByName(TOURNAMENT_NAME)).thenReturn(1);
 
         Set<ErrorDataDTO> result = testInstance.validateCreateTournament(tournamentDTO);
 

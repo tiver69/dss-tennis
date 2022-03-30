@@ -31,8 +31,10 @@ public class TournamentHelper {
     private TournamentFactory tournamentFactory;
 
     @Transactional
-    public Tournament createNewTournament(TournamentDTO tournamentDTO) {
-        Tournament tournament = Tournament.builder().name(tournamentDTO.getName())
+    public Tournament saveTournament(TournamentDTO tournamentDTO) {
+        Tournament tournament = Tournament.builder()
+                .id(tournamentDTO.getId())
+                .name(tournamentDTO.getName())
                 .tournamentType(tournamentDTO.getTournamentType())
                 .participantType(tournamentDTO.getParticipantType())
                 .status(getStatusBaseOnBeginningDate(tournamentDTO.getBeginningDate()))
@@ -49,8 +51,8 @@ public class TournamentHelper {
         }
     }
 
-    public TournamentDTO getTournament(Integer tournamentId) {
-        return getTournament(tournamentId, RequestParameter.DEFAULT);
+    public TournamentDTO getTournamentDto(Integer tournamentId) {
+        return getTournamentDto(tournamentId, RequestParameter.DEFAULT);
     }
 
     public PageableDTO<TournamentDTO> getTournamentsPage(Pageable pageableRequestParameter) {
@@ -64,7 +66,7 @@ public class TournamentHelper {
                 .build();
     }
 
-    public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {
+    public TournamentDTO getTournamentDto(Integer tournamentId, RequestParameter requestParameters) {
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->
                 new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
 
