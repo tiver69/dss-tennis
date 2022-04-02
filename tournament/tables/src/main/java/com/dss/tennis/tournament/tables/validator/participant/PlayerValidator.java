@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.validator.participant;
 
+import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
@@ -40,6 +41,14 @@ public class PlayerValidator extends ParticipantValidator<Player> {
             return new ErrorDataDTO(PARTICIPANT_DUPLICATION, participantId.toString(), newPlayer
                     .getSequenceNumber());
         return null;
+    }
+
+    @Override
+    public void validateParticipantForRemoving(Integer playerId, Integer tournamentId) {
+        List<Integer> playerIds = playerHelper.getTournamentPlayerIds(tournamentId);
+
+        if (!playerIds.contains(playerId)) throw new DetailedException(PARTICIPANT_NOT_FOUND, playerId);
+        if (playerIds.size() <= 2) throw new DetailedException(FORBIDDEN_PARTICIPANT_QUANTITY_REMOVING, tournamentId);
     }
 
     public Set<ErrorDataDTO> validatePlayer(PlayerDTO playerDTO) {

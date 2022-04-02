@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.MappingException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
@@ -37,12 +39,15 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
     @Autowired
     private JsonParseExceptionHandler jsonParseExceptionHandler;
     @Autowired
+    private TypeMismatchExceptionHandler typeMismatchExceptionHandler;
+    @Autowired
     private DefaultExceptionHandler defaultExceptionHandler;
 
     @PostConstruct
     protected void initialize() {
         jacksonExceptionHandlerMap = new HashMap<>();
         jacksonExceptionHandlerMap.put(InvalidFormatException.class, invalidFormatExceptionHandler);
+        jacksonExceptionHandlerMap.put(MethodArgumentTypeMismatchException.class, typeMismatchExceptionHandler);
         jacksonExceptionHandlerMap.put(JsonParseException.class, jsonParseExceptionHandler);
     }
 
@@ -66,6 +71,16 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
                         .collect(Collectors.toList());
 
         return new ResponseEntity<>(new ErrorResponse(list), getHttpStatus(list));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException exception, HttpHeaders headers,
+                                                        HttpStatus status, WebRequest request) {
+        JacksonExceptionHandler handler = jacksonExceptionHandlerMap
+                .getOrDefault(exception.getClass(), defaultExceptionHandler);
+
+        ErrorData errorData = handler.createErrorData(exception);
+        return new ResponseEntity<>(new ErrorResponse(errorData), HttpStatus.BAD_REQUEST);
     }
 
     @Override

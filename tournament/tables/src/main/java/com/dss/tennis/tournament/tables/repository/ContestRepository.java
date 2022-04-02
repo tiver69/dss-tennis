@@ -21,6 +21,13 @@ public interface ContestRepository extends CrudRepository<Contest, Integer> {
     @Query("select count(c) > 0 from Contest c where c.tournamentId = ?1")
     boolean isTournamentHasContests(Integer tournamentId);
 
+    @Query("SELECT sc FROM SingleContest sc WHERE (sc.playerOneId = ?1 OR sc.playerTwoId = ?1) AND sc.tournamentId = " +
+            "?2")
+    List<Contest> findByPlayerIdAndSingleTournamentId(Integer playerId, Integer tournamentId);
+
+    @Query("SELECT dc FROM DoubleContest dc WHERE (dc.teamOne.id = ?1 OR dc.teamTwo.id = ?1) AND dc.tournamentId = ?2")
+    List<Contest> findByTeamIdAndDoubleTournamentId(Integer teamId, Integer tournamentId);
+
     Optional<Contest> findByIdAndTournamentId(Integer id, Integer tournamentId);
 
     List<Contest> findByTournamentId(Integer TournamentId);

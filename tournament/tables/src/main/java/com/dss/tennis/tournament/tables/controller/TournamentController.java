@@ -130,5 +130,15 @@ public class TournamentController {
         return new ResponseEntity<>(tournamentsSuccessResponse, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{tournamentId}/participants/{participantId}")
+    public ResponseEntity<SuccessResponse<GetTournament>> removeParticipantFromTournament(
+            @PathVariable Integer tournamentId, @PathVariable Integer participantId,
+            @RequestParam(required = false, defaultValue = "true") boolean techDefeat) {
+        TournamentDTO tournamentDTO = tournamentService
+                .removeParticipantFromTournament(participantId, tournamentId, techDefeat);
 
+        SuccessResponse<GetTournament> tournamentResponse = responseHelper
+                .createSuccessResponse(tournamentDTO, GetTournament.class);
+        return new ResponseEntity<>(tournamentResponse, HttpStatus.OK);
+    }
 }

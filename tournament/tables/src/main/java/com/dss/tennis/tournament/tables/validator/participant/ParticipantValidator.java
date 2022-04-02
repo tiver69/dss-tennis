@@ -14,4 +14,6 @@ public abstract class ParticipantValidator<T> {
 
     public abstract ErrorDataDTO validateParticipantForEnrolling(List<Integer> currentPlayerIds,
                                                                  ResourceObjectDTO newParticipant);
+
+    public abstract void validateParticipantForRemoving(Integer participantId, Integer tournamentId);
 }

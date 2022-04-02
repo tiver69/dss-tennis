@@ -19,7 +19,9 @@ import com.dss.tennis.tournament.tables.validator.ContestValidator;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.ScoreValidator;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
+import com.dss.tennis.tournament.tables.validator.participant.ParticipantValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
+import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,8 @@ public class TournamentService {
     private WarningHandler warningHandler;
     @Autowired
     private PatchApplierHelper patchApplierHelper;
+    @Autowired
+    private TeamValidator teamValidator;
 
     public TournamentDTO createNewTournament(TournamentDTO tournamentDTO) {
         validateCreateTournamentDTO(tournamentDTO);
@@ -155,6 +159,16 @@ public class TournamentService {
         return new SuccessResponseDTO<>(tournamentsPage, warnings);
     }
 
+    public TournamentDTO removeParticipantFromTournament(Integer participantId, Integer tournamentId,
+                                                         boolean techDefeat) {
+        TournamentDTO tournamentDto = tournamentHelper.getTournamentDto(tournamentId, BASIC);
+        ParticipantValidator<?> participantValidator = getParticipantValidator(tournamentDto.getParticipantType());
+        participantValidator.validateParticipantForRemoving(participantId, tournamentId);
+
+        tournamentHelper.removeParticipantFromTournament(participantId, tournamentDto, techDefeat);
+        return tournamentHelper.getTournamentDto(tournamentId);
+    }
+
     private void validateCreateTournamentDTO(TournamentDTO tournamentDTO) {
         Set<ErrorDataDTO> errorSet = new HashSet<>(tournamentValidator
                 .validateCreateTournament(tournamentDTO));
@@ -163,5 +177,9 @@ public class TournamentService {
 
     private ParticipantHelper<?> getParticipantHelper(ParticipantType participantType) {
         return participantType == ParticipantType.DOUBLE ? teamHelper : playerHelper;
+    }
+
+    private ParticipantValidator<?> getParticipantValidator(ParticipantType participantType) {
+        return participantType == ParticipantType.DOUBLE ? teamValidator : playerValidator;
     }
 }

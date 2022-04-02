@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.validator.participant;
 
+import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.UNSUPPORTED_RESOURCE_TYPE;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
 
 @Component
 public class TeamValidator extends ParticipantValidator<Team> {
@@ -35,5 +36,13 @@ public class TeamValidator extends ParticipantValidator<Team> {
                     .getSequenceNumber());
 
         return null;
+    }
+
+    @Override
+    public void validateParticipantForRemoving(Integer teamId, Integer tournamentId) {
+        List<Integer> teamIds = teamHelper.getTournamentTeamIds(tournamentId);
+
+        if (!teamIds.contains(teamId)) throw new DetailedException(PARTICIPANT_NOT_FOUND, teamId);
+        if (teamIds.size() <= 2) throw new DetailedException(FORBIDDEN_PARTICIPANT_QUANTITY_REMOVING, tournamentId);
     }
 }

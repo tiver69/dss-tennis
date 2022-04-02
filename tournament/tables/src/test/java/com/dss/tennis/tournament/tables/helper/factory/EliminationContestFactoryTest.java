@@ -3,7 +3,6 @@ package com.dss.tennis.tournament.tables.helper.factory;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +27,7 @@ class EliminationContestFactoryTest {
     @Test
     public void shouldThrowUnsupportedErrorWhenBuildExistingTournament() {
         DetailedException result = Assertions.assertThrows(DetailedException.class, () -> testInstance
-                .getContestDTOs(TOURNAMENT_ID, SingleContestDTO.class));
+                .getContestDTOs(TOURNAMENT_ID));
 
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),

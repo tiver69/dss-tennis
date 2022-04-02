@@ -118,6 +118,10 @@ public class ScoreHelper {
         return (ContestDTO cc) -> null;
     }
 
+    public void removeContestScore(Integer contestId) {
+        scoreRepository.removeByContestId(contestId);
+    }
+
     private Function<ContestDTO, Integer> getTieBreakSetWinner(SetScoreDTO tieBreakSetScore) {
         if (tieBreakSetScore == null || tieBreakSetScore.getParticipantOneScore()
                 .equals(tieBreakSetScore.getParticipantTwoScore()))

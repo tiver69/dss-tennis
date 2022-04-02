@@ -16,6 +16,10 @@ public interface SetScoreRepository extends CrudRepository<SetScore, Integer> {
     void updateSetScoreById(Byte participantOne, Byte participantTwo, Integer setScoreId);
 
     @Modifying(clearAutomatically = true)
+    @Query("delete from SetScore ss where ss.contest.id = ?1")
+    void removeByContestId(Integer contestId);
+
+    @Modifying(clearAutomatically = true)
     @Query("delete from SetScore ss where ss.id = ?1")
     void removeById(Integer setScoreId);
 }

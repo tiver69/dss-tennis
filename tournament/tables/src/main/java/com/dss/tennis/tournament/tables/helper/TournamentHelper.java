@@ -51,6 +51,12 @@ public class TournamentHelper {
         }
     }
 
+    @Transactional
+    public void removeParticipantFromTournament(Integer participantId, TournamentDTO tournamentDto,
+                                                boolean techDefeat) {
+        tournamentFactory.removeParticipantFromTournament(participantId, tournamentDto, techDefeat);
+    }
+
     public TournamentDTO getTournamentDto(Integer tournamentId) {
         return getTournamentDto(tournamentId, RequestParameter.DEFAULT);
     }

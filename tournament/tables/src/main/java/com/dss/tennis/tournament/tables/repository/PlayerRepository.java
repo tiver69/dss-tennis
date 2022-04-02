@@ -14,6 +14,12 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 
     Optional<Player> findByFirstNameAndLastName(String firstName, String lastName);
 
+    @Query("SELECT COUNT(p.id) > 0 FROM Player p " +
+            "RIGHT JOIN SingleContest sc ON (sc.playerOneId=p.id OR sc.playerTwoId=p.id) " +
+            "WHERE sc.tournamentId=:tournamentId AND p.id=:playerId")
+    boolean isPlayerEnrolledToTournament(@Param("playerId") Integer playerId,
+                                         @Param("tournamentId") Integer tournamentId);
+
     @Query("SELECT DISTINCT p.id FROM Player p " +
             "RIGHT JOIN SingleContest sc ON (sc.playerOneId=p.id OR sc.playerTwoId=p.id) " +
             "WHERE sc.tournamentId=:tournamentId")

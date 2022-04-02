@@ -74,4 +74,11 @@ public class TeamHelper extends ParticipantHelper<Team> {
         }
         return participantIdsForEnrolling;
     }
+
+    public ArrayList<Integer> getTournamentTeamIds(Integer tournamentId) {
+        List<Integer> participants =
+                teamRepository.findTeamIdsByDoubleTournamentId(tournamentId);
+
+        return participants.stream().allMatch(Objects::isNull) ? new ArrayList<>() : new ArrayList<>(participants);
+    }
 }
