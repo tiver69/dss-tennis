@@ -169,6 +169,11 @@ public class TournamentService {
         return tournamentHelper.getTournamentDto(tournamentId);
     }
 
+    public void removeTournament(Integer tournamentId) {
+        TournamentDTO tournamentDto = tournamentHelper.getTournamentDto(tournamentId, BASIC);
+        tournamentHelper.removeTournament(tournamentDto);
+    }
+
     private void validateCreateTournamentDTO(TournamentDTO tournamentDTO) {
         Set<ErrorDataDTO> errorSet = new HashSet<>(tournamentValidator
                 .validateCreateTournament(tournamentDTO));

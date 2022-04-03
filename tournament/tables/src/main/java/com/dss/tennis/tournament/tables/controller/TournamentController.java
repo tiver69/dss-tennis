@@ -141,4 +141,10 @@ public class TournamentController {
                 .createSuccessResponse(tournamentDTO, GetTournament.class);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{tournamentId}")
+    public ResponseEntity removeTournament(@PathVariable Integer tournamentId) {
+        tournamentService.removeTournament(tournamentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

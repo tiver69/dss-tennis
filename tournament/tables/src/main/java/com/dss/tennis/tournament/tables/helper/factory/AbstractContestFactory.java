@@ -11,5 +11,7 @@ public interface AbstractContestFactory {
 
     void removeParticipantFromTournament(Integer participantId, int tournamentId, boolean techDefeat);
 
+    void removeTournamentContests(int tournamentId);
+
     List<ContestDTO> getContestDTOs(Integer tournamentId);
 }

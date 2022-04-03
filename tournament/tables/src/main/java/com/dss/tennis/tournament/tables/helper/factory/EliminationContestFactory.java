@@ -24,6 +24,11 @@ public class EliminationContestFactory implements AbstractContestFactory {
     }
 
     @Override
+    public void removeTournamentContests(int tournamentId) {
+        throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
+    }
+
+    @Override
     public List<ContestDTO> getContestDTOs(Integer tournamentId) {
         throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
     }

@@ -46,6 +46,12 @@ public class TournamentFactory {
         contestFactory.removeParticipantFromTournament(participantId, tournamentDto.getId(), techDefeat);
     }
 
+    public void removeTournamentContests(TournamentDTO tournamentDto) {
+        AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
+                .getParticipantType());
+        contestFactory.removeTournamentContests(tournamentDto.getId());
+    }
+
     public TournamentDTO populateTournamentDTO(Tournament tournament) {
         return converterHelper.convert(tournament, TournamentDTO.class);
     }
