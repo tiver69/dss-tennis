@@ -4,14 +4,13 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.PatchApplierHelper;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
-import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
+import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,9 +25,13 @@ public class ParticipantService {
     @Autowired
     private PlayerHelper playerHelper;
     @Autowired
+    private TeamHelper teamHelper;
+    @Autowired
     private PageableValidator pageableValidator;
     @Autowired
     private PlayerValidator playerValidator;
+    @Autowired
+    private TeamValidator teamValidator;
     @Autowired
     private ConverterHelper converterHelper;
     @Autowired
@@ -37,12 +40,18 @@ public class ParticipantService {
     @Transactional
     public PlayerDTO createNewPlayer(PlayerDTO playerDto) {
         Set<ErrorDataDTO> errorSet = playerValidator.validatePlayer(playerDto);
-        if (!errorSet.isEmpty()) {
-            throw new DetailedException(errorSet);
-        }
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
-        Integer playerId = playerHelper.savePlayer(playerDto);
+        Integer playerId = playerHelper.saveParticipant(playerDto);
         return playerHelper.getParticipantDto(playerId);
+    }
+
+    public TeamDTO createNewTeam(TeamDTO teamDto) {
+        Set<ErrorDataDTO> errorSet = teamValidator.validateTeamCreation(teamDto);
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+
+        Integer teamId = teamHelper.saveParticipant(teamDto);
+        return teamHelper.getParticipantDto(teamId);
     }
 
     public PlayerDTO updatePlayer(PatchPlayer patch, Integer playerId) {
@@ -53,7 +62,7 @@ public class ParticipantService {
             throw new DetailedException(errorSet);
         }
 
-        playerHelper.savePlayer(updatedPlayer);
+        playerHelper.saveParticipant(updatedPlayer);
         return playerHelper.getParticipantDto(playerId);
     }
 

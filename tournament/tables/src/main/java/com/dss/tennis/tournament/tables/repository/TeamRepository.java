@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamRepository extends CrudRepository<Team, Integer> {
 
@@ -29,4 +30,8 @@ public interface TeamRepository extends CrudRepository<Team, Integer> {
             "RIGHT JOIN DoubleContest dc ON (dc.teamOne.id=team.id OR dc.teamTwo.id=team.id) " +
             "WHERE dc.tournamentId=:tournamentId")
     int countTeamsByDoubleTournamentId(@Param("tournamentId") Integer tournamentId);
+
+    @Query("SELECT team FROM Team team WHERE (team.playerOneId = ?1 AND team.playerTwoId = ?2) OR (team.playerOneId =" +
+            " ?2 AND team.playerTwoId = ?1)")
+    Optional<Team> getTeamByPlayerIds(Integer playerOneId, Integer playerTwoId);
 }

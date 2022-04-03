@@ -5,10 +5,13 @@ import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
+import com.dss.tennis.tournament.tables.model.request.CreateTeam;
 import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
+import com.dss.tennis.tournament.tables.model.response.v1.GetTeam;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +39,17 @@ public class ParticipantController {
         PlayerDTO playerDto = converterHelper.convert(createPlayer, PlayerDTO.class);
 
         PlayerDTO newPlayerDto = participantService.createNewPlayer(playerDto);
-        SuccessResponse<GetPlayer> playerResponse = responseHelper
-                .createSuccessResponse(newPlayerDto, GetPlayer.class);
+        SuccessResponse<GetPlayer> playerResponse = responseHelper.createSuccessResponse(newPlayerDto, GetPlayer.class);
         return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/teams")
+    public ResponseEntity<?> createTeam(@RequestBody CreateTeam createTeam) {
+        TeamDTO teamDto = converterHelper.convert(createTeam, TeamDTO.class);
+
+        TeamDTO newTeamDto = participantService.createNewTeam(teamDto);
+        SuccessResponse<GetTeam> teamResponse = responseHelper.createSuccessResponse(newTeamDto, GetTeam.class);
+        return new ResponseEntity<>(teamResponse, HttpStatus.OK);
     }
 
     @PatchMapping("/players/{playerId}")

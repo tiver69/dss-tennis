@@ -5,6 +5,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
+import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import com.dss.tennis.tournament.tables.repository.TeamRepository;
 import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class TeamHelper extends ParticipantHelper<Team> {
+public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
 
     @Autowired
     private TeamRepository teamRepository;
     @Autowired
     private TeamValidator teamValidator;
+
+    @Override
+    public Integer saveParticipant(TeamDTO teamDto) {
+        Team team = converterHelper.convert(teamDto, Team.class);
+        Team savedTeam = teamRepository.save(team);
+        return savedTeam.getId();
+    }
 
     @Override
     public boolean isParticipantExist(Integer teamId) {
@@ -34,6 +42,18 @@ public class TeamHelper extends ParticipantHelper<Team> {
     @Override
     public Team getParticipant(Integer teamId) {
         return teamRepository.findById(teamId).orElse(null);
+    }
+
+    @Override
+    public TeamDTO getParticipantDto(Integer teamId) {
+        Team team = getParticipant(teamId);
+        TeamDTO teamDto = converterHelper.convert(team, TeamDTO.class);
+        playerRepository.findById(team.getPlayerOneId())
+                .ifPresent(player -> teamDto.setPlayerOne(converterHelper.convert(player, PlayerDTO.class)));
+        playerRepository.findById(team.getPlayerTwoId())
+                .ifPresent(player -> teamDto.setPlayerTwo(converterHelper.convert(player, PlayerDTO.class)));
+
+        return teamDto;
     }
 
     @Override
@@ -80,5 +100,9 @@ public class TeamHelper extends ParticipantHelper<Team> {
                 teamRepository.findTeamIdsByDoubleTournamentId(tournamentId);
 
         return participants.stream().allMatch(Objects::isNull) ? new ArrayList<>() : new ArrayList<>(participants);
+    }
+
+    public boolean isTeamExist(Integer playerOneId, Integer playerTwoId) {
+        return teamRepository.getTeamByPlayerIds(playerOneId, playerTwoId).isPresent();
     }
 }

@@ -13,18 +13,22 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public abstract class ParticipantHelper<T> {
+public abstract class ParticipantHelper<T, D> {
 
     @Autowired
     protected PlayerRepository playerRepository;
     @Autowired
     protected ConverterHelper converterHelper;
 
+    public abstract Integer saveParticipant(D participantDto);
+
     public abstract boolean isParticipantExist(Integer playerId);
 
     public abstract boolean isParticipantNotExist(Integer participantId);
 
     public abstract T getParticipant(Integer participantId);
+
+    public abstract D getParticipantDto(Integer participantId);
 
     public abstract List<T> getTournamentParticipants(Integer tournamentId);
 

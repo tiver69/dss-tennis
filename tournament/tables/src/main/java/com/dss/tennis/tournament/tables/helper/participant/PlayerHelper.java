@@ -19,12 +19,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class PlayerHelper extends ParticipantHelper<Player> {
+public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
 
     @Autowired
     private PlayerValidator playerValidator;
     @Autowired
     private ConverterHelper converterHelper;
+
+    @Override
+    public Integer saveParticipant(PlayerDTO playerDto) {
+        Player player = converterHelper.convert(playerDto, Player.class);
+        Player savedPlayer = playerRepository.save(player);
+        return savedPlayer.getId();
+    }
 
     @Override
     public boolean isParticipantExist(Integer playerId) {
@@ -52,6 +59,7 @@ public class PlayerHelper extends ParticipantHelper<Player> {
         return repositoryPlayer.get();
     }
 
+    @Override
     public PlayerDTO getParticipantDto(Integer playerId) {
         return converterHelper.convert(getParticipant(playerId), PlayerDTO.class);
     }
@@ -102,12 +110,5 @@ public class PlayerHelper extends ParticipantHelper<Player> {
 
         return PageableDTO.<PlayerDTO>builder().page(players)
                 .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages()).build();
-    }
-
-    public Integer savePlayer(PlayerDTO playerDto) {
-        Player player = converterHelper.convert(playerDto, Player.class);
-        Player savedPlayer = playerRepository.save(player);
-
-        return savedPlayer.getId();
     }
 }

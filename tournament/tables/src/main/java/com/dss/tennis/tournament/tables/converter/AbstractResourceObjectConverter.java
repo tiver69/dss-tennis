@@ -14,32 +14,29 @@ public abstract class AbstractResourceObjectConverter {
 
     private final String allowedResourceType;
 
-    protected Set<ErrorDataDTO> validateResponseObjectIdMappingWithId(ResourceObject resourceObject,
+    protected Set<ErrorDataDTO> validateResourceObjectIdMappingWithId(ResourceObject resourceObject,
                                                                       String customPointer) {
         Set<ErrorDataDTO> errors = new HashSet<>();
-        if (validateBaseResponseObjectMapping(resourceObject, customPointer, errors)) return errors;
-
-        if (resourceObject.getId() == null) {
+        if (validateBaseResourceObjectMapping(resourceObject, customPointer, errors)) return errors;
+        if (resourceObject.getId() == null)
             errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_ID_EMPTY).pointer(customPointer)
                     .build());
-        }
         return errors;
     }
 
-    protected Set<ErrorDataDTO> validateResponseObjectMappingWitAttributes(ResourceObject resourceObject,
+    protected Set<ErrorDataDTO> validateResourceObjectMappingWitAttributes(ResourceObject resourceObject,
                                                                            String customPointer) {
         Set<ErrorDataDTO> errors = new HashSet<>();
-        if (validateBaseResponseObjectMapping(resourceObject, customPointer, errors)) return errors;
-
-        if (resourceObject.getAttributes() == null) {
+        if (validateBaseResourceObjectMapping(resourceObject, customPointer, errors)) return errors;
+        if (resourceObject.getAttributes() == null)
             errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_ATTRIBUTES_EMPTY).pointer(customPointer)
                     .build());
-        }
         return errors;
     }
 
-    private boolean validateBaseResponseObjectMapping(ResourceObject resourceObject, String customPointer,
+    private boolean validateBaseResourceObjectMapping(ResourceObject resourceObject, String customPointer,
                                                       Set<ErrorDataDTO> errors) {
+        if (resourceObject == null) return true;
         if (resourceObject.isInitializedEmpty()) {
             errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_EMPTY).pointer(customPointer).build());
             return true;

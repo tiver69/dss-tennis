@@ -79,7 +79,7 @@ public class TournamentFactory {
         return eliminationTournamentFactory;
     }
 
-    private ParticipantHelper<?> getParticipantHelper(ParticipantType type) {
+    private ParticipantHelper<?, ?> getParticipantHelper(ParticipantType type) {
         return type == ParticipantType.SINGLE ? playerHelper : teamHelper;
     }
 }

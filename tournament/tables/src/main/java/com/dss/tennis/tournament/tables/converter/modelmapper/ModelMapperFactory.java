@@ -5,6 +5,7 @@ import com.dss.tennis.tournament.tables.converter.patch.PlayerDtoPathApplier;
 import com.dss.tennis.tournament.tables.converter.patch.TournamentDtoPathApplier;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
+import com.dss.tennis.tournament.tables.model.request.CreateTeam;
 import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.request.PatchTournament;
 import com.dss.tennis.tournament.tables.model.response.v1.*;
@@ -41,6 +42,10 @@ public class ModelMapperFactory {
                 .setPostConverter(new PlayerDtoToGetPlayerConverter());
         modelMapper.createTypeMap(PageableDTO.class, GetPageable.class)
                 .setPostConverter(new PageableDtoToGetPageableConverter(modelMapper));
+        modelMapper.createTypeMap(TeamDTO.class, GetTeam.class)
+                .setPostConverter(new TeamDtoToGetTeamConverter(modelMapper));
+        modelMapper.createTypeMap(CreateTeam.class, TeamDTO.class)
+                .setPostConverter(new CreateTeamToTeamDtoConverter(ResourceObjectType.PLAYER.value));
         modelMapper.createTypeMap(String.class, ResourceObjectType.class)
                 .setConverter(new ResourceObjectTypeStringToEnumConverter());
         modelMapper.createTypeMap(CreateScore.class, ScoreDTO.class)

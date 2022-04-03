@@ -6,11 +6,14 @@ import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
+import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
+import com.dss.tennis.tournament.tables.validator.ValidatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
 
@@ -19,6 +22,8 @@ public class TeamValidator extends ParticipantValidator<Team> {
 
     @Autowired
     private TeamHelper teamHelper;
+    @Autowired
+    private ValidatorHelper<TeamDTO> validatorHelper;
 
     @Override
     public ErrorDataDTO validateParticipantForEnrolling(List<Integer> currentPlayerIds, ResourceObjectDTO newTeam) {
@@ -44,5 +49,23 @@ public class TeamValidator extends ParticipantValidator<Team> {
 
         if (!teamIds.contains(teamId)) throw new DetailedException(PARTICIPANT_NOT_FOUND, teamId);
         if (teamIds.size() <= 2) throw new DetailedException(FORBIDDEN_PARTICIPANT_QUANTITY_REMOVING, tournamentId);
+    }
+
+    public Set<ErrorDataDTO> validateTeamCreation(TeamDTO teamDto) {
+        Set<ErrorDataDTO> detailedErrorData = validatorHelper.validateObject(teamDto);
+        if (!detailedErrorData.isEmpty()) return detailedErrorData;
+
+        if (teamHelper.isTeamExist(teamDto.getPlayerOne().getId(), teamDto.getPlayerTwo().getId()))
+            throw new DetailedException(TEAM_DUPLICATION);
+
+        int playerOneId = teamDto.getPlayerOne().getId();
+        int playerTwoId = teamDto.getPlayerTwo().getId();
+        if (!playerHelper.isParticipantExist(playerOneId))
+            detailedErrorData.add(new ErrorDataDTO(PLAYER_NOT_FOUND, String.valueOf(playerOneId)));
+        if (!playerHelper.isParticipantExist(playerTwoId))
+            detailedErrorData.add(new ErrorDataDTO(PLAYER_NOT_FOUND, String.valueOf(playerTwoId)));
+        if (playerOneId == playerTwoId)
+            detailedErrorData.add(new ErrorDataDTO(TEAM_PLAYER_DUPLICATION, String.valueOf(playerTwoId)));
+        return detailedErrorData;
     }
 }

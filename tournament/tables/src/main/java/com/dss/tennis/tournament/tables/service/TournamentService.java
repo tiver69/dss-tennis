@@ -92,7 +92,7 @@ public class TournamentService {
         TournamentDTO tournamentDto = tournamentHelper.getTournamentDto(tournamentId, BASIC);
 
         Set<ErrorDataDTO> warnings = new HashSet<>();
-        ParticipantHelper<?> participantHelper = getParticipantHelper(tournamentDto.getParticipantType());
+        ParticipantHelper<?, ?> participantHelper = getParticipantHelper(tournamentDto.getParticipantType());
         Set<Integer> newParticipantIds = participantHelper
                 .getParticipantIdsForEnrolling(tournamentId, newParticipantsDto, warnings);
 
@@ -180,7 +180,7 @@ public class TournamentService {
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
     }
 
-    private ParticipantHelper<?> getParticipantHelper(ParticipantType participantType) {
+    private ParticipantHelper<?, ?> getParticipantHelper(ParticipantType participantType) {
         return participantType == ParticipantType.DOUBLE ? teamHelper : playerHelper;
     }
 

@@ -45,7 +45,7 @@ public class CreateScoreToScorePatchDtoConverter extends AbstractResourceObjectC
     private Optional<SetScorePatchDTO> mapSetScoreDto(ResourceObject<SetScoreAttributes> set, SetType type,
                                                  Set<ErrorDataDTO> errors) {
         if (set == null) return Optional.empty();
-        errors.addAll(validateResponseObjectMappingWitAttributes(set, type.value));
+        errors.addAll(validateResourceObjectMappingWitAttributes(set, type.value));
         if (set.getAttributes() == null) return Optional.empty();
         return Optional.of(new SetScorePatchDTO(set.getId(), set.getAttributes().getParticipantOne(), set
                 .getAttributes().getParticipantTwo()));

@@ -2,7 +2,6 @@ package com.dss.tennis.tournament.tables.validator.participant;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
-import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
@@ -21,8 +20,6 @@ import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
 @Component
 public class PlayerValidator extends ParticipantValidator<Player> {
 
-    @Autowired
-    private PlayerHelper playerHelper;
     @Autowired
     private ValidatorHelper<PlayerDTO> validatorHelper;
 
