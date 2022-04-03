@@ -79,4 +79,12 @@ public class ParticipantController {
         SuccessResponse<GetPlayer> playerResponse = responseHelper.createSuccessResponse(player, GetPlayer.class);
         return new ResponseEntity<>(playerResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/teams/{teamId}")
+    public ResponseEntity<SuccessResponse<GetTeam>> getTeamById(@PathVariable Integer teamId) {
+        TeamDTO team = participantService.getTeamDTO(teamId);
+
+        SuccessResponse<GetTeam> teamResponse = responseHelper.createSuccessResponse(team, GetTeam.class);
+        return new ResponseEntity<>(teamResponse, HttpStatus.OK);
+    }
 }

@@ -1,5 +1,7 @@
 package com.dss.tennis.tournament.tables.helper.participant;
 
+import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
@@ -41,7 +43,11 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
 
     @Override
     public Team getParticipant(Integer teamId) {
-        return teamRepository.findById(teamId).orElse(null);
+        Optional<Team> repositoryTeam = teamRepository.findById(teamId);
+        if (!repositoryTeam.isPresent())
+            throw new DetailedException(ErrorConstants.TEAM_NOT_FOUND, teamId);
+
+        return repositoryTeam.get();
     }
 
     @Override

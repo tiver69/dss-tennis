@@ -70,6 +70,10 @@ public class ParticipantService {
         return playerHelper.getParticipantDto(playerId);
     }
 
+    public TeamDTO getTeamDTO(Integer teamId) {
+        return teamHelper.getParticipantDto(teamId);
+    }
+
     public SuccessResponseDTO<PageableDTO<PlayerDTO>> getPlayersPage(int page, byte pageSize) {
         Set<ErrorDataDTO> warnings = new HashSet<>();
         Pageable pageableRequestParameter = pageableValidator.validatePageableRequest(page, pageSize, warnings,
