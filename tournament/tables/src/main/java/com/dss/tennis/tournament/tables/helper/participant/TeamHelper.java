@@ -4,13 +4,12 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
-import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
-import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.repository.TeamRepository;
 import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -51,15 +50,19 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
     }
 
     @Override
+    public PageableDTO<TeamDTO> getParticipantPage(Pageable pageableRequestParameter) {
+        Page<Team> teamsPage = teamRepository.findAll(pageableRequestParameter);
+        List<TeamDTO> teams = teamsPage.getContent().stream()
+                .map(this::convertTeamDto).collect(Collectors.toList());
+
+        return PageableDTO.<TeamDTO>builder().page(teams)
+                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(teamsPage.getTotalPages()).build();
+    }
+
+    @Override
     public TeamDTO getParticipantDto(Integer teamId) {
         Team team = getParticipant(teamId);
-        TeamDTO teamDto = converterHelper.convert(team, TeamDTO.class);
-        playerRepository.findById(team.getPlayerOneId())
-                .ifPresent(player -> teamDto.setPlayerOne(converterHelper.convert(player, PlayerDTO.class)));
-        playerRepository.findById(team.getPlayerTwoId())
-                .ifPresent(player -> teamDto.setPlayerTwo(converterHelper.convert(player, PlayerDTO.class)));
-
-        return teamDto;
+        return convertTeamDto(team);
     }
 
     @Override
@@ -110,5 +113,15 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
 
     public boolean isTeamExist(Integer playerOneId, Integer playerTwoId) {
         return teamRepository.getTeamByPlayerIds(playerOneId, playerTwoId).isPresent();
+    }
+
+    private TeamDTO convertTeamDto(Team team) {
+        TeamDTO teamDto = converterHelper.convert(team, TeamDTO.class);
+        playerRepository.findById(team.getPlayerOneId())
+                .ifPresent(player -> teamDto.setPlayerOne(converterHelper.convert(player, PlayerDTO.class)));
+        playerRepository.findById(team.getPlayerTwoId())
+                .ifPresent(player -> teamDto.setPlayerTwo(converterHelper.convert(player, PlayerDTO.class)));
+
+        return teamDto;
     }
 }

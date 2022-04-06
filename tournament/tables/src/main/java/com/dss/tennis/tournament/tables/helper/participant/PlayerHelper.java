@@ -60,6 +60,17 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
     }
 
     @Override
+    public PageableDTO<PlayerDTO> getParticipantPage(Pageable pageableRequestParameter) {
+        Page<Player> playersPage = playerRepository.findAll(pageableRequestParameter);
+        List<PlayerDTO> players = playersPage.getContent().stream()
+                .map(player -> converterHelper.convert(player, PlayerDTO.class))
+                .collect(Collectors.toList());
+
+        return PageableDTO.<PlayerDTO>builder().page(players)
+                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages()).build();
+    }
+
+    @Override
     public PlayerDTO getParticipantDto(Integer playerId) {
         return converterHelper.convert(getParticipant(playerId), PlayerDTO.class);
     }
@@ -100,15 +111,5 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
             }
         }
         return participantIdsForEnrolling;
-    }
-
-    public PageableDTO<PlayerDTO> getPlayersPage(Pageable pageableRequestParameter) {
-        Page<Player> playersPage = playerRepository.findAll(pageableRequestParameter);
-        List<PlayerDTO> players = playersPage.getContent().stream()
-                .map(player -> converterHelper.convert(player, PlayerDTO.class))
-                .collect(Collectors.toList());
-
-        return PageableDTO.<PlayerDTO>builder().page(players)
-                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages()).build();
     }
 }

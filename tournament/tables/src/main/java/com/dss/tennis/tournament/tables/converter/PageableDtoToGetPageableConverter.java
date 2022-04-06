@@ -2,9 +2,11 @@ package com.dss.tennis.tournament.tables.converter;
 
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
+import com.dss.tennis.tournament.tables.model.response.v1.GetTeam;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +27,7 @@ public class PageableDtoToGetPageableConverter<T, E> implements Converter<Pageab
     private ModelMapper modelMapper;
 
     public PageableDtoToGetPageableConverter(ModelMapper modelMapper) {
+        pageableDtoClassTOResponseClass.put(TeamDTO.class, GetTeam.class);
         pageableDtoClassTOResponseClass.put(PlayerDTO.class, GetPlayer.class);
         pageableDtoClassTOResponseClass.put(TournamentDTO.class, GetTournament.class);
         this.modelMapper = modelMapper;

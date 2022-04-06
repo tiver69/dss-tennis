@@ -2,10 +2,12 @@ package com.dss.tennis.tournament.tables.helper.participant;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
+import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
 import com.dss.tennis.tournament.tables.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public abstract class ParticipantHelper<T, D> {
     public abstract boolean isParticipantNotExist(Integer participantId);
 
     public abstract T getParticipant(Integer participantId);
+
+    public abstract PageableDTO<D> getParticipantPage(Pageable pageableRequestParameter);
 
     public abstract D getParticipantDto(Integer participantId);
 

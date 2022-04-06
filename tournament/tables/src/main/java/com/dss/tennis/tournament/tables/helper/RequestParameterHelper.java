@@ -46,6 +46,8 @@ public class RequestParameterHelper {
                 .of(new Order(DESC, "status"), new Order(DESC, "beginningDate")));
         pageableSortParameters.put(ResourceObjectType.PLAYER, List
                 .of(new Order(ASC, "lastName"), new Order(ASC, "firstName")));
+        pageableSortParameters.put(ResourceObjectType.TEAM, List
+                .of(new Order(ASC, "playerOneId"), new Order(ASC, "playerTwoId")));
 
         tmpRequestParameter = new RequestParameter();
         requestParameterSetter.put(CONTEST_VALUE, tmpRequestParameter::setIncludeContests);

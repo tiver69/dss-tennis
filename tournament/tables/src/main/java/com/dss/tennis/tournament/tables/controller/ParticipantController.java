@@ -12,6 +12,7 @@ import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTeam;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +65,24 @@ public class ParticipantController {
     public ResponseEntity<SuccessResponse<GetPageable>> getPageablePlayers(
             @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
             @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
-        SuccessResponseDTO<PageableDTO<PlayerDTO>> pageablePlayersDto = participantService
-                .getPlayersPage(page, pageSize);
+        SuccessResponseDTO<PageableDTO> pageablePlayersDto = participantService
+                .getParticipantPage(page, pageSize, ResourceObjectType.PLAYER);
 
         SuccessResponse<GetPageable> playersSuccessResponse = responseHelper
                 .createSuccessResponse(pageablePlayersDto, GetPageable.class);
         return new ResponseEntity<>(playersSuccessResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/teams")
+    public ResponseEntity<SuccessResponse<GetPageable>> getPageableTeams(
+            @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
+            @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
+        SuccessResponseDTO<PageableDTO> pageableTeamsDto = participantService
+                .getParticipantPage(page, pageSize, ResourceObjectType.TEAM);
+
+        SuccessResponse<GetPageable> teamsSuccessResponse = responseHelper
+                .createSuccessResponse(pageableTeamsDto, GetPageable.class);
+        return new ResponseEntity<>(teamsSuccessResponse, HttpStatus.OK);
     }
 
     @GetMapping("/players/{playerId}")

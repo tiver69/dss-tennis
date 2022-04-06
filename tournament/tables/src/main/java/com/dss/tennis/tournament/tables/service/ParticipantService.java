@@ -3,6 +3,7 @@ package com.dss.tennis.tournament.tables.service;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.PatchApplierHelper;
+import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.dto.*;
@@ -74,19 +75,25 @@ public class ParticipantService {
         return teamHelper.getParticipantDto(teamId);
     }
 
-    public SuccessResponseDTO<PageableDTO<PlayerDTO>> getPlayersPage(int page, byte pageSize) {
+    public SuccessResponseDTO<PageableDTO> getParticipantPage(int page, byte pageSize,
+                                                              ResourceObjectType participantType) {
         Set<ErrorDataDTO> warnings = new HashSet<>();
-        Pageable pageableRequestParameter = pageableValidator.validatePageableRequest(page, pageSize, warnings,
-                ResourceObjectType.PLAYER);
+        ParticipantHelper helper = getParticipantHelper(participantType);
+        Pageable pageableRequestParameter = pageableValidator
+                .validatePageableRequest(page, pageSize, warnings, participantType);
 
-        PageableDTO<PlayerDTO> playersPage = playerHelper.getPlayersPage(pageableRequestParameter);
+        PageableDTO<PlayerDTO> playersPage = helper.getParticipantPage(pageableRequestParameter);
         Pageable newPageableRequestParameter = pageableValidator
-                .validateUpperPage(pageableRequestParameter, playersPage
-                        .getTotalPages(), warnings, ResourceObjectType.PLAYER);
+                .validateUpperPage(pageableRequestParameter, playersPage.getTotalPages(), warnings, participantType);
         if (newPageableRequestParameter != null) {
-            playersPage = playerHelper.getPlayersPage(newPageableRequestParameter);
+            playersPage = helper.getParticipantPage(newPageableRequestParameter);
         }
 
         return new SuccessResponseDTO<>(playersPage, warnings);
+    }
+
+    private ParticipantHelper<?, ?> getParticipantHelper(ResourceObjectType participantType) {
+        return participantType == ResourceObjectType.PLAYER ? playerHelper : teamHelper;
+
     }
 }
