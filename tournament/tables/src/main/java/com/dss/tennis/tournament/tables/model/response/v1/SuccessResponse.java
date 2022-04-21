@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.model.response.v1;
 
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

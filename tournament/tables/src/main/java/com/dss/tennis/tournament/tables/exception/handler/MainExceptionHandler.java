@@ -2,12 +2,10 @@ package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.modelmapper.MappingException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +13,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.AUTHENTICATION_FAILED;
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
@@ -54,12 +54,17 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
         ErrorData errorData = createErrorData(new ErrorDataDTO(INTERNAL_SERVER_ERROR, exception.getMessage()));
-        System.out.println(exception.getStackTrace()); //todo: temp
         return new ResponseEntity<>(new ErrorResponse(errorData), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(MappingException.class)
-    public ResponseEntity<ErrorResponse> handleMappingException(MappingException exception) {
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception) {
+        return new ResponseEntity<>(new ErrorResponse(createErrorData(AUTHENTICATION_FAILED, null, null)),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({MappingException.class, InternalAuthenticationServiceException.class})
+    public ResponseEntity<ErrorResponse> handleRuntimeExceptionWithDetailedCause(MappingException exception) {
         return exception.getCause() instanceof DetailedException ?
                 handleDetailedException((DetailedException) exception.getCause()) : handleRuntimeException(exception);
     }
@@ -94,20 +99,8 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(errorData), HttpStatus.BAD_REQUEST);
     }
 
-    private HttpStatus getHttpStatus(List<ErrorData> list) {
+    public HttpStatus getHttpStatus(List<ErrorData> list) {
         return list.stream().findFirst().map(ErrorData::getCode).map(Integer::parseInt).map(HttpStatus::resolve)
                 .orElse(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    protected static class ErrorResponse {
-
-        public ErrorResponse(ErrorData errorData) {
-            this.errors = Collections.singletonList(errorData);
-        }
-
-        private final List<ErrorData> errors;
     }
 }

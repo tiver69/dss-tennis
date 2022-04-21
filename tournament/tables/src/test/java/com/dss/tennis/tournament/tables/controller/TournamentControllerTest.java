@@ -9,7 +9,7 @@ import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.TournamentService;

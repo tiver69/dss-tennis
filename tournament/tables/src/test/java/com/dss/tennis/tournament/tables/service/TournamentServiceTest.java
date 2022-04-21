@@ -7,7 +7,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import org.junit.jupiter.api.Assertions;

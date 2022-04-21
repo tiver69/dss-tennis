@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import org.springframework.stereotype.Service;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.GENERAL_BAD_REQUEST;

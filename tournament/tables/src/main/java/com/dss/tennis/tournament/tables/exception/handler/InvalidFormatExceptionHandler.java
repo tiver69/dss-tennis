@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

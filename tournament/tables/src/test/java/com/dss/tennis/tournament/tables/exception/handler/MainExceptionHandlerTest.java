@@ -2,10 +2,10 @@ package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
-import com.dss.tennis.tournament.tables.exception.handler.MainExceptionHandler.ErrorResponse;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorData.ErrorDataSource;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
+import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData.ErrorDataSource;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

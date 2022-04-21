@@ -32,4 +32,11 @@ public class DetailedException extends RuntimeException {
     public DetailedException(Set<ErrorDataDTO> errors) {
         this.errors = errors;
     }
+
+    @Override
+    public String getMessage() {
+        return errors.size() == 1 ? errors.stream().findFirst().get().getErrorConstant()
+                .toString() : "MULTIPLE_VALIDATION_FAILS";
+
+    }
 }
