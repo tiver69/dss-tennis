@@ -2,14 +2,15 @@ package com.dss.tennis.tournament.tables.model.db.v2;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "contest_id")
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -36,5 +37,14 @@ public class SingleContest extends Contest {
 
     public void setPlayerTwoId(Integer playerTwoId) {
         this.playerTwoId = playerTwoId;
+    }
+
+    @Override
+    public String toString() {
+        return "SingleContest{" +
+                super.toString() +
+                "playerOneId=" + playerOneId +
+                ", playerTwoId=" + playerTwoId +
+                '}';
     }
 }

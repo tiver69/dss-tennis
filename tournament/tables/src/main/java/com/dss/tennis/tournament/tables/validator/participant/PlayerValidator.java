@@ -24,8 +24,7 @@ public class PlayerValidator extends ParticipantValidator<Player> {
     private ValidatorHelper<PlayerDTO> validatorHelper;
 
     @Override
-    public ErrorDataDTO validateParticipantForEnrolling(List<Integer> currentPlayerIds,
-                                                        ResourceObjectDTO newPlayer) {
+    public ErrorDataDTO validateParticipantForEnrolling(List<Integer> currentPlayerIds, ResourceObjectDTO newPlayer) {
         Integer participantId = newPlayer.getId();
 
         if (ResourceObjectType.PLAYER != newPlayer.getType())

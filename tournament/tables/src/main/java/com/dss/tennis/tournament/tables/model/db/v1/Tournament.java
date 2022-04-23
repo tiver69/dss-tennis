@@ -107,4 +107,16 @@ public class Tournament {
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return 31 * result + (beginningDate != null ? beginningDate.hashCode() : 0);
     }
+
+    @Override
+    public String toString() {
+        return "Tournament{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", tournamentType=" + tournamentType +
+                ", participantType=" + participantType +
+                ", status=" + status +
+                ", beginningDate=" + beginningDate +
+                '}';
+    }
 }

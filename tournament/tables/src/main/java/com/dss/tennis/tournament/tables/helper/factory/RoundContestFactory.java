@@ -28,13 +28,13 @@ public abstract class RoundContestFactory implements AbstractContestFactory {
                 .collect(Collectors.toList());
     }
 
-    protected void removeContests(Supplier<List<Contest>> contestsToRemove) {
-        contestsToRemove.get().stream().map(Contest::getId).forEach(contestHelper::removeContestById);
-    }
-
     @Override
     public void removeTournamentContests(int tournamentId) {
         removeContests(() -> contestHelper.getTournamentContests(tournamentId));
+    }
+
+    protected void removeContests(Supplier<List<Contest>> contestsToRemove) {
+        contestsToRemove.get().stream().map(Contest::getId).forEach(contestHelper::removeContestById);
     }
 
     protected abstract Class<? extends ContestDTO> getContestParticipantClass();

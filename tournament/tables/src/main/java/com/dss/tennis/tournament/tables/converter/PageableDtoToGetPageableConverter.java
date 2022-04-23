@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 @Setter
 public class PageableDtoToGetPageableConverter<T, E> implements Converter<PageableDTO<T>, GetPageable<E>> {
 
-    private Map<Class<?>, Class> pageableDtoClassTOResponseClass = new HashMap<>();
+    private Map<Class<?>, Class> pageableDtoClassToResponseClass = new HashMap<>();
     private ModelMapper modelMapper;
 
     public PageableDtoToGetPageableConverter(ModelMapper modelMapper) {
-        pageableDtoClassTOResponseClass.put(TeamDTO.class, GetTeam.class);
-        pageableDtoClassTOResponseClass.put(PlayerDTO.class, GetPlayer.class);
-        pageableDtoClassTOResponseClass.put(TournamentDTO.class, GetTournament.class);
+        pageableDtoClassToResponseClass.put(TeamDTO.class, GetTeam.class);
+        pageableDtoClassToResponseClass.put(PlayerDTO.class, GetPlayer.class);
+        pageableDtoClassToResponseClass.put(TournamentDTO.class, GetTournament.class);
         this.modelMapper = modelMapper;
     }
 
@@ -40,7 +40,7 @@ public class PageableDtoToGetPageableConverter<T, E> implements Converter<Pageab
 
         List<E> page = pageableDto.getPage().stream()
                 .map(pageItem -> {
-                    Class<E> className = pageableDtoClassTOResponseClass.get(pageItem.getClass());
+                    Class<E> className = pageableDtoClassToResponseClass.get(pageItem.getClass());
                     return modelMapper.map(pageItem, className);
                 })
                 .collect(Collectors.toList());

@@ -51,4 +51,13 @@ public class TieBreak {
     public void setSetScore(SetScore setScore) {
         this.setScore = setScore;
     }
+
+    @Override
+    public String toString() {
+        return "TieBreak{" +
+                "id=" + id +
+                ", participantOne=" + participantOne +
+                ", participantTwo=" + participantTwo +
+                '}';
+    }
 }

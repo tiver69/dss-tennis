@@ -3,14 +3,12 @@ package com.dss.tennis.tournament.tables.model.db.v2;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "contest_id")
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -37,5 +35,14 @@ public class DoubleContest extends Contest {
 
     public void setTeamTwo(Team teamTwo) {
         this.teamTwo = teamTwo;
+    }
+
+    @Override
+    public String toString() {
+        return "DoubleContest{" +
+                super.toString() +
+                ", teamOne=" + teamOne +
+                ", teamTwo=" + teamTwo +
+                '}';
     }
 }

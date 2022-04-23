@@ -60,4 +60,13 @@ public class Team {
     public int hashCode() {
         return Objects.hash(id, playerOneId, playerTwoId);
     }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", playerOneId=" + playerOneId +
+                ", playerTwoId=" + playerTwoId +
+                '}';
+    }
 }

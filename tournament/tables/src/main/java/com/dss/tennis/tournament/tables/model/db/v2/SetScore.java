@@ -80,4 +80,15 @@ public class SetScore {
     public void setContest(Contest contest) {
         this.contest = contest;
     }
+
+    @Override
+    public String toString() {
+        return "SetScore{" +
+                "id=" + id +
+                ", setType=" + setType +
+                ", participantOne=" + participantOne +
+                ", participantTwo=" + participantTwo +
+                ", tieBreak=" + tieBreak +
+                '}';
+    }
 }

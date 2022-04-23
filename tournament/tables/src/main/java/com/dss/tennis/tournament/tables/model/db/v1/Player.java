@@ -102,4 +102,15 @@ public class Player {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", experienceYear=" + experienceYear +
+                ", leadingHand=" + leadingHand +
+                '}';
+    }
 }

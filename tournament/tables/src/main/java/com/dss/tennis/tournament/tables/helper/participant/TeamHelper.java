@@ -32,7 +32,7 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
 
     @Override
     public boolean isParticipantExist(Integer teamId) {
-        return teamRepository.findById(teamId).isPresent();
+        return teamRepository.existsById(teamId);
     }
 
     @Override
@@ -79,10 +79,10 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
 
     @Override
     public ArrayList<Integer> getTournamentPlayerIds(Integer tournamentId) {
-        List<Integer> participants =
+        List<Integer> playerIds =
                 playerRepository.findPlayerIdsByDoubleTournamentId(tournamentId);
 
-        return participants.stream().allMatch(Objects::isNull) ? new ArrayList<>() : new ArrayList<>(participants);
+        return playerIds.stream().allMatch(Objects::isNull) ? new ArrayList<>() : new ArrayList<>(playerIds);
     }
 
     @Override
@@ -105,10 +105,10 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
     }
 
     public ArrayList<Integer> getTournamentTeamIds(Integer tournamentId) {
-        List<Integer> participants =
+        List<Integer> teamIds =
                 teamRepository.findTeamIdsByDoubleTournamentId(tournamentId);
 
-        return participants.stream().allMatch(Objects::isNull) ? new ArrayList<>() : new ArrayList<>(participants);
+        return teamIds.stream().allMatch(Objects::isNull) ? new ArrayList<>() : new ArrayList<>(teamIds);
     }
 
     public boolean isTeamExist(Integer playerOneId, Integer playerTwoId) {

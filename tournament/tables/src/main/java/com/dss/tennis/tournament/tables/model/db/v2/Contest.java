@@ -2,7 +2,6 @@ package com.dss.tennis.tournament.tables.model.db.v2;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -11,7 +10,6 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -117,5 +115,15 @@ public class Contest {
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (tournamentId != null ? tournamentId.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", round=" + round +
+                ", tournamentId=" + tournamentId +
+                ", winner=" + winner +
+                ", techDefeat=" + techDefeat +
+                ", date=" + date;
     }
 }

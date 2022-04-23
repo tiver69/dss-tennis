@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -33,10 +34,14 @@ public class DetailedException extends RuntimeException {
         this.errors = errors;
     }
 
+    public boolean contains(ErrorConstants searchedError) {
+        return errors.stream().anyMatch(errorDataDTO -> errorDataDTO.getErrorConstant() == searchedError);
+    }
+
     @Override
     public String getMessage() {
-        return errors.size() == 1 ? errors.stream().findFirst().get().getErrorConstant()
-                .toString() : "MULTIPLE_VALIDATION_FAILS";
-
+        return errors.stream()
+                .map(errorDto -> String.format("%s[%s]", errorDto.getErrorConstant().toString(), errorDto.getPointer()))
+                .collect(Collectors.joining(", "));
     }
 }

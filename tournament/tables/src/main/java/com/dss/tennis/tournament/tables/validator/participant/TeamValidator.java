@@ -32,10 +32,10 @@ public class TeamValidator extends ParticipantValidator<Team> {
             return new ErrorDataDTO(UNSUPPORTED_RESOURCE_TYPE, newTeam.getType().value, newTeam
                     .getSequenceNumber());
 
-        Team team = teamHelper.getParticipant(newTeamId);
-        if (team == null)
+        if (teamHelper.isParticipantNotExist(newTeamId))
             return new ErrorDataDTO(ErrorConstants.TEAM_NOT_FOUND, newTeamId.toString(), newTeam
                     .getSequenceNumber());
+        Team team = teamHelper.getParticipant(newTeamId);
         if (currentPlayerIds.contains(team.getPlayerOneId()) || currentPlayerIds.contains(team.getPlayerTwoId()))
             return new ErrorDataDTO(ErrorConstants.PARTICIPANT_DUPLICATION, newTeamId.toString(), newTeam
                     .getSequenceNumber());
@@ -60,9 +60,9 @@ public class TeamValidator extends ParticipantValidator<Team> {
 
         int playerOneId = teamDto.getPlayerOne().getId();
         int playerTwoId = teamDto.getPlayerTwo().getId();
-        if (!playerHelper.isParticipantExist(playerOneId))
+        if (playerHelper.isParticipantNotExist(playerOneId))
             detailedErrorData.add(new ErrorDataDTO(PLAYER_NOT_FOUND, String.valueOf(playerOneId)));
-        if (!playerHelper.isParticipantExist(playerTwoId))
+        if (playerHelper.isParticipantNotExist(playerTwoId))
             detailedErrorData.add(new ErrorDataDTO(PLAYER_NOT_FOUND, String.valueOf(playerTwoId)));
         if (playerOneId == playerTwoId)
             detailedErrorData.add(new ErrorDataDTO(TEAM_PLAYER_DUPLICATION, String.valueOf(playerTwoId)));

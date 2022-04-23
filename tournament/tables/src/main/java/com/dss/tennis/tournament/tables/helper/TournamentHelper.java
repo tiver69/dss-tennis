@@ -85,7 +85,7 @@ public class TournamentHelper {
         return tournamentFactory.populateTournamentDTO(tournament, requestParameters);
     }
 
-    public StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate) {
+    private StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate) {
         if (beginningDate == null || beginningDate.isAfter(LocalDate.now()))
             return StatusType.PLANNED;
         return StatusType.IN_PROGRESS;
