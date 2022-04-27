@@ -19,6 +19,13 @@ public class Admin implements UserDetails {
 
     @Getter
     @Setter
+    private String refreshToken;
+    @Getter
+    @Setter
+    private LocalDateTime refreshTokenExpirationTime;
+
+    @Getter
+    @Setter
     private byte attempts;
     @Getter
     @Setter

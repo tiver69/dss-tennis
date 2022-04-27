@@ -1,7 +1,11 @@
 package com.dss.tennis.tournament.tables.controller;
 
+import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.model.request.PostAuthentication;
+import com.dss.tennis.tournament.tables.model.request.PostRefreshToken;
 import com.dss.tennis.tournament.tables.model.response.v1.AuthenticationResponse;
+import com.dss.tennis.tournament.tables.security.Admin;
 import com.dss.tennis.tournament.tables.security.AdminDetailsService;
 import com.dss.tennis.tournament.tables.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,6 +50,19 @@ public class AuthenticationController {
         adminDetailsService.resetUnsuccessfulCounter(authenticationRequest.getUsername());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
-        return new ResponseEntity<>(new AuthenticationResponse(jwt), HttpStatus.OK);
+        String refreshToken = ((Admin) authentication.getPrincipal()).getRefreshToken();
+        return new ResponseEntity<>(new AuthenticationResponse(jwt, refreshToken), HttpStatus.OK);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshAuthenticationToken(@RequestBody PostRefreshToken refreshRequest) {
+        Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (admin.getRefreshToken().equals(refreshRequest.getRefreshToken()) && LocalDateTime.now()
+                .isBefore(admin.getRefreshTokenExpirationTime())) {
+            String jwt = jwtTokenProvider.generateToken(SecurityContextHolder.getContext().getAuthentication());
+            return new ResponseEntity<>(new AuthenticationResponse(jwt, admin.getRefreshToken()), HttpStatus.OK);
+        }
+        throw new DetailedException(ErrorConstants.AUTHENTICATION_FAILED);
     }
 }

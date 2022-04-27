@@ -18,7 +18,7 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final String HEADER_STRING = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String TOKEN_PREFIX = "Bearer";
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String jwt = getJWTFromRequest(httpServletRequest);
         if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-            String username = jwtTokenProvider.getAdminUsernameFromJWT(jwt);
+            String username = jwtTokenProvider.getAdminUsernameFromJWT(jwt, httpServletRequest.getServletPath());
             UserDetails playerDetails = adminDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     playerDetails, null, Collections.emptyList());
@@ -44,8 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String getJWTFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(HEADER_STRING);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX + " ")) {
+            return bearerToken.substring(TOKEN_PREFIX.length() + 1);
         }
         return null;
     }

@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 @PropertySource("classpath:error.properties")
@@ -58,6 +59,12 @@ public class AdminDetailsService implements UserDetailsService {
                 throw new DetailedException(ErrorConstants.ACCOUNT_LOCKED);
             }
         }
+    }
+
+    public void updateRefreshToken(String username, LocalDateTime expirationTime) {
+        Admin admin = adminsMap.get(username);
+        admin.setRefreshToken(UUID.randomUUID().toString());
+        admin.setRefreshTokenExpirationTime(expirationTime);
     }
 
     public void increaseUnsuccessfulCounter(String username) {
