@@ -3,6 +3,7 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
+import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
@@ -12,6 +13,7 @@ import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +33,7 @@ public class ResponseHelper {
                                                                 Set<ErrorDataDTO> warnings) {
         Set<ResourceObject> included = null;
         if (tournamentDTO.getPlayers() != null) {
-            included = tournamentDTO.getPlayers().stream()
+            included = ((List<PlayerDTO>) tournamentDTO.getPlayers()).stream()
                     .map(player -> converterHelper.convert(player, ResourceObject.class))
                     .collect(Collectors.toSet());
         }

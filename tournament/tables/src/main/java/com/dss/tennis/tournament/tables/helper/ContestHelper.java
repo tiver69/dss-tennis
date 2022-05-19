@@ -108,7 +108,7 @@ public class ContestHelper {
             Integer winnerId = contestDto.getPlayerOne().getId() == playerId ? contestDto.getPlayerTwo()
                     .getId() : contestDto.getPlayerOne().getId();
             contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-        } else if (contestDto.getWinner().equals(playerId)) {
+        } else if (contestDto.getWinnerId().equals(playerId)) {
             contestRepository.updateTechDefeatByContestId(null, true, contestDto.getId());
         }
     }
@@ -118,7 +118,7 @@ public class ContestHelper {
             Integer winnerId = contestDto.getTeamOne().getId().equals(teamId) ? contestDto.getTeamTwo()
                     .getId() : contestDto.getTeamOne().getId();
             contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-        } else if (contestDto.getWinner().equals(teamId)) {
+        } else if (contestDto.getWinnerId().equals(teamId)) {
             contestRepository.updateTechDefeatByContestId(null, true, contestDto.getId());
         }
     }

@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 public abstract class ContestDTO {
 
     private int id;
-    private Integer winner;
+    private Integer winnerId;
     private boolean techDefeat;
     private ScoreDTO scoreDto;
 

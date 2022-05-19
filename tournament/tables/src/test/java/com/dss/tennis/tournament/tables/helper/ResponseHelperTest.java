@@ -7,7 +7,6 @@ import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.GetSingleParticipant;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
@@ -36,7 +35,7 @@ class ResponseHelperTest {
     @Mock
     private WarningHandler warningHandlerMock;
     @Spy
-    private GetTournament<GetSingleParticipant> getTournamentSpy;
+    private GetTournament getTournamentSpy;
     @Spy
     private PlayerDTO playerOneDtoSpy;
     @Spy

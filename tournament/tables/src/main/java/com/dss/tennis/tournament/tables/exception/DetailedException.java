@@ -41,7 +41,8 @@ public class DetailedException extends RuntimeException {
     @Override
     public String getMessage() {
         return errors.stream()
-                .map(errorDto -> String.format("%s[%s]", errorDto.getErrorConstant().toString(), errorDto.getPointer()))
+                .map(errorDto -> String.format("%s[%s]", errorDto.getErrorConstant().toString(), errorDto
+                        .getPointer() != null ? errorDto.getPointer() : errorDto.getDetailParameter()))
                 .collect(Collectors.joining(", "));
     }
 }

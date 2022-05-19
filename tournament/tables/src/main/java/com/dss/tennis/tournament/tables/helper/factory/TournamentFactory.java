@@ -27,7 +27,9 @@ public class TournamentFactory {
     @Autowired
     private RoundDoubleContestFactory roundDoubleContestFactory;
     @Autowired
-    private EliminationContestFactory eliminationTournamentFactory;
+    private EliminationSingleContestFactory eliminationSingleContestFactory;
+    @Autowired
+    private EliminationDoubleContestFactory eliminationDoubleContestFactory;
     @Autowired
     private PlayerHelper playerHelper;
     @Autowired
@@ -60,7 +62,7 @@ public class TournamentFactory {
         TournamentDTO tournamentDto = populateTournamentDTO(tournament);
 
         if (requestParameters.isIncludeContests()) {
-            List<ContestDTO> contests = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
+            Iterable<ContestDTO> contests = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
                     .getParticipantType()).getContestDTOs(tournamentDto.getId());
             tournamentDto.setContests(contests);
         }
@@ -76,7 +78,8 @@ public class TournamentFactory {
         if (type == TournamentType.ROUND) {
             return participantType == ParticipantType.SINGLE ? roundSingleContestFactory : roundDoubleContestFactory;
         }
-        return eliminationTournamentFactory;
+        return participantType == ParticipantType.SINGLE ? eliminationSingleContestFactory :
+                eliminationDoubleContestFactory;
     }
 
     private ParticipantHelper<?, ?> getParticipantHelper(ParticipantType type) {

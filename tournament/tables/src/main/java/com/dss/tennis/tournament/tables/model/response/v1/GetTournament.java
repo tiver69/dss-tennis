@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
@@ -29,5 +28,5 @@ public class GetTournament<T extends GetParticipant> {
     private ParticipantType participantType;
     private StatusType status;
     private LocalDate beginningDate;
-    private List<GetContest<T>> contests;
+    private Iterable<T> contests;
 }
