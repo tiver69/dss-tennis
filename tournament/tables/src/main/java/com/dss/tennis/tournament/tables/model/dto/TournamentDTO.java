@@ -33,6 +33,6 @@ public class TournamentDTO {
     private ParticipantType participantType;
     private StatusType status;
     private LocalDate beginningDate;
-    private List<ContestDTO> contests;
+    private Iterable<ContestDTO> contests;
     private List<PlayerDTO> players;
 }

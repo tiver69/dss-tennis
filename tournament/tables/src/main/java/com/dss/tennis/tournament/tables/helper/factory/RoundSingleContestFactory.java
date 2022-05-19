@@ -39,7 +39,7 @@ public class RoundSingleContestFactory extends RoundContestFactory {
     }
 
     @Override
-    protected Class<? extends ContestDTO> getContestParticipantClass() {
+    public Class<? extends ContestDTO> getContestParticipantClass() {
         return SingleContestDTO.class;
     }
 }

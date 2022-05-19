@@ -78,6 +78,36 @@ LOCK TABLES `double_contest` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `elimination_contest`
+--
+
+DROP TABLE IF EXISTS `elimination_contest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `elimination_contest` (
+  `contest_id` int(11) NOT NULL,
+  `first_parent_contest_id` int(11) NOT NULL,
+  `second_parent_contest_id` int(11) NOT NULL,
+  PRIMARY KEY (`contest_id`,`first_parent_contest_id`,`second_parent_contest_id`),
+  KEY `fk_elimination_contest_contest2_idx` (`first_parent_contest_id`),
+  KEY `fk_elimination_contest_contest3_idx` (`second_parent_contest_id`),
+  KEY `fk_elimination_contest_contest1_idx` (`contest_id`),
+  CONSTRAINT `fk_elimination_contest_contest1` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`id`),
+  CONSTRAINT `fk_elimination_contest_contest2` FOREIGN KEY (`first_parent_contest_id`) REFERENCES `contest` (`id`),
+  CONSTRAINT `fk_elimination_contest_contest3` FOREIGN KEY (`second_parent_contest_id`) REFERENCES `contest` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `elimination_contest`
+--
+
+LOCK TABLES `elimination_contest` WRITE;
+/*!40000 ALTER TABLE `elimination_contest` DISABLE KEYS */;
+/*!40000 ALTER TABLE `elimination_contest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `player`
 --
 
@@ -258,4 +288,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-03 19:48:04
+-- Dump completed on 2022-05-20 23:03:48

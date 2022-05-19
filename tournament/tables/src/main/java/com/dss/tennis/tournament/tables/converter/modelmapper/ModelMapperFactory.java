@@ -28,6 +28,7 @@ public class ModelMapperFactory {
             @Override
             protected void configure() {
                 skip(destination.getType());
+                skip(destination.getContests());
             }
         });
 
@@ -52,6 +53,10 @@ public class ModelMapperFactory {
                 .setConverter(new CreateScoreToScoreDtoConverter(ResourceObjectType.SET_SCORE.value));
         modelMapper.createTypeMap(CreateScore.class, ScorePatchDTO.class)
                 .setConverter(new CreateScoreToScorePatchDtoConverter(ResourceObjectType.SET_SCORE.value));
+        modelMapper.createTypeMap(EliminationContestDTO.class, GetEliminationContest.class)
+                .setPostConverter(new EliminationContestDtoToGetObjectConverter(modelMapper));
+        modelMapper.getTypeMap(TournamentDTO.class, GetTournament.class)
+                .setPostConverter(new TournamentDtoToGetObjectConverter(modelMapper));
 
         //patch appliers
         modelMapper.createTypeMap(PatchPlayer.class, PlayerDTO.class)
