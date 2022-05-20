@@ -6,6 +6,7 @@ import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.EliminationContest;
+import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.EliminationContestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,8 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
 
     @Override
     public void removeTournamentContests(int tournamentId) {
-        throw new DetailedException(TOURNAMENT_TYPE_NOT_SUPPORTED, TournamentType.ELIMINATION);
+        EliminationContestDTO contests = getContestDTOs(tournamentId);
+        removeEliminationContestDtoRecursive(contests);
     }
 
     @Override
@@ -137,5 +139,15 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
                             .get(i), firstLineEliminationContestIds.get(i + 1), tournamentId).getId());
         }
         return createContestsForTournamentRecursively(nextLineEliminationContestIds, tournamentId);
+    }
+
+    private void removeEliminationContestDtoRecursive(ContestDTO eliminationContest) {
+        contestHelper.removeContestById(eliminationContest.getId());
+        if (eliminationContest instanceof EliminationContestDTO) {
+            removeEliminationContestDtoRecursive(((EliminationContestDTO) eliminationContest)
+                    .getFirstParentContestDto());
+            removeEliminationContestDtoRecursive(((EliminationContestDTO) eliminationContest)
+                    .getSecondParentContestDto());
+        }
     }
 }
