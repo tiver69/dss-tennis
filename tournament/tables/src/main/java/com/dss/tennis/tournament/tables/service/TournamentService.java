@@ -93,8 +93,10 @@ public class TournamentService {
 
         Set<ErrorDataDTO> warnings = new HashSet<>();
         ParticipantHelper<?, ?> participantHelper = getParticipantHelper(tournamentDto.getParticipantType());
-        Set<Integer> newParticipantIds = participantHelper
+        List<Integer> newParticipantIds = participantHelper
                 .getParticipantIdsForEnrolling(tournamentId, newParticipantsDto, warnings);
+        getParticipantValidator(tournamentDto.getParticipantType())
+                .validateTournamentParticipantQuantity(tournamentDto, newParticipantIds.size());
 
         tournamentHelper.addParticipantsToTournament(tournamentDto, newParticipantIds);
         return new SuccessResponseDTO<>(tournamentHelper.getTournamentDto(tournamentId), warnings);

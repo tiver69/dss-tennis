@@ -1,12 +1,14 @@
 package com.dss.tennis.tournament.tables.helper.factory;
 
+import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 
-import java.util.Set;
+import java.util.List;
+import java.util.function.Consumer;
 
 public interface AbstractContestFactory {
 
-    boolean createContestsForTournament(Integer tournamentId, Set<Integer> newParticipantsId);
+    void createContestsForTournament(Integer tournamentId, List<Integer> newParticipantsId);
 
     void removeParticipantFromTournament(Integer participantId, int tournamentId, boolean techDefeat);
 
@@ -14,5 +16,9 @@ public interface AbstractContestFactory {
 
     Iterable<ContestDTO> getContestDTOs(Integer tournamentId);
 
-    Class<? extends ContestDTO> getContestParticipantClass();
+    Class<? extends Contest> getContestParticipantClass();
+
+    Class<? extends ContestDTO> getContestParticipantDtoClass();
+
+    Consumer<Integer> getParticipantEnrollingQuantityValidationRule();
 }

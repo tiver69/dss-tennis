@@ -3,10 +3,7 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
-import com.dss.tennis.tournament.tables.model.db.v2.Contest;
-import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
-import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
-import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
+import com.dss.tennis.tournament.tables.model.db.v2.*;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import com.dss.tennis.tournament.tables.repository.TeamRepository;
@@ -81,6 +78,17 @@ public class ContestHelper {
         Contest contest = DoubleContest.builder()
                 .teamOne(teamOne)
                 .teamTwo(teamTwo)
+                .tournamentId(tournamentId)
+                .build();
+
+        return contestRepository.save(contest);
+    }
+
+    public Contest createNewEliminationContest(Integer firstParentContestId, Integer secondParentContestId,
+                                               Integer tournamentId) {
+        Contest contest = EliminationContest.builder()
+                .firstParentContestId(firstParentContestId)
+                .secondParentContestId(secondParentContestId)
                 .tournamentId(tournamentId)
                 .build();
 
