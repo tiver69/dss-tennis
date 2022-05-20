@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.function.Consumer;
 
 @Service
 public class TournamentFactory {
@@ -35,10 +35,10 @@ public class TournamentFactory {
     @Autowired
     private TeamHelper teamHelper;
 
-    public boolean createContestForNewParticipants(TournamentDTO tournamentDto, Set<Integer> newParticipantIds) {
+    public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
                 .getParticipantType());
-        return contestFactory.createContestsForTournament(tournamentDto.getId(), newParticipantIds);
+        contestFactory.createContestsForTournament(tournamentDto.getId(), newParticipantIds);
     }
 
     public void removeParticipantFromTournament(Integer participantId, TournamentDTO tournamentDto,
@@ -72,6 +72,11 @@ public class TournamentFactory {
             tournamentDto.setPlayers(players);
         }
         return tournamentDto;
+    }
+
+    public Consumer<Integer> getParticipantEnrollingQuantityValidationRule(TournamentType type,
+                                                                           ParticipantType participantType) {
+        return getContestFactory(type, participantType).getParticipantEnrollingQuantityValidationRule();
     }
 
     private AbstractContestFactory getContestFactory(TournamentType type, ParticipantType participantType) {

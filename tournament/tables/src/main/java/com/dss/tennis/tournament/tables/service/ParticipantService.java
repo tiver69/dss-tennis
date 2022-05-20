@@ -94,6 +94,5 @@ public class ParticipantService {
 
     private ParticipantHelper<?, ?> getParticipantHelper(ResourceObjectType participantType) {
         return participantType == ResourceObjectType.PLAYER ? playerHelper : teamHelper;
-
     }
 }

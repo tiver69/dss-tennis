@@ -86,11 +86,11 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
     }
 
     @Override
-    public Set<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
+    public List<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
                                                       List<ResourceObjectDTO> newParticipants,
                                                       Set<ErrorDataDTO> warnings) {
         ArrayList<Integer> currentPlayerIds = getTournamentPlayerIds(tournamentId);
-        Set<Integer> participantIdsForEnrolling = new HashSet<>();
+        List<Integer> participantIdsForEnrolling = new ArrayList<>();
 
         for (ResourceObjectDTO newTeam : newParticipants) {
             ErrorDataDTO warning = teamValidator.validateParticipantForEnrolling(currentPlayerIds, newTeam);

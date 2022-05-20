@@ -40,7 +40,7 @@ public abstract class ParticipantHelper<T, D> {
 
     public abstract ArrayList<Integer> getTournamentPlayerIds(Integer tournamentId);
 
-    public abstract Set<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
+    public abstract List<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
                                                                List<ResourceObjectDTO> newParticipants,
                                                                Set<ErrorDataDTO> warnings);
 }

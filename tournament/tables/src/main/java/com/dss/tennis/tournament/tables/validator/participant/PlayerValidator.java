@@ -6,6 +6,7 @@ import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
+import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.ValidatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,13 @@ public class PlayerValidator extends ParticipantValidator<Player> {
 
     @Autowired
     private ValidatorHelper<PlayerDTO> validatorHelper;
+
+    @Override
+    public void validateTournamentParticipantQuantity(TournamentDTO tournamentDto, int additionalParticipantQuantity) {
+        int currentParticipantQuantity = playerHelper.getTournamentParticipants(tournamentDto.getId()).size();
+        tournamentFactory.getParticipantEnrollingQuantityValidationRule(tournamentDto.getTournamentType(), tournamentDto
+                .getParticipantType()).accept(currentParticipantQuantity + additionalParticipantQuantity);
+    }
 
     @Override
     public ErrorDataDTO validateParticipantForEnrolling(List<Integer> currentPlayerIds, ResourceObjectDTO newPlayer) {

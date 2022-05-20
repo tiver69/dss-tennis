@@ -77,7 +77,7 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
 
     @Override
     public List<Player> getTournamentParticipants(Integer tournamentId) {
-        return playerRepository.findPlayersByDoubleTournamentId(tournamentId);
+        return playerRepository.findPlayersBySingleTournamentId(tournamentId);
     }
 
     @Override
@@ -96,11 +96,11 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
     }
 
     @Override
-    public Set<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
+    public List<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
                                                       List<ResourceObjectDTO> newPlayers,
                                                       Set<ErrorDataDTO> warnings) {
         List<Integer> currentPlayerIds = getTournamentPlayerIds(tournamentId);
-        Set<Integer> participantIdsForEnrolling = new HashSet<>();
+        List<Integer> participantIdsForEnrolling = new ArrayList<>();
 
         for (ResourceObjectDTO newPlayer : newPlayers) {
             ErrorDataDTO warning = playerValidator.validateParticipantForEnrolling(currentPlayerIds, newPlayer);

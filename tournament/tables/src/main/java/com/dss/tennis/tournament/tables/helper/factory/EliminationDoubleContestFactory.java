@@ -1,6 +1,9 @@
 package com.dss.tennis.tournament.tables.helper.factory;
 
 import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
+import com.dss.tennis.tournament.tables.model.db.v1.Team;
+import com.dss.tennis.tournament.tables.model.db.v2.Contest;
+import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,29 +15,21 @@ public class EliminationDoubleContestFactory extends EliminationContestFactory {
     @Autowired
     private TeamHelper teamHelper;
 
-//    @Override
-//    public boolean createContestsForTournament(Integer tournamentId, Set<Integer> newTeamIds) {
-//        List<Team> currentTeams = teamHelper.getTournamentParticipants(tournamentId);
-//        for (Integer newTeamId : newTeamIds) {
-//            Team newTeam = teamHelper.getParticipant(newTeamId);
-//            for (Team currentTeam : currentTeams)
-//                contestHelper.createNewDoubleContest(newTeam, currentTeam, tournamentId);
-//            currentTeams.add(newTeam);
-//        }
-//        return currentTeams.size() != 1;
-//    }
-//
-//    @Override
-//    public void removeParticipantFromTournament(Integer teamId, int tournamentId, boolean techDefeat) {
-//        if (techDefeat)
-//            contestHelper.getTournamentTeamContests(teamId, tournamentId).forEach(contestDTO -> contestHelper
-//                    .updateDoubleContestTechDefeatForTeamRemoving(teamId, contestDTO));
-//        else
-//            removeContests(() -> contestRepository.findByTeamIdAndDoubleTournamentId(teamId, tournamentId));
-//    }
+    @Override
+    public Integer createFirstLineEliminationContest(Integer firstParticipantId, Integer secondParticipantId,
+                                                     Integer tournamentId) {
+        Team firstTeam = teamHelper.getParticipant(firstParticipantId);
+        Team secondTeam = teamHelper.getParticipant(secondParticipantId);
+        return contestHelper.createNewDoubleContest(firstTeam, secondTeam, tournamentId).getId();
+    }
 
     @Override
-    public Class<? extends ContestDTO> getContestParticipantClass() {
+    public Class<? extends ContestDTO> getContestParticipantDtoClass() {
         return DoubleContestDTO.class;
+    }
+
+    @Override
+    public Class<? extends Contest> getContestParticipantClass() {
+        return DoubleContest.class;
     }
 }
