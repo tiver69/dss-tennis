@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_SCORE_EXISTS;
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_SCORE_NOT_FOUND;
 import static com.dss.tennis.tournament.tables.model.dto.RequestParameter.BASIC;
 
 @Service
@@ -104,20 +103,22 @@ public class TournamentService {
 
     @Transactional
     public ContestDTO createContestScore(Integer contestId, Integer tournamentId, ScoreDTO scoreDto) {
-        ContestDTO contest = contestHelper.getTournamentContest(contestId, tournamentId);
         if (!scoreHelper.getContestSetScores(contestId).isEmpty()) throw new DetailedException(CONTEST_SCORE_EXISTS);
         Set<ErrorDataDTO> errorSet = scoreValidator.validateCreateScore(scoreDto);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
+        TournamentDTO tournamentDTO = tournamentHelper.getTournamentDto(tournamentId, BASIC);
+        ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
         contestHelper.createContestScore(scoreDto, contest);
-        return contestHelper.getContestWithScore(contestId);
+
+        return contestHelper.getTournamentContestDTO(contestId, tournamentDTO, true);
     }
 
     @Transactional
     public ContestDTO updateContestScore(Integer contestId, Integer tournamentId, ScorePatchDTO scorePatchDto) {
-        ContestDTO contest = contestHelper.getTournamentContest(contestId, tournamentId);
+        TournamentDTO tournamentDTO = tournamentHelper.getTournamentDto(tournamentId, BASIC);
         List<SetScore> sets = scoreHelper.getContestSetScores(contestId);
-        if (sets.isEmpty()) throw new DetailedException(CONTEST_SCORE_NOT_FOUND);
+        contestValidator.validateContestUpdate(contestId, tournamentDTO, sets.isEmpty());
         ScoreDTO scoreDTO = scoreHelper.mapSetScoreToDto(sets);
         Set<ErrorDataDTO> errorSet = scoreValidator.validateUpdateScorePatch(scoreDTO, scorePatchDto);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
@@ -127,18 +128,22 @@ public class TournamentService {
         errorSet = scoreValidator.validateUpdateScore(patchedScoreDTO);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
+        ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
         contestHelper.updateContestScore(patchedScoreDTO, contest);
-        return contestHelper.getContestWithScore(contestId);
+
+        return contestHelper.getTournamentContestDTO(contestId, tournamentDTO, true);
     }
 
     @Transactional
     public ContestDTO updateContestTechDefeat(Integer contestId, Integer tournamentId, TechDefeatDTO techDefeatDto) {
-        ContestDTO contest = contestHelper.getTournamentContest(contestId, tournamentId);
-        Set<ErrorDataDTO> errorSet = contestValidator.validateTechDefeat(techDefeatDto);
+        TournamentDTO tournamentDTO = tournamentHelper.getTournamentDto(tournamentId, BASIC);
+        Set<ErrorDataDTO> errorSet = contestValidator.validateTechDefeat(techDefeatDto, contestId, tournamentDTO);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
+        ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
         contestHelper.updateContestTechDefeat(techDefeatDto, contest);
-        return contestHelper.getContestWithScore(contestId);
+
+        return contestHelper.getTournamentContestDTO(contestId, tournamentDTO, true);
     }
 
     public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {

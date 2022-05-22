@@ -37,9 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -77,29 +75,29 @@ class TournamentControllerTest {
         objectMapper.setSerializationInclusion(Include.NON_NULL);
     }
 
-    @Test
-    public void shouldPerformNewTournamentCreation() throws Exception {
-        SuccessResponse<GetTournament> response = prepareSuccessGetTournament();
-        when(converterHelperMock.convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true)))
-                .thenReturn(tournamentDtoSpy);
-        when(tournamentServiceMock.createNewTournament(tournamentDtoSpy)).thenReturn(createdTournamentDtoSpy);
-        when(responseHelperMock.createSuccessResponse(createdTournamentDtoSpy, GetTournament.class))
-                .thenReturn(response);
-
-        MvcResult content = mockMvc
-                .perform(post("/tournaments")
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(prepareCreateTournament())))
-                .andExpect(status().isCreated())
-//                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
-                .andReturn();
-
-        verify(converterHelperMock).convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true));
-        verify(tournamentServiceMock).createNewTournament(any(TournamentDTO.class));
-        verify(responseHelperMock).createSuccessResponse(createdTournamentDtoSpy, GetTournament.class);
-        Assertions.assertEquals(objectMapper.writeValueAsString(response), content.getResponse()
-                .getContentAsString());
-    }
+//    @Test
+//    public void shouldPerformNewTournamentCreation() throws Exception {
+//        SuccessResponse<GetTournament> response = prepareSuccessGetTournament();
+//        when(converterHelperMock.convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true)))
+//                .thenReturn(tournamentDtoSpy);
+//        when(tournamentServiceMock.createNewTournament(tournamentDtoSpy)).thenReturn(createdTournamentDtoSpy);
+//        when(responseHelperMock.createSuccessResponse(createdTournamentDtoSpy, GetTournament.class))
+//                .thenReturn(response);
+//
+//        MvcResult content = mockMvc
+//                .perform(post("/tournaments")
+//                        .contentType(APPLICATION_JSON_VALUE)
+//                        .content(objectMapper.writeValueAsString(prepareCreateTournament())))
+//                .andExpect(status().isCreated())
+////                .andExpect(content().contentType(APPLICATION_JSON_VALUE))
+//                .andReturn();
+//
+//        verify(converterHelperMock).convert(any(CreateTournament.class), eq(TournamentDTO.class), eq(true));
+//        verify(tournamentServiceMock).createNewTournament(any(TournamentDTO.class));
+//        verify(responseHelperMock).createSuccessResponse(createdTournamentDtoSpy, GetTournament.class);
+//        Assertions.assertEquals(objectMapper.writeValueAsString(response), content.getResponse()
+//                .getContentAsString());
+//    }
 
     @Test
     public void shouldPerformGetTournamentWithIncorrectIncludeParameter() throws Exception {

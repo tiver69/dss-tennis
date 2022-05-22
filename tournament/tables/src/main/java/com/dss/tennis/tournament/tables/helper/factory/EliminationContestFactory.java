@@ -18,8 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.FORBIDDEN_PARTICIPANT_QUANTITY;
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_TYPE_NOT_SUPPORTED;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
 
 @Service
 public abstract class EliminationContestFactory implements AbstractContestFactory {
@@ -31,6 +30,8 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
 
     public abstract Integer createFirstLineEliminationContest(Integer firstParticipantId, Integer secondParticipantId,
                                                               Integer tournamentId);
+
+    protected abstract ContestDTO convertEliminationContestToBase(EliminationContestDTO eliminationContest);
 
     @Override
     public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds) {
@@ -82,6 +83,23 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
             Stream.of(4, 8, 16, 32, 64).filter(commonQuantity::equals).findAny()
                     .orElseThrow(() -> new DetailedException(FORBIDDEN_PARTICIPANT_QUANTITY, commonQuantity));
         };
+    }
+
+    @Override
+    public ContestDTO getBasicContestDTO(Integer contestId, Integer tournamentId) {
+        List<Contest> contests = contestHelper.getTournamentContests(tournamentId);
+        Contest basicContest = contests.stream().filter(contest -> contest.getId() == contestId).findFirst()
+                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND));
+        if (getContestParticipantClass().isInstance(basicContest))
+            return converterHelper.convert(basicContest, getContestParticipantDtoClass());
+
+        EliminationContestDTO eliminationContest =
+                populateEliminationContestDtoRecursive((EliminationContest) basicContest, contests);
+        if (eliminationContest.getSecondParentContestDto().getWinnerId() == null || eliminationContest
+                .getFirstParentContestDto().getWinnerId() == null)
+            throw new DetailedException(CONTEST_NOT_REACHED);
+
+        return convertEliminationContestToBase(eliminationContest);
     }
 
     protected Integer getFinalEliminationContestId(Integer tournamentId) {

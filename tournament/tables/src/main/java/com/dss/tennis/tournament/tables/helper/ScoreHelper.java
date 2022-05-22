@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class ScoreHelper {
@@ -31,6 +32,10 @@ public class ScoreHelper {
 
     public List<SetScore> getContestSetScores(Integer contestId) {
         return scoreRepository.findByContestId(contestId);
+    }
+
+    public List<SetScore> getEliminationContestChildSetScores(Integer contestId) {
+        return scoreRepository.findChildByEliminationContestId(contestId);
     }
 
     public ScoreDTO mapSetScoreToDto(List<SetScore> sets) {
@@ -70,7 +75,8 @@ public class ScoreHelper {
     }
 
     public void updateContestScore(ScorePatchDTO scoreDto, Integer contestId) {
-        scoreDto.getSets().keySet().forEach(setType -> {
+        Map<SetType, SetScorePatchDTO> sets = scoreDto.getSets();
+        sets.keySet().forEach(setType -> {
             SetScorePatchDTO setScoreDto = scoreDto.getSets().get(setType);
             if (setScoreDto.isCreatePatch())
                 scoreRepository.save(mapSetScore(setScoreDto, setType, contestId));
@@ -81,6 +87,8 @@ public class ScoreHelper {
                         .updateSetScoreById(setScoreDto.getParticipantOneScore(), setScoreDto
                                 .getParticipantTwoScore(), setScoreDto.getId());
         });
+        sets.keySet().stream().filter(setType -> sets.get(setType).isDeletePatch()).collect(Collectors.toList())
+                .forEach(sets::remove);
     }
 
     public boolean isSetScoreValid(byte gameScore, byte otherGameScore) {

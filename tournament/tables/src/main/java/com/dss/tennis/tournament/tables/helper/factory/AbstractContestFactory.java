@@ -14,6 +14,8 @@ public interface AbstractContestFactory {
 
     void removeTournamentContests(int tournamentId);
 
+    ContestDTO getBasicContestDTO(Integer contestId, Integer tournamentId);
+
     Iterable<ContestDTO> getContestDTOs(Integer tournamentId);
 
     Class<? extends Contest> getContestParticipantClass();

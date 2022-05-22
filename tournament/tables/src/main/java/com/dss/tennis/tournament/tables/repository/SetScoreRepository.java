@@ -21,6 +21,11 @@ public interface SetScoreRepository extends CrudRepository<SetScore, Integer> {
     @RepositoryLogRecord(method = QueryMethod.GET, resultType = ResultType.MULTIPLE_RECORDS)
     List<SetScore> findByContestId(Integer contestId);
 
+    @RepositoryLogRecord(method = QueryMethod.GET)
+//    SELECT * From set_score where contest_id in (SELECT contest_id from elimination_contest ec where ec.first_parent_contest_id = 285 OR ec.second_parent_contest_id = 285)
+    @Query("SELECT ss FROM SetScore ss WHERE ss.contest.id = (SELECT ec.id FROM EliminationContest ec WHERE ec.firstParentContestId = ?1 OR ec.secondParentContestId = ?1)")
+    List<SetScore> findChildByEliminationContestId(Integer contestId);
+
     @RepositoryLogRecord(method = QueryMethod.UPDATE)
     @Modifying(clearAutomatically = true)
     @Query("update SetScore ss set ss.participantOne = ?1, ss.participantTwo = ?2 where ss.id = ?3")

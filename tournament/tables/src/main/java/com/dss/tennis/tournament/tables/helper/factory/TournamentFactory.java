@@ -79,6 +79,12 @@ public class TournamentFactory {
         return getContestFactory(type, participantType).getParticipantEnrollingQuantityValidationRule();
     }
 
+    public ContestDTO getTournamentContestDTO(Integer contestId, TournamentDTO tournamentDTO) {
+        AbstractContestFactory contestFactory = getContestFactory(tournamentDTO.getTournamentType(), tournamentDTO
+                .getParticipantType());
+        return contestFactory.getBasicContestDTO(contestId, tournamentDTO.getId());
+    }
+
     private AbstractContestFactory getContestFactory(TournamentType type, ParticipantType participantType) {
         if (type == TournamentType.ROUND) {
             return participantType == ParticipantType.SINGLE ? roundSingleContestFactory : roundDoubleContestFactory;
