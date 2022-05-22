@@ -17,6 +17,7 @@ public abstract class AbstractContestDtoToGetResponseConverter<T extends Contest
 
     public void convertSuper(T sourceContest, GetContest<E> destinationContest) {
         if (sourceContest.getScoreDto() == null) return;
+        destinationContest.setWinner(sourceContest.getWinnerId());
         GetScore getScore = new GetScore();
 
         Map<SetType, SetScoreDTO> sets = sourceContest.getScoreDto().getSets();

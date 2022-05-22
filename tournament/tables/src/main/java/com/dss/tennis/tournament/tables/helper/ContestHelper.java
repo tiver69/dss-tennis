@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
-import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import com.dss.tennis.tournament.tables.model.db.v2.*;
 import com.dss.tennis.tournament.tables.model.dto.*;
@@ -11,11 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_NOT_FOUND;
 
 @Service
 public class ContestHelper {
@@ -28,9 +24,16 @@ public class ContestHelper {
     private TeamRepository teamRepository;
     @Autowired
     private ScoreHelper scoreHelper;
+    @Autowired
+    private TournamentFactory tournamentFactory;
 
-    public ContestDTO getTournamentContest(Integer contestId, Integer tournamentId) {
-        return getBaseContestDTO(() -> contestRepository.findByIdAndTournamentId(contestId, tournamentId));
+    public ContestDTO getTournamentContestDTO(Integer contestId, TournamentDTO tournament, boolean includeScore) {
+        ContestDTO contestDto = tournamentFactory.getTournamentContestDTO(contestId, tournament);
+        if (includeScore) {
+            ScoreDTO scoreDto = scoreHelper.getContestScoreDto(contestId);
+            contestDto.setScoreDto(scoreDto);
+        }
+        return contestDto;
     }
 
     public List<Contest> getTournamentContests(Integer tournamentId) {
@@ -47,21 +50,6 @@ public class ContestHelper {
         List<Contest> contests = contestRepository.findByTeamIdAndDoubleTournamentId(teamId, tournamentId);
         return contests.stream().map(contest -> converterHelper.convert(contest, DoubleContestDTO.class))
                 .collect(Collectors.toList());
-    }
-
-    public ContestDTO getContestWithScore(Integer contestId) {
-        ContestDTO contestDto = getBaseContestDTO(() -> contestRepository.findById(contestId));
-        ScoreDTO scoreDto = scoreHelper.getContestScoreDto(contestId);
-
-        contestDto.setScoreDto(scoreDto);
-        return contestDto;
-    }
-
-    private ContestDTO getBaseContestDTO(Supplier<Optional<Contest>> contestSupplier) {
-        Contest contest = contestSupplier.get().orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND));
-        Class<? extends ContestDTO> destinationClass = contest instanceof SingleContest ? SingleContestDTO.class :
-                DoubleContestDTO.class;
-        return converterHelper.convert(contest, destinationClass);
     }
 
     public Contest createNewSingleContest(Integer playerOneId, Integer playerTwoId, Integer tournamentId) {
@@ -148,5 +136,9 @@ public class ContestHelper {
     public void removeContestById(Integer contestId) {
         scoreHelper.removeContestScore(contestId);
         contestRepository.deleteById(contestId);
+    }
+
+    public boolean isEliminationContestChildTechDefeat(Integer contestId) {
+        return contestRepository.isEliminationContestChildTechDefeat(contestId);
     }
 }

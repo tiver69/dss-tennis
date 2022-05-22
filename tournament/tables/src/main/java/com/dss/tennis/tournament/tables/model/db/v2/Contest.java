@@ -15,9 +15,8 @@ import java.util.Set;
 @SuperBuilder
 public class Contest {
     private int id;
-    private byte round;
     private Integer tournamentId;
-    private Integer winner;
+    private Integer winnerId;
     private boolean techDefeat;
     private Date date;
     private Set<SetScore> sets;
@@ -34,16 +33,6 @@ public class Contest {
     }
 
     @Basic
-    @Column(name = "round", nullable = false)
-    public byte getRound() {
-        return round;
-    }
-
-    public void setRound(byte round) {
-        this.round = round;
-    }
-
-    @Basic
     @Column(name = "tournament_id", nullable = false)
     public Integer getTournamentId() {
         return tournamentId;
@@ -55,12 +44,12 @@ public class Contest {
 
     @Basic
     @Column(name = "winner_id")
-    public Integer getWinner() {
-        return winner;
+    public Integer getWinnerId() {
+        return winnerId;
     }
 
-    public void setWinner(Integer winner) {
-        this.winner = winner;
+    public void setWinnerId(Integer winnerId) {
+        this.winnerId = winnerId;
     }
 
     @Basic
@@ -100,8 +89,7 @@ public class Contest {
         Contest contest = (Contest) o;
 
         if (id != contest.id) return false;
-        if (round != contest.round) return false;
-        if (winner != null ? !winner.equals(contest.winner) : contest.winner != null) return false;
+        if (winnerId != null ? !winnerId.equals(contest.winnerId) : contest.winnerId != null) return false;
         if (tournamentId != null ? !tournamentId.equals(contest.tournamentId) : contest.tournamentId != null)
             return false;
         return date != null ? date.equals(contest.date) : contest.date == null;
@@ -110,8 +98,7 @@ public class Contest {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (int) round;
-        result = 31 * result + (winner != null ? winner.hashCode() : 0);
+        result = 31 * result + (winnerId != null ? winnerId.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (tournamentId != null ? tournamentId.hashCode() : 0);
         return result;
@@ -120,9 +107,8 @@ public class Contest {
     @Override
     public String toString() {
         return "id=" + id +
-                ", round=" + round +
                 ", tournamentId=" + tournamentId +
-                ", winner=" + winner +
+                ", winner=" + winnerId +
                 ", techDefeat=" + techDefeat +
                 ", date=" + date;
     }

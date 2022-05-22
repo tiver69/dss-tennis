@@ -9,10 +9,12 @@ import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_NOT_FOUND;
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.FORBIDDEN_PARTICIPANT_QUANTITY;
 
 public abstract class RoundContestFactory implements AbstractContestFactory {
@@ -36,11 +38,19 @@ public abstract class RoundContestFactory implements AbstractContestFactory {
         };
     }
 
+    @Override
     public List<ContestDTO> getContestDTOs(Integer tournamentId) {
         List<Contest> contests = contestHelper.getTournamentContests(tournamentId);
         return contests.stream()
                 .map(contest -> converterHelper.convert(contest, getContestParticipantDtoClass()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ContestDTO getBasicContestDTO(Integer contestId, Integer tournamentId) {
+        Optional<Contest> contest = contestRepository.findByIdAndTournamentId(contestId, tournamentId);
+        return converterHelper.convert(contest
+                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND)), getContestParticipantDtoClass());
     }
 
     protected void removeContests(Supplier<List<Contest>> contestsToRemove) {

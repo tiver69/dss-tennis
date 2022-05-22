@@ -18,6 +18,7 @@ public class CreateScore {
     private ResourceObject<SetScoreAttributes> tieBreak;
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class SetScoreAttributes {
         private Byte participantOne;
