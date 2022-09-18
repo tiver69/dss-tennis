@@ -1,0 +1,79 @@
+{
+  "data": {
+    "id": 111,
+    "type": "tournament",
+    "attributes": {
+      "name": "name-1653240275",
+      "tournamentType": "ELIMINATION",
+      "participantType": "SINGLE",
+      "status": "IN_PROGRESS",
+      "beginningDate": "2022-01-01"
+    },
+    "relationships": {
+      "final": {
+        "id": 1,
+        "type": "eliminationContestInfo"
+      }
+    },
+    "included": [
+      {
+        "id": 1,
+        "type": "eliminationContestInfo",
+        "attributes": {
+          "participantOne": "Test-1648580330",
+          "participantTwo": "Test-1648580330",
+          "mainScore": "1:6 7:5 2:1",
+          "tieBreak": "4:1",
+          "techDefeat": false
+        },
+        "relationships": {
+          "firstParentContest": {
+            "id": 1,
+            "type": "contestInfo"
+          },
+          "secondParentContest": {
+            "id": 1,
+            "type": "contestInfo"
+          }
+        },
+        "links": {
+          "self": "/tournament/1/contest/1"
+        }
+      },
+      {
+        "id": 2,
+        "type": "contestInfo",
+        "attributes": {
+          "participantOne": "Test-1648580330",
+          "participantTwo": "Test-1648580330",
+          "mainScore": "1:6 7:5 2:1",
+          "tieBreak": "4:1",
+          "techDefeat": {
+            "participantOne": false,
+            "participantTwo": false
+          }
+        },
+        "links": {
+          "self": "/tournament/1/contest/2"
+        }
+      },
+      {
+        "id": 3,
+        "type": "contestInfo",
+        "attributes": {
+          "participantOne": "Test-1648580330",
+          "participantTwo": "Test-1648580330",
+          "mainScore": "1:6 7:5 2:1",
+          "tieBreak": "4:1",
+          "techDefeat": {
+            "participantOne": false,
+            "participantTwo": false
+          }
+        },
+        "links": {
+          "self": "/tournament/1/contest/3"
+        }
+      }
+    ]
+  }
+}

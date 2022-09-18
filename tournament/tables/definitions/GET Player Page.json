@@ -1,0 +1,40 @@
+{
+  "totalPages": 10,
+  "page": [
+    {
+      "id": 1,
+      "type": "player",
+      "attributes": {
+        "firstName": "Lando",
+        "lastName": "Norris",
+        "age": 25,
+        "experience": 1,
+        "leadingHand": "RIGHT"
+      },
+      "links": {
+        "self": "/participants/player/1"
+      }
+    },
+    {
+      "id": 2,
+      "type": "player",
+      "attributes": {
+        "firstName": "Lando1",
+        "lastName": "Norris1",
+        "age": 27,
+        "experience": 2,
+        "leadingHand": "LEFT"
+      },
+      "links": {
+        "self": "/participants/player/2"
+      }
+    }
+  ],
+  "links": {
+    "first": "/participants/player?page=1&pageSize=10",
+    "last": "/participants/player?page=10&pageSize=10",
+    "prev": "/participants/player?page=2&pageSize=10",
+    "self": "/participants/player?page=3&pageSize=10",
+    "next": "/participants/player?page=4&pageSize=10"
+  }
+}
