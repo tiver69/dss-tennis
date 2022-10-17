@@ -23,16 +23,24 @@ public class ResourceObject<T> {
     private T attributes;
 
     public enum ResourceObjectType {
-        PLAYER("player"),
-        TEAM("team"),
-        TOURNAMENT("tournament"),
-        CONTEST("contest"),
-        SET_SCORE("setScore");
+        PLAYER("player", "/participants/players"),
+        TEAM("team", "/participants/teams"),
+        TOURNAMENT("tournament", "/tournaments"),
+        CONTEST("contest", "/tournaments/%d/contests/%d", null),
+        SET_SCORE("setScore", null, null);
 
         public final String value;
+        public final String selfLinkFormat;
+        public final String pageableLinkFormat;
 
-        ResourceObjectType(String value) {
+        ResourceObjectType(String value, String basicLink) {
+            this(value, basicLink + "/%d", basicLink + "?page=%d&pageSize=%d");
+        }
+
+        ResourceObjectType(String value, String selfLinkFormat, String pageableLinkFormat) {
             this.value = value;
+            this.selfLinkFormat = selfLinkFormat;
+            this.pageableLinkFormat = pageableLinkFormat;
         }
 
         public static ResourceObjectType fromStringValue(String value) {

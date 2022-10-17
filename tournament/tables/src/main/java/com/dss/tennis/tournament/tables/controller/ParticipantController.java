@@ -3,14 +3,10 @@ package com.dss.tennis.tournament.tables.controller;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
 import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
-import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.request.CreateTeam;
-import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.GetPageable;
-import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTeam;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
@@ -35,14 +31,14 @@ public class ParticipantController {
     @Autowired
     private ConverterHelper converterHelper;
 
-    @PostMapping("/players")
-    public ResponseEntity<?> createPlayer(@RequestBody CreatePlayer createPlayer) {
-        PlayerDTO playerDto = converterHelper.convert(createPlayer, PlayerDTO.class);
-
-        PlayerDTO newPlayerDto = participantService.createNewPlayer(playerDto);
-        SuccessResponse<GetPlayer> playerResponse = responseHelper.createSuccessResponse(newPlayerDto, GetPlayer.class);
-        return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
-    }
+//    @PostMapping("/players")
+//    public ResponseEntity<?> createPlayer(@RequestBody CreatePlayer createPlayer) {
+//        PlayerDTO playerDto = converterHelper.convert(createPlayer, PlayerDTO.class);
+//
+//        PlayerDTO newPlayerDto = participantService.createNewPlayer(playerDto);
+//        SuccessResponse<GetPlayer> playerResponse = responseHelper.createSuccessResponse(newPlayerDto, GetPlayer.class);
+//        return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
+//    }
 
     @PostMapping("/teams")
     public ResponseEntity<?> createTeam(@RequestBody CreateTeam createTeam) {
@@ -53,25 +49,25 @@ public class ParticipantController {
         return new ResponseEntity<>(teamResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/players/{playerId}")
-    public ResponseEntity<?> updatePlayer(@RequestBody PatchPlayer patch, @PathVariable Integer playerId) {
-        PlayerDTO updatedPlayer = participantService.updatePlayer(patch, playerId);
-        SuccessResponse<GetPlayer> playerResponse = responseHelper
-                .createSuccessResponse(updatedPlayer, GetPlayer.class);
-        return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
-    }
+//    @PatchMapping("/players/{playerId}")
+//    public ResponseEntity<?> updatePlayer(@RequestBody PatchPlayer patch, @PathVariable Integer playerId) {
+//        PlayerDTO updatedPlayer = participantService.updatePlayer(patch, playerId);
+//        SuccessResponse<GetPlayer> playerResponse = responseHelper
+//                .createSuccessResponse(updatedPlayer, GetPlayer.class);
+//        return new ResponseEntity<>(playerResponse, HttpStatus.CREATED);
+//    }
 
-    @GetMapping("/players")
-    public ResponseEntity<SuccessResponse<GetPageable>> getPageablePlayers(
-            @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
-            @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
-        SuccessResponseDTO<PageableDTO> pageablePlayersDto = participantService
-                .getParticipantPage(page, pageSize, ResourceObjectType.PLAYER);
-
-        SuccessResponse<GetPageable> playersSuccessResponse = responseHelper
-                .createSuccessResponse(pageablePlayersDto, GetPageable.class);
-        return new ResponseEntity<>(playersSuccessResponse, HttpStatus.OK);
-    }
+//    @GetMapping("/players")
+//    public ResponseEntity<SuccessResponse<GetPageable>> getPageablePlayers(
+//            @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
+//            @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
+//        SuccessResponseDTO<PageableDTO> pageablePlayersDto = participantService
+//                .getParticipantPage(page, pageSize, ResourceObjectType.PLAYER);
+//
+//        SuccessResponse<GetPageable> playersSuccessResponse = responseHelper
+//                .createSuccessResponse(pageablePlayersDto, GetPageable.class);
+//        return new ResponseEntity<>(playersSuccessResponse, HttpStatus.OK);
+//    }
 
     @GetMapping("/teams")
     public ResponseEntity<SuccessResponse<GetPageable>> getPageableTeams(
@@ -85,13 +81,13 @@ public class ParticipantController {
         return new ResponseEntity<>(teamsSuccessResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/players/{playerId}")
-    public ResponseEntity<SuccessResponse<GetPlayer>> getPlayerById(@PathVariable Integer playerId) {
-        PlayerDTO player = participantService.getPlayerDTO(playerId);
-
-        SuccessResponse<GetPlayer> playerResponse = responseHelper.createSuccessResponse(player, GetPlayer.class);
-        return new ResponseEntity<>(playerResponse, HttpStatus.OK);
-    }
+//    @GetMapping("/players/{playerId}")
+//    public ResponseEntity<SuccessResponse<GetPlayer>> getPlayerById(@PathVariable Integer playerId) {
+//        PlayerDTO player = participantService.getPlayerDTO(playerId);
+//
+//        SuccessResponse<GetPlayer> playerResponse = responseHelper.createSuccessResponse(player, GetPlayer.class);
+//        return new ResponseEntity<>(playerResponse, HttpStatus.OK);
+//    }
 
     @GetMapping("/teams/{teamId}")
     public ResponseEntity<SuccessResponse<GetTeam>> getTeamById(@PathVariable Integer teamId) {
