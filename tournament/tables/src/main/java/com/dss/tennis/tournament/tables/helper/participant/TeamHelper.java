@@ -55,8 +55,8 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
         List<TeamDTO> teams = teamsPage.getContent().stream()
                 .map(this::convertTeamDto).collect(Collectors.toList());
 
-        return PageableDTO.<TeamDTO>builder().page(teams)
-                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(teamsPage.getTotalPages()).build();
+        return PageableDTO.<TeamDTO>builder().page(teams).currentPage(pageableRequestParameter.getPageNumber())
+                .pageSize(pageableRequestParameter.getPageSize()).totalPages(teamsPage.getTotalPages()).build();
     }
 
     @Override
@@ -87,8 +87,8 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
 
     @Override
     public List<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
-                                                      List<ResourceObjectDTO> newParticipants,
-                                                      Set<ErrorDataDTO> warnings) {
+                                                       List<ResourceObjectDTO> newParticipants,
+                                                       Set<ErrorDataDTO> warnings) {
         ArrayList<Integer> currentPlayerIds = getTournamentPlayerIds(tournamentId);
         List<Integer> participantIdsForEnrolling = new ArrayList<>();
 
