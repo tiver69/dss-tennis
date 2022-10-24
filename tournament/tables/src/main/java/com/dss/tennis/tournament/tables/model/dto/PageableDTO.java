@@ -13,5 +13,6 @@ public class PageableDTO<T> {
 
     private List<T> page;
     private Integer totalPages;
+    private Integer pageSize;
     private Integer currentPage;
 }

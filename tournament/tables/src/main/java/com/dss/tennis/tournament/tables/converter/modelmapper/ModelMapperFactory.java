@@ -3,6 +3,14 @@ package com.dss.tennis.tournament.tables.converter.modelmapper;
 import com.dss.tennis.tournament.tables.converter.*;
 import com.dss.tennis.tournament.tables.converter.patch.PlayerDtoPathApplier;
 import com.dss.tennis.tournament.tables.converter.patch.TournamentDtoPathApplier;
+import com.dss.tennis.tournament.tables.converter.v2.request.CreatePlayerRequestToPlayerDtoConverter;
+import com.dss.tennis.tournament.tables.converter.v2.request.UpdatePlayerRequestToPatchPlayerConverter;
+import com.dss.tennis.tournament.tables.converter.v2.response.PageableDtoToPageablePlayerResponse;
+import com.dss.tennis.tournament.tables.converter.v2.response.PlayerDtoToPlayerResponseDataConverter;
+import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
+import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.CretePlayerRequest;
+import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.UpdatePlayerRequest;
+import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
 import com.dss.tennis.tournament.tables.model.request.CreateTeam;
@@ -58,11 +66,24 @@ public class ModelMapperFactory {
         modelMapper.getTypeMap(TournamentDTO.class, GetTournament.class)
                 .setPostConverter(new TournamentDtoToGetObjectConverter(modelMapper));
 
+        applyConvertersForV2(modelMapper);
+
         //patch appliers
         modelMapper.createTypeMap(PatchPlayer.class, PlayerDTO.class)
                 .setConverter(new PlayerDtoPathApplier());
         modelMapper.createTypeMap(PatchTournament.class, TournamentDTO.class)
                 .setConverter(new TournamentDtoPathApplier());
         return modelMapper;
+    }
+
+    private void applyConvertersForV2(ModelMapper modelMapper) {
+        modelMapper.createTypeMap(PlayerDTO.class, PlayerResponseData.class)
+                .setConverter(new PlayerDtoToPlayerResponseDataConverter());
+        modelMapper.createTypeMap(PageableDTO.class, PageablePlayerResponse.class)
+                .setConverter(new PageableDtoToPageablePlayerResponse(modelMapper));
+        modelMapper.createTypeMap(UpdatePlayerRequest.class, PatchPlayer.class)
+                .setConverter(new UpdatePlayerRequestToPatchPlayerConverter());
+        modelMapper.createTypeMap(CretePlayerRequest.class, PlayerDTO.class)
+                .setConverter(new CreatePlayerRequestToPlayerDtoConverter());
     }
 }

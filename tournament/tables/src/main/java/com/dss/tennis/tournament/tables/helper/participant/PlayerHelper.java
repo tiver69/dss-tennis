@@ -67,7 +67,9 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
                 .collect(Collectors.toList());
 
         return PageableDTO.<PlayerDTO>builder().page(players)
-                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages()).build();
+                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages())
+                .pageSize(pageableRequestParameter.getPageSize())
+                .build();
     }
 
     @Override
@@ -97,8 +99,8 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
 
     @Override
     public List<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
-                                                      List<ResourceObjectDTO> newPlayers,
-                                                      Set<ErrorDataDTO> warnings) {
+                                                       List<ResourceObjectDTO> newPlayers,
+                                                       Set<ErrorDataDTO> warnings) {
         List<Integer> currentPlayerIds = getTournamentPlayerIds(tournamentId);
         List<Integer> participantIdsForEnrolling = new ArrayList<>();
 
