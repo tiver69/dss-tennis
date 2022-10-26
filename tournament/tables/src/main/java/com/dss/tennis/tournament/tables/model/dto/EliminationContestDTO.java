@@ -46,6 +46,7 @@ public class EliminationContestDTO extends ContestDTO implements Iterable<Contes
     @Override
     public Iterator<ContestDTO> iterator() {
         List<ContestDTO> eliminationContestList = new ArrayList<>();
+        eliminationContestList.add(this);
         collectToList(eliminationContestList);
         return eliminationContestList.iterator();
     }
@@ -53,6 +54,7 @@ public class EliminationContestDTO extends ContestDTO implements Iterable<Contes
     @Override
     public void forEach(Consumer<? super ContestDTO> action) {
         List<ContestDTO> eliminationContestList = new ArrayList<>();
+        eliminationContestList.add(this);
         collectToList(eliminationContestList);
         eliminationContestList.forEach(action);
     }
@@ -60,6 +62,7 @@ public class EliminationContestDTO extends ContestDTO implements Iterable<Contes
     @Override
     public Spliterator<ContestDTO> spliterator() {
         List<ContestDTO> eliminationContestList = new ArrayList<>();
+        eliminationContestList.add(this);
         collectToList(eliminationContestList);
         return eliminationContestList.spliterator();
     }

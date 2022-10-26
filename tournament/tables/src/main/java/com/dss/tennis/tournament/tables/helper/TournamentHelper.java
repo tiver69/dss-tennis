@@ -68,7 +68,9 @@ public class TournamentHelper {
                 .collect(Collectors.toList());
 
         return PageableDTO.<TournamentDTO>builder().page(tournaments)
-                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(tournamentsPage.getTotalPages())
+                .currentPage(pageableRequestParameter.getPageNumber())
+                .pageSize(pageableRequestParameter.getPageSize())
+                .totalPages(tournamentsPage.getTotalPages())
                 .build();
     }
 

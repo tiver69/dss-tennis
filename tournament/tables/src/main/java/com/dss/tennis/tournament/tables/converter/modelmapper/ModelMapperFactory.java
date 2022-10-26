@@ -3,13 +3,10 @@ package com.dss.tennis.tournament.tables.converter.modelmapper;
 import com.dss.tennis.tournament.tables.converter.*;
 import com.dss.tennis.tournament.tables.converter.patch.PlayerDtoPathApplier;
 import com.dss.tennis.tournament.tables.converter.patch.TournamentDtoPathApplier;
-import com.dss.tennis.tournament.tables.converter.v2.request.CreatePlayerRequestToPlayerDtoConverter;
-import com.dss.tennis.tournament.tables.converter.v2.request.CreateTeamRequestToTeamDtoConverter;
-import com.dss.tennis.tournament.tables.converter.v2.request.UpdatePlayerRequestToPatchPlayerConverter;
-import com.dss.tennis.tournament.tables.converter.v2.response.PageableDtoToPageablePlayerResponse;
-import com.dss.tennis.tournament.tables.converter.v2.response.PageableDtoToPageableTeamResponse;
-import com.dss.tennis.tournament.tables.converter.v2.response.PlayerDtoToPlayerResponseDataConverter;
-import com.dss.tennis.tournament.tables.converter.v2.response.TeamDtoToTeamResponseDataConverter;
+import com.dss.tennis.tournament.tables.converter.v2.request.*;
+import com.dss.tennis.tournament.tables.converter.v2.response.*;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.CretePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.UpdatePlayerRequest;
@@ -17,6 +14,11 @@ import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.
 import com.dss.tennis.tournament.tables.model.definitions.team.CreateTeamRequest;
 import com.dss.tennis.tournament.tables.model.definitions.team.PageableTeamResponse;
 import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.TeamResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.tournament.EnrollTournamentParticipantRequest;
+import com.dss.tennis.tournament.tables.model.definitions.tournament.PageableTournamentResponse;
+import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentRequest.CreteTournamentRequest;
+import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentRequest.UpdateTournamentRequest;
+import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse.TournamentResponseData;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
 import com.dss.tennis.tournament.tables.model.request.CreateTeam;
@@ -27,6 +29,8 @@ import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.Resourc
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ModelMapperFactory {
@@ -97,5 +101,21 @@ public class ModelMapperFactory {
                 .setConverter(new PageableDtoToPageableTeamResponse(modelMapper));
         modelMapper.createTypeMap(CreateTeamRequest.class, TeamDTO.class)
                 .setConverter(new CreateTeamRequestToTeamDtoConverter());
+        modelMapper.createTypeMap(TournamentDTO.class, TournamentResponseData.class)
+                .setConverter(new TournamentDtoToTournamentResponseDataConverter(modelMapper));
+        modelMapper.createTypeMap(EliminationContestDTO.class, EliminationContestInfoResponseData.class)
+                .setConverter(new EliminationContestDtoToEliminationContestInfoResponseDataConverter());
+        modelMapper.createTypeMap(SingleContestDTO.class, ContestInfoResponseData.class)
+                .setConverter(new SingleContestDtoToContestInfoResponseDataConverter());
+        modelMapper.createTypeMap(DoubleContestDTO.class, ContestInfoResponseData.class)
+                .setConverter(new DoubleContestDtoToContestInfoResponseDataConverter());
+        modelMapper.createTypeMap(PageableDTO.class, PageableTournamentResponse.class)
+                .setConverter(new PageableDtoToPageableTournamentResponse(modelMapper));
+        modelMapper.createTypeMap(CreteTournamentRequest.class, TournamentDTO.class)
+                .setConverter(new CreateTournamentRequestToTournamentDtoConverter());
+        modelMapper.createTypeMap(UpdateTournamentRequest.class, PatchTournament.class)
+                .setConverter(new UpdateTournamentRequestToPatchTournamentConverter());
+        modelMapper.createTypeMap(EnrollTournamentParticipantRequest.class, List.class)
+                .setConverter(new EnrollTournamentParticipantRequestToResourceObjectListConverter());
     }
 }

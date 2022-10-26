@@ -27,6 +27,8 @@ public class ResourceObject<T> {
         TEAM("team", "/participants/teams"),
         TOURNAMENT("tournament", "/tournaments"),
         CONTEST("contest", "/tournaments/%d/contests/%d", null),
+        CONTEST_INFO("contestInfo", "/tournaments/%d/contests/%d", null),
+        ELIMINATION_CONTEST_INFO("eliminationContestInfo", "/tournaments/%d/contests/%d", null),
         SET_SCORE("setScore", null, null);
 
         public final String value;
