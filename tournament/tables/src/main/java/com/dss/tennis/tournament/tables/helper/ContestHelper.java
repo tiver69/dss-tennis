@@ -52,35 +52,45 @@ public class ContestHelper {
                 .collect(Collectors.toList());
     }
 
-    public Contest createNewSingleContest(Integer playerOneId, Integer playerTwoId, Integer tournamentId) {
+    public Contest createNewSingleContest(Integer playerOneId, Integer playerTwoId, Integer tournamentId,
+                                          boolean shouldCreateScore) {
         Contest contest = SingleContest.builder()
                 .playerOneId(playerOneId)
                 .playerTwoId(playerTwoId)
                 .tournamentId(tournamentId)
                 .build();
 
-        return contestRepository.save(contest);
+        Contest createdContest = contestRepository.save(contest);
+        if (shouldCreateScore)
+            scoreHelper.createEmptyContestScore(createdContest.getId());
+        return createdContest;
     }
 
-    public Contest createNewDoubleContest(Team teamOne, Team teamTwo, Integer tournamentId) {
+    public Contest createNewDoubleContest(Team teamOne, Team teamTwo, Integer tournamentId, boolean shouldCreateScore) {
         Contest contest = DoubleContest.builder()
                 .teamOne(teamOne)
                 .teamTwo(teamTwo)
                 .tournamentId(tournamentId)
                 .build();
 
-        return contestRepository.save(contest);
+        Contest createdContest = contestRepository.save(contest);
+        if (shouldCreateScore)
+            scoreHelper.createEmptyContestScore(createdContest.getId());
+        return createdContest;
     }
 
     public Contest createNewEliminationContest(Integer firstParentContestId, Integer secondParentContestId,
-                                               Integer tournamentId) {
+                                               Integer tournamentId, boolean shouldCreateScore) {
         Contest contest = EliminationContest.builder()
                 .firstParentContestId(firstParentContestId)
                 .secondParentContestId(secondParentContestId)
                 .tournamentId(tournamentId)
                 .build();
 
-        return contestRepository.save(contest);
+        Contest createdContest = contestRepository.save(contest);
+        if (shouldCreateScore)
+            scoreHelper.createEmptyContestScore(createdContest.getId());
+        return createdContest;
     }
 
     public void createContestScore(ScoreDTO scoreDto, ContestDTO contestDto) {
@@ -95,6 +105,16 @@ public class ContestHelper {
         scoreHelper.updateContestScore(scoreDto, contestDto.getId());
         if (!contestDto.isTechDefeat()) {
             Integer winnerId = scoreHelper.getScoreWinnerIdFunction(scoreDto.getSets()).apply(contestDto);
+            contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
+        }
+    }
+
+    public void updateContestScore(ScoreDTO scoreDto, ContestDTO contestDto) {
+        scoreHelper.updateContestScore(scoreDto);
+        if (scoreDto.getTechDefeat().isTechDefeat()) {
+            updateContestTechDefeat(scoreDto.getTechDefeat(), contestDto);
+        } else {
+            Integer winnerId = scoreHelper.getScoreWinnerIdFunctionWithCreatedScore(scoreDto.getSets()).apply(contestDto);
             contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
         }
     }

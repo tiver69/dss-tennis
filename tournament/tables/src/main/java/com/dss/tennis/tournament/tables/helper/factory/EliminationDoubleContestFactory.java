@@ -19,10 +19,10 @@ public class EliminationDoubleContestFactory extends EliminationContestFactory {
 
     @Override
     public Integer createFirstLineEliminationContest(Integer firstParticipantId, Integer secondParticipantId,
-                                                     Integer tournamentId) {
+                                                     Integer tournamentId, boolean shouldCreateScore) {
         Team firstTeam = teamHelper.getParticipant(firstParticipantId);
         Team secondTeam = teamHelper.getParticipant(secondParticipantId);
-        return contestHelper.createNewDoubleContest(firstTeam, secondTeam, tournamentId).getId();
+        return contestHelper.createNewDoubleContest(firstTeam, secondTeam, tournamentId, shouldCreateScore).getId();
     }
 
     protected ContestDTO convertEliminationContestToBase(EliminationContestDTO eliminationContest) {

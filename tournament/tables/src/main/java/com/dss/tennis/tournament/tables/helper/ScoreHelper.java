@@ -3,12 +3,9 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import com.dss.tennis.tournament.tables.model.db.v2.SetType;
-import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO.SetScorePatchDTO;
-import com.dss.tennis.tournament.tables.model.dto.TechDefeatDTO;
 import com.dss.tennis.tournament.tables.repository.SetScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,7 +41,20 @@ public class ScoreHelper {
             scoreSets.put(set.getSetType(), new SetScoreDTO(set.getId(), set.getParticipantOne(), set
                     .getParticipantTwo()));
         });
-        return new ScoreDTO(scoreSets);
+        return new ScoreDTO(null, scoreSets);
+    }
+
+    public ScoreDTO mapSetScoreToDtoWithTechDefeatDetails(List<SetScore> sets, ContestDTO contest) {
+        Map<SetType, SetScoreDTO> scoreSets = new HashMap<>();
+        sets.forEach(set -> {
+            scoreSets.put(set.getSetType(), new SetScoreDTO(set.getId(), set.getParticipantOne(), set
+                    .getParticipantTwo()));
+        });
+        TechDefeatDTO techDefeatDTO = new TechDefeatDTO(
+                contest.isTechDefeat() && contest.getWinnerId().equals(contest.participantTwoId()),
+                contest.isTechDefeat() && contest.getWinnerId().equals(contest.participantOneId())
+        );
+        return new ScoreDTO(techDefeatDTO, scoreSets);
     }
 
     public ScorePatchDTO applyPatch(ScoreDTO scoreDto, ScorePatchDTO patch) {
@@ -67,11 +77,41 @@ public class ScoreHelper {
         return new ScorePatchDTO(scoreSetPatches);
     }
 
+    public ScoreDTO applyPatch(ScoreDTO scoreDto, ContestScorePatchDTO patch) {
+        if (patch.getSets() != null)
+            scoreDto.getSets().keySet().forEach(setType -> {
+                Integer currentSetScoreId = scoreDto.getSets().get(setType).getId();
+                SetScoreDTO setScoreFromPatch = patch.getSets().get(setType);
+                if (setScoreFromPatch != null)
+                    scoreDto.getSets()
+                            .put(setType, new SetScoreDTO(currentSetScoreId, setScoreFromPatch
+                                    .getParticipantOneScore(), setScoreFromPatch
+                                    .getParticipantTwoScore()));
+            });
+
+        if (patch.getTechDefeat() != null)
+            scoreDto.setTechDefeat(new TechDefeatDTO(patch.getTechDefeat().getParticipantOne(), patch.getTechDefeat()
+                    .getParticipantTwo()));
+
+        return scoreDto;
+    }
+
     public void createContestScore(ScoreDTO scoreDto, Integer contestId) {
         scoreDto.getSets().keySet().forEach(setType -> {
             SetScore score = mapSetScore(scoreDto.getSets().get(setType), setType, contestId);
             scoreRepository.save(score);
         });
+    }
+
+    public void createEmptyContestScore(Integer contestId) {
+        SetScore setOne = mapEmptySetScore(SetType.SET_ONE, contestId);
+        SetScore setTwo = mapEmptySetScore(SetType.SET_TWO, contestId);
+        SetScore setThree = mapEmptySetScore(SetType.SET_THREE, contestId);
+        SetScore tieBreak = mapEmptySetScore(SetType.TIE_BREAK, contestId);
+        scoreRepository.save(setOne);
+        scoreRepository.save(setTwo);
+        scoreRepository.save(setThree);
+        scoreRepository.save(tieBreak);
     }
 
     public void updateContestScore(ScorePatchDTO scoreDto, Integer contestId) {
@@ -89,6 +129,16 @@ public class ScoreHelper {
         });
         sets.keySet().stream().filter(setType -> sets.get(setType).isDeletePatch()).collect(Collectors.toList())
                 .forEach(sets::remove);
+    }
+
+    public void updateContestScore(ScoreDTO scoreDto) {
+        Map<SetType, SetScoreDTO> sets = scoreDto.getSets();
+        sets.keySet().forEach(setType -> {
+            SetScoreDTO setScoreDto = scoreDto.getSets().get(setType);
+            scoreRepository
+                    .updateSetScoreById(setScoreDto.getParticipantOneScore(), setScoreDto
+                            .getParticipantTwoScore(), setScoreDto.getId());
+        });
     }
 
     public boolean isSetScoreValid(byte gameScore, byte otherGameScore) {
@@ -119,6 +169,27 @@ public class ScoreHelper {
         return result < 0 ? ContestDTO::participantOneId : ContestDTO::participantTwoId;
     }
 
+    public Function<ContestDTO, Integer> getScoreWinnerIdFunctionWithCreatedScore(Map<SetType, ? extends SetScoreDTO> setScores) {
+        byte result = 0;
+        for (SetType key : setScores.keySet()) {
+            SetScoreDTO setScore = setScores.get(key);
+            if (key == SetType.TIE_BREAK || setScore.isSetScoreNotDefined()) continue;
+
+            Byte participantOneScore = setScore.getParticipantOneScore();
+            Byte participantTwoScore = setScore.getParticipantTwoScore();
+
+            if (participantOneScore.equals(participantTwoScore)) return (ContestDTO cc) -> null;
+            if (isSetScoreComplete(participantOneScore, participantTwoScore)) {
+                if (participantOneScore > participantTwoScore) result--;
+                else result++;
+            } else return (ContestDTO cc) -> null;
+        }
+
+        if (result == 0)
+            return getTieBreakSetWinner(setScores.get(SetType.TIE_BREAK));
+        return result < 0 ? ContestDTO::participantOneId : ContestDTO::participantTwoId;
+    }
+
     public Function<ContestDTO, Integer> getTechDefeatWinnerIdFunction(TechDefeatDTO techDefeatDto) {
         if (techDefeatDto.getParticipantOne() && techDefeatDto.getParticipantTwo()) return (ContestDTO cc) -> null;
         if (techDefeatDto.getParticipantOne()) return ContestDTO::participantTwoId;
@@ -132,7 +203,7 @@ public class ScoreHelper {
 
     private Function<ContestDTO, Integer> getTieBreakSetWinner(SetScoreDTO tieBreakSetScore) {
         if (tieBreakSetScore == null || tieBreakSetScore.getParticipantOneScore()
-                .equals(tieBreakSetScore.getParticipantTwoScore()))
+                .equals(tieBreakSetScore.getParticipantTwoScore()) || tieBreakSetScore.isSetScoreNotDefined())
             return (ContestDTO cc) -> null;
 
         return tieBreakSetScore.getParticipantOneScore() > tieBreakSetScore.getParticipantTwoScore() ?
@@ -144,6 +215,15 @@ public class ScoreHelper {
                 .contest(Contest.builder().id(contestId).build())
                 .participantOne(setScore.getParticipantOneScore())
                 .participantTwo(setScore.getParticipantTwoScore())
+                .setType(setType)
+                .build();
+    }
+
+    private SetScore mapEmptySetScore(SetType setType, Integer contestId) {
+        return SetScore.builder()
+                .contest(Contest.builder().id(contestId).build())
+                .participantOne((byte) 0)
+                .participantTwo((byte) 0)
                 .setType(setType)
                 .build();
     }

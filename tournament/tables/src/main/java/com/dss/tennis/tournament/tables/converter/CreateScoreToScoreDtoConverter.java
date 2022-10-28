@@ -39,7 +39,7 @@ public class CreateScoreToScoreDtoConverter extends AbstractResourceObjectConver
         mapSetScoreDto(createScore.getTieBreak(), TIE_BREAK, errors)
                 .ifPresent(setScore -> sets.put(TIE_BREAK, setScore));
         if (!errors.isEmpty()) throw new DetailedException(errors);
-        return new ScoreDTO(sets);
+        return new ScoreDTO(null, sets);
     }
 
     private Optional<SetScoreDTO> mapSetScoreDto(ResourceObject<SetScoreAttributes> set, SetType type,

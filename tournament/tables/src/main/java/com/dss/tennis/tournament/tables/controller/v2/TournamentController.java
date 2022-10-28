@@ -98,7 +98,7 @@ public class TournamentController {
         List<ResourceObjectDTO> participantsDto = converterHelper.convert(participants, List.class);
 
         SuccessResponseDTO<TournamentDTO> tournamentDTO = tournamentService
-                .addParticipantsToTournament(tournamentId, participantsDto);
+                .addParticipantsToTournamentWithScore(tournamentId, participantsDto);
 
         //todo: plus warnings
         TournamentResponseData tournamentResponseData = converterHelper

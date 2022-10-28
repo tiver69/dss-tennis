@@ -5,7 +5,6 @@ import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO;
 import com.dss.tennis.tournament.tables.model.dto.TechDefeatDTO;
 import com.dss.tennis.tournament.tables.model.request.CreateScore;
 import com.dss.tennis.tournament.tables.model.request.PatchTechDefeat;
@@ -77,17 +76,17 @@ public class TournamentControllerV1 {
         return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{tournamentId}/contest/{contestId}/score")
-    public ResponseEntity<SuccessResponse<?>> updateScore(@PathVariable Integer tournamentId,
-                                                          @PathVariable Integer contestId,
-                                                          @RequestBody CreateScore score) {
-        ScorePatchDTO scorePatchDto = converterHelper.convert(score, ScorePatchDTO.class);
-
-        ContestDTO contestDto = tournamentService.updateContestScore(contestId, tournamentId, scorePatchDto);
-        SuccessResponse<GetContest> contestResponse = responseHelper
-                .createSuccessResponse(contestDto, GetContest.class);
-        return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);
-    }
+//    @PatchMapping("/{tournamentId}/contest/{contestId}/score")
+//    public ResponseEntity<SuccessResponse<?>> updateScore(@PathVariable Integer tournamentId,
+//                                                          @PathVariable Integer contestId,
+//                                                          @RequestBody CreateScore score) {
+//        ScorePatchDTO scorePatchDto = converterHelper.convert(score, ScorePatchDTO.class);
+//
+//        ContestDTO contestDto = tournamentService.updateContestScoreV1(contestId, tournamentId, scorePatchDto);
+//        SuccessResponse<GetContest> contestResponse = responseHelper
+//                .createSuccessResponse(contestDto, GetContest.class);
+//        return new ResponseEntity<>(contestResponse, HttpStatus.CREATED);
+//    }
 
     @PatchMapping("/{tournamentId}/contest/{contestId}/techDefeat")
     public ResponseEntity<SuccessResponse<?>> updateTechDefeat(@PathVariable Integer tournamentId,

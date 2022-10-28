@@ -7,6 +7,8 @@ import com.dss.tennis.tournament.tables.converter.v2.request.*;
 import com.dss.tennis.tournament.tables.converter.v2.response.*;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestRequest.UpdateContestScoreRequest;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.CretePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.UpdatePlayerRequest;
@@ -107,8 +109,12 @@ public class ModelMapperFactory {
                 .setConverter(new EliminationContestDtoToEliminationContestInfoResponseDataConverter());
         modelMapper.createTypeMap(SingleContestDTO.class, ContestInfoResponseData.class)
                 .setConverter(new SingleContestDtoToContestInfoResponseDataConverter());
+        modelMapper.createTypeMap(SingleContestDTO.class, ContestResponseData.class)
+                .setConverter(new SingleContestDtoToContestResponseDataConverter(modelMapper));
         modelMapper.createTypeMap(DoubleContestDTO.class, ContestInfoResponseData.class)
                 .setConverter(new DoubleContestDtoToContestInfoResponseDataConverter());
+        modelMapper.createTypeMap(DoubleContestDTO.class, ContestResponseData.class)
+                .setConverter(new DoubleContestDtoToContestResponseDataConverter(modelMapper));
         modelMapper.createTypeMap(PageableDTO.class, PageableTournamentResponse.class)
                 .setConverter(new PageableDtoToPageableTournamentResponse(modelMapper));
         modelMapper.createTypeMap(CreteTournamentRequest.class, TournamentDTO.class)
@@ -117,5 +123,9 @@ public class ModelMapperFactory {
                 .setConverter(new UpdateTournamentRequestToPatchTournamentConverter());
         modelMapper.createTypeMap(EnrollTournamentParticipantRequest.class, List.class)
                 .setConverter(new EnrollTournamentParticipantRequestToResourceObjectListConverter());
+        modelMapper.createTypeMap(EliminationContestDTO.class, ContestResponseData.class)
+                .setConverter(new EliminationContestDtoToContestResponseDataConverter(modelMapper));
+        modelMapper.createTypeMap(UpdateContestScoreRequest.class, ContestScorePatchDTO.class)
+                .setConverter(new UpdateContestRequestToScorePatchConverter());
     }
 }

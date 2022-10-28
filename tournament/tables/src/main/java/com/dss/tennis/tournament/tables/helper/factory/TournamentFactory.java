@@ -35,10 +35,10 @@ public class TournamentFactory {
     @Autowired
     private TeamHelper teamHelper;
 
-    public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds) {
+    public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds, boolean shouldCreateScore) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
                 .getParticipantType());
-        contestFactory.createContestsForTournament(tournamentDto.getId(), newParticipantIds);
+        contestFactory.createContestsForTournament(tournamentDto.getId(), newParticipantIds, shouldCreateScore);
     }
 
     public void removeParticipantFromTournament(Integer participantId, TournamentDTO tournamentDto,

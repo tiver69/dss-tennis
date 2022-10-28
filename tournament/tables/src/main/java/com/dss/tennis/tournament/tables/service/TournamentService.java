@@ -102,6 +102,27 @@ public class TournamentService {
     }
 
     @Transactional
+    public SuccessResponseDTO<TournamentDTO> addParticipantsToTournamentWithScore(Integer tournamentId,
+                                                                                  List<ResourceObjectDTO> newParticipantsDto) {
+        TournamentDTO tournamentDto = tournamentHelper.getTournamentDto(tournamentId, BASIC);
+
+        Set<ErrorDataDTO> warnings = new HashSet<>();
+        ParticipantHelper<?, ?> participantHelper = getParticipantHelper(tournamentDto.getParticipantType());
+        List<Integer> newParticipantIds = participantHelper
+                .getParticipantIdsForEnrolling(tournamentId, newParticipantsDto, warnings);
+        getParticipantValidator(tournamentDto.getParticipantType())
+                .validateTournamentParticipantQuantity(tournamentDto, newParticipantIds.size());
+
+        tournamentHelper.addParticipantsToTournament(tournamentDto, newParticipantIds, true);
+        return new SuccessResponseDTO<>(tournamentHelper.getTournamentDto(tournamentId), warnings);
+    }
+
+    public ContestDTO getTournamentContest(Integer contestId, Integer tournamentId) {
+        TournamentDTO tournamentDto = tournamentHelper.getTournamentDto(tournamentId, BASIC);
+        return contestHelper.getTournamentContestDTO(contestId, tournamentDto, true);
+    }
+
+    @Transactional
     public ContestDTO createContestScore(Integer contestId, Integer tournamentId, ScoreDTO scoreDto) {
         if (!scoreHelper.getContestSetScores(contestId).isEmpty()) throw new DetailedException(CONTEST_SCORE_EXISTS);
         Set<ErrorDataDTO> errorSet = scoreValidator.validateCreateScore(scoreDto);
@@ -115,10 +136,10 @@ public class TournamentService {
     }
 
     @Transactional
-    public ContestDTO updateContestScore(Integer contestId, Integer tournamentId, ScorePatchDTO scorePatchDto) {
+    public ContestDTO updateContestScoreV1(Integer contestId, Integer tournamentId, ScorePatchDTO scorePatchDto) {
         TournamentDTO tournamentDTO = tournamentHelper.getTournamentDto(tournamentId, BASIC);
         List<SetScore> sets = scoreHelper.getContestSetScores(contestId);
-        contestValidator.validateContestUpdate(contestId, tournamentDTO, sets.isEmpty());
+        contestValidator.validateContestUpdateV1(contestId, tournamentDTO, sets.isEmpty());
         ScoreDTO scoreDTO = scoreHelper.mapSetScoreToDto(sets);
         Set<ErrorDataDTO> errorSet = scoreValidator.validateUpdateScorePatch(scoreDTO, scorePatchDto);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
@@ -129,6 +150,26 @@ public class TournamentService {
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
         ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
+        contestHelper.updateContestScore(patchedScoreDTO, contest);
+
+        return contestHelper.getTournamentContestDTO(contestId, tournamentDTO, true);
+    }
+
+    @Transactional
+    public ContestDTO updateContestScore(Integer contestId, Integer tournamentId, ContestScorePatchDTO scorePatchDto) {
+        Set<ErrorDataDTO> errorSet = scoreValidator.validateUpdateScorePatch(scorePatchDto);
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+
+        TournamentDTO tournamentDTO = tournamentHelper.getTournamentDto(tournamentId, BASIC);
+        List<SetScore> currentScore = scoreHelper.getContestSetScores(contestId);
+        contestValidator.validateContestUpdate(contestId, tournamentDTO);
+        ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
+        ScoreDTO currentScoreDTO = scoreHelper.mapSetScoreToDtoWithTechDefeatDetails(currentScore, contest);
+
+        ScoreDTO patchedScoreDTO = scoreHelper.applyPatch(currentScoreDTO, scorePatchDto);
+        errorSet = scoreValidator.validateUpdateScore(patchedScoreDTO);
+        if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
+
         contestHelper.updateContestScore(patchedScoreDTO, contest);
 
         return contestHelper.getTournamentContestDTO(contestId, tournamentDTO, true);

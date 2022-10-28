@@ -24,11 +24,16 @@ public class ContestValidator {
     @Autowired
     private ValidatorHelper<TechDefeatDTO> techDefeatDtoValidatorHelper;
 
-    public void validateContestUpdate(Integer contestId, TournamentDTO tournamentDTO,
-                                      boolean isContestWithoutSetScores) {
+    public void validateContestUpdateV1(Integer contestId, TournamentDTO tournamentDTO,
+                                        boolean isContestWithoutSetScores) {
         if (TournamentType.ELIMINATION.equals(tournamentDTO.getTournamentType()))
             validateEliminationContestUpdateForbidden(contestId);
         if (isContestWithoutSetScores) throw new DetailedException(CONTEST_SCORE_NOT_FOUND);
+    }
+
+    public void validateContestUpdate(Integer contestId, TournamentDTO tournamentDTO) {
+        if (TournamentType.ELIMINATION.equals(tournamentDTO.getTournamentType()))
+            validateEliminationContestUpdateForbidden(contestId);
     }
 
     public Set<ErrorDataDTO> validateTechDefeat(TechDefeatDTO techDefeatDto, Integer contestId,

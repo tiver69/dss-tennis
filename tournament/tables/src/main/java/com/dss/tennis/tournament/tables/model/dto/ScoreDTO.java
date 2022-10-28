@@ -12,7 +12,16 @@ import java.util.Map;
 @NoArgsConstructor
 public class ScoreDTO {
 
+    private TechDefeatDTO techDefeat;
     private Map<SetType, SetScoreDTO> sets;
+
+    public boolean isSetScoreNotDefined(SetType type) {
+        return sets == null || sets.get(type).isSetScoreNotDefined();
+    }
+
+    public boolean isSetScoreDefined(SetType type) {
+        return sets != null && sets.get(type).isSetScoreDefined();
+    }
 
     @Getter
     @Setter
@@ -34,6 +43,16 @@ public class ScoreDTO {
         public SetScoreDTO(Byte participantOneScore, Byte participantTwoScore) {
             this.participantOneScore = participantOneScore;
             this.participantTwoScore = participantTwoScore;
+        }
+
+        public boolean isSetScoreNotDefined() {
+            return ((participantOneScore == null || participantTwoScore == null) ||
+                    (participantOneScore == 0 && participantTwoScore == 0));
+        }
+
+        public boolean isSetScoreDefined() {
+            return ((participantOneScore != null && participantTwoScore != null) &&
+                    (participantOneScore != 0 && participantTwoScore != 0));
         }
     }
 }

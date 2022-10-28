@@ -6,10 +6,10 @@ import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -48,9 +48,9 @@ public abstract class RoundContestFactory implements AbstractContestFactory {
 
     @Override
     public ContestDTO getBasicContestDTO(Integer contestId, Integer tournamentId) {
-        Optional<Contest> contest = contestRepository.findByIdAndTournamentId(contestId, tournamentId);
-        return converterHelper.convert(contest
-                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND)), getContestParticipantDtoClass());
+        Contest contest = contestRepository.findByIdAndTournamentId(contestId, tournamentId)
+                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND));
+        return converterHelper.convert(Hibernate.unproxy(contest), getContestParticipantDtoClass());
     }
 
     protected void removeContests(Supplier<List<Contest>> contestsToRemove) {

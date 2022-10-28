@@ -2,22 +2,17 @@ package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.helper.ScoreHelper;
 import com.dss.tennis.tournament.tables.model.db.v2.SetType;
-import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
-import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScorePatchDTO.SetScorePatchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
-import static com.dss.tennis.tournament.tables.model.db.v2.SetType.SET_ONE;
-import static com.dss.tennis.tournament.tables.model.db.v2.SetType.SET_TWO;
+import static com.dss.tennis.tournament.tables.model.db.v2.SetType.*;
 
 @Component
 public class ScoreValidator {
@@ -26,6 +21,8 @@ public class ScoreValidator {
     private ScoreHelper scoreHelper;
     @Autowired
     private ValidatorHelper<SetScoreDTO> setScoreValidatorHelper;
+    @Autowired
+    private ValidatorHelper<TechDefeatDTO> techDefeatDtoValidatorHelper;
 
     public Set<ErrorDataDTO> validateUpdateScorePatch(ScoreDTO scoreDto, ScorePatchDTO patch) {
         Set<ErrorDataDTO> errors = new HashSet<>();
@@ -39,6 +36,26 @@ public class ScoreValidator {
                 errors.add(ErrorDataDTO.builder().errorConstant(SET_SCORE_NOT_FOUND).pointer(setType.value).build());
             }
         });
+        return errors;
+    }
+
+    public Set<ErrorDataDTO> validateUpdateScorePatch(ContestScorePatchDTO scorePatchDto) {
+        Set<ErrorDataDTO> errors = new HashSet<>();
+
+        if (scorePatchDto.getTechDefeat() == null && scorePatchDto.getSets() == null) {
+            errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_ATTRIBUTES_EMPTY).build());
+            return errors;
+        }
+
+        if (scorePatchDto.getTechDefeat() != null) {
+            errors = techDefeatDtoValidatorHelper.validateObject(scorePatchDto.getTechDefeat());
+        }
+        if (scorePatchDto.getSets() != null) {
+            Set<ErrorDataDTO> structureErrors = scorePatchDto.getSets().keySet().stream()
+                    .map(setType -> validateSetScorePatch(scorePatchDto.getSets().get(setType), setType.value))
+                    .flatMap(Collection::stream).collect(Collectors.toSet());
+            errors.addAll(structureErrors);
+        }
         return errors;
     }
 
@@ -68,6 +85,16 @@ public class ScoreValidator {
         return errors;
     }
 
+    public Set<ErrorDataDTO> validateUpdateScore(ScoreDTO score) {
+        Set<ErrorDataDTO> errors = new HashSet<>();
+        //todo define rule for tie break
+        if (score.isSetScoreNotDefined(SET_ONE) && score.isSetScoreDefined(SET_TWO))
+            errors.add(ErrorDataDTO.builder().errorConstant(SET_SCORE_EMPTY).pointer(SET_ONE.value).build());
+        if (score.isSetScoreNotDefined(SET_TWO) && score.isSetScoreDefined(SET_THREE))
+            errors.add(ErrorDataDTO.builder().errorConstant(SET_SCORE_EMPTY).pointer(SET_TWO.value).build());
+        return errors;
+    }
+
     private Set<ErrorDataDTO> validateSetScoreCreate(SetScoreDTO setScore, String type) {
         Set<ErrorDataDTO> errorDataDTOs = setScoreValidatorHelper.validateObject(setScore, type);
 
@@ -83,12 +110,19 @@ public class ScoreValidator {
                 .getParticipantOneScore(), setScorePatch.getParticipantTwoScore(), type) : errorDataDTOs;
     }
 
+    private Set<ErrorDataDTO> validateSetScorePatch(SetScoreDTO setScoreDTO, String type) {
+        Set<ErrorDataDTO> errorDataDTOs = setScoreValidatorHelper.validateObject(setScoreDTO, type);
+
+        return errorDataDTOs.isEmpty() ? validateSetScoreLimit(setScoreDTO
+                .getParticipantOneScore(), setScoreDTO.getParticipantTwoScore(), type) : errorDataDTOs;
+    }
+
     private Set<ErrorDataDTO> validateSetScoreLimit(Byte participantOne, Byte participantTwo, String type) {
         if (participantOne != null && participantTwo != null && !scoreHelper
                 .isSetScoreValid(participantOne, participantTwo))
             return Set.of(ErrorDataDTO.builder().errorConstant(GAME_LIMIT_EXCEEDED).pointer(type)
                     .detailParameter(String.format("%d:%d", participantOne, participantTwo)).build());
-        return null;
+        return new HashSet<>();
     }
 
     private boolean isSetScorePatchDelete(SetScorePatchDTO scorePatch) {

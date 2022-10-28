@@ -19,12 +19,12 @@ public class RoundSingleContestFactory extends RoundContestFactory {
     private PlayerHelper playerHelper;
 
     @Override
-    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds) {
+    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds, boolean shouldCreateScore) {
         List<Integer> currentPlayerIds = playerHelper.getTournamentParticipants(tournamentId).stream()
                 .map(Player::getId).collect(Collectors.toList());
         for (Integer newPlayerId : newPlayerIds) {
             for (Integer currentPlayerId : currentPlayerIds)
-                contestHelper.createNewSingleContest(newPlayerId, currentPlayerId, tournamentId);
+                contestHelper.createNewSingleContest(newPlayerId, currentPlayerId, tournamentId, shouldCreateScore);
             currentPlayerIds.add(newPlayerId);
         }
     }

@@ -42,7 +42,11 @@ public class TournamentHelper {
     }
 
     public void addParticipantsToTournament(TournamentDTO tournamentDto, List<Integer> newParticipantIds) {
-        tournamentFactory.createContestForNewParticipants(tournamentDto, newParticipantIds);
+        addParticipantsToTournament(tournamentDto, newParticipantIds, false);
+    }
+
+    public void addParticipantsToTournament(TournamentDTO tournamentDto, List<Integer> newParticipantIds, boolean shouldCreateScore) {
+        tournamentFactory.createContestForNewParticipants(tournamentDto, newParticipantIds, shouldCreateScore);
     }
 
     @Transactional

@@ -18,12 +18,12 @@ public class RoundDoubleContestFactory extends RoundContestFactory {
     private TeamHelper teamHelper;
 
     @Override
-    public void createContestsForTournament(Integer tournamentId, List<Integer> newTeamIds) {
+    public void createContestsForTournament(Integer tournamentId, List<Integer> newTeamIds, boolean shouldCreateScore) {
         List<Team> currentTeams = teamHelper.getTournamentParticipants(tournamentId);
         for (Integer newTeamId : newTeamIds) {
             Team newTeam = teamHelper.getParticipant(newTeamId);
             for (Team currentTeam : currentTeams)
-                contestHelper.createNewDoubleContest(newTeam, currentTeam, tournamentId);
+                contestHelper.createNewDoubleContest(newTeam, currentTeam, tournamentId, shouldCreateScore);
             currentTeams.add(newTeam);
         }
     }
