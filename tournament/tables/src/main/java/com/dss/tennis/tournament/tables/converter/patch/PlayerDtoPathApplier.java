@@ -29,8 +29,6 @@ public class PlayerDtoPathApplier implements Converter<PatchPlayer, PlayerDTO> {
     }
 
     private <T> void applyValue(Optional<T> patchValue, Consumer<T> setFunction) {
-        if (patchValue == null) return;
-        if (!patchValue.isPresent()) setFunction.accept(null);
-        else patchValue.ifPresent(setFunction);
+            patchValue.ifPresent(setFunction);
     }
 }

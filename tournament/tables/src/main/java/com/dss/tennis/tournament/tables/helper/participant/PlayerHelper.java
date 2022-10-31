@@ -46,8 +46,9 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
     public boolean isPlayerExist(PlayerDTO playerDTO) {
         if (StringUtils.isBlank(playerDTO.getFirstName()) || StringUtils.isBlank(playerDTO.getLastName()))
             return false;
-        return playerRepository
-                .findByFirstNameAndLastName(playerDTO.getFirstName(), playerDTO.getLastName()).isPresent();
+        Optional<Player> player = playerRepository
+                .findByFirstNameAndLastName(playerDTO.getFirstName(), playerDTO.getLastName());
+        return player.isPresent() && player.get().getId() != playerDTO.getId() ;
     }
 
     @Override
@@ -66,8 +67,10 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
                 .map(player -> converterHelper.convert(player, PlayerDTO.class))
                 .collect(Collectors.toList());
 
-        return PageableDTO.<PlayerDTO>builder().page(players)
-                .currentPage(pageableRequestParameter.getPageNumber()).totalPages(playersPage.getTotalPages())
+        return PageableDTO.<PlayerDTO>builder()
+                .page(players)
+                .currentPage(pageableRequestParameter.getPageNumber())
+                .totalPages(playersPage.getTotalPages())
                 .pageSize(pageableRequestParameter.getPageSize())
                 .build();
     }

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.GENERAL_BAD_REQUEST;
 
 @Service
@@ -18,8 +20,8 @@ public class InvalidFormatExceptionHandler extends SourceAwareExceptionHandler i
     public ErrorData createErrorData(Throwable exception) {
         InvalidFormatException castedException = (InvalidFormatException) exception;
         String parameter = castedException.getValue().toString();
-        String pointer = StringUtils
-                .substringBetween(castedException.getPath().toString(), EXCEPTION_OPEN_PATH, EXCEPTION_CLOSE_PATH);
+        String pointer = castedException.getPath().stream().map(ex -> StringUtils
+                .substringBetween(ex.getDescription(), EXCEPTION_OPEN_PATH, EXCEPTION_CLOSE_PATH)).collect(Collectors.joining("/"));
         pointer = StringUtils.isBlank(pointer) ? null : EXCEPTION_POINTER_PREFIX + pointer;
 
         return super.createErrorData(GENERAL_BAD_REQUEST, parameter, pointer);

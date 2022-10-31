@@ -17,7 +17,7 @@ import static com.dss.tennis.tournament.tables.helper.RequestParameterHelper.PAR
 @Component
 public class PageableValidator {
 
-    public static final String PAGE_DEFAULT_STRING = "1";
+    public static final String PAGE_DEFAULT_STRING = "0";  //Spring numerates pages from 0
     public static final String PAGE_SIZE_DEFAULT_STRING = "5";
 
     public static String PAGE_KEY = "page";
@@ -32,7 +32,7 @@ public class PageableValidator {
                                             ResourceObjectType resourceType) {
         if (page < 0) {
             ErrorDataDTO loverLimitWarning = createWarningsForNotAllowedParameter(PAGE_OUT_OF_LOWER_RANGE, String
-                    .valueOf(page), PAGE_KEY);
+                    .valueOf(page + 1), PAGE_KEY);
             warnings.add(loverLimitWarning);
             page = Integer.parseInt(PAGE_DEFAULT_STRING);
         }
@@ -52,7 +52,7 @@ public class PageableValidator {
         int currentPageRequest = pageableRequestParameter.getPageNumber();
         if (currentPageRequest >= maxPage) {
             ErrorDataDTO pageSizeWarning = createWarningsForNotAllowedParameter(PAGE_OUT_OF_UPPER_RANGE, String
-                    .valueOf(currentPageRequest), PAGE_KEY);
+                    .valueOf(currentPageRequest + 1), PAGE_KEY);
             warnings.add(pageSizeWarning);
             return requestParameterHelper
                     .populatePageableRequestParameter(maxPage - 1, pageableRequestParameter

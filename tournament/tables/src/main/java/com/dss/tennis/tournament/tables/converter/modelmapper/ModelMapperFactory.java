@@ -9,7 +9,6 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoRes
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestRequest.UpdateContestScoreRequest;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestResponseData;
-import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.CretePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.UpdatePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
@@ -91,8 +90,6 @@ public class ModelMapperFactory {
     private void applyConvertersForV2(ModelMapper modelMapper) {
         modelMapper.createTypeMap(PlayerDTO.class, PlayerResponseData.class)
                 .setConverter(new PlayerDtoToPlayerResponseDataConverter());
-        modelMapper.createTypeMap(PageableDTO.class, PageablePlayerResponse.class)
-                .setConverter(new PageableDtoToPageablePlayerResponse(modelMapper));
         modelMapper.createTypeMap(UpdatePlayerRequest.class, PatchPlayer.class)
                 .setConverter(new UpdatePlayerRequestToPatchPlayerConverter());
         modelMapper.createTypeMap(CretePlayerRequest.class, PlayerDTO.class)

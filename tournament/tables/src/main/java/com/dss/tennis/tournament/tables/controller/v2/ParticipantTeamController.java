@@ -41,7 +41,7 @@ public class ParticipantTeamController {
             @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
             @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
         SuccessResponseDTO<PageableDTO> pageableTeamsDto = participantService
-                .getParticipantPage(page, pageSize, ResourceObjectType.TEAM);
+                .getParticipantPage1(page, pageSize, ResourceObjectType.TEAM);
 
         //todo: plus warnings
         PageableTeamResponse teamsSuccessResponse = converterHelper

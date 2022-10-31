@@ -75,8 +75,8 @@ public class ParticipantService {
         return teamHelper.getParticipantDto(teamId);
     }
 
-    public SuccessResponseDTO<PageableDTO> getParticipantPage(int page, byte pageSize,
-                                                              ResourceObjectType participantType) {
+    public SuccessResponseDTO<PageableDTO> getParticipantPage1(int page, byte pageSize,
+                                                               ResourceObjectType participantType) {
         Set<ErrorDataDTO> warnings = new HashSet<>();
         ParticipantHelper helper = getParticipantHelper(participantType);
         Pageable pageableRequestParameter = pageableValidator
@@ -90,6 +90,23 @@ public class ParticipantService {
         }
 
         return new SuccessResponseDTO<>(playersPage, warnings);
+    }
+
+    public ResponseWarningDTO<PageableDTO> getParticipantPage(int page, byte pageSize,
+                                                               ResourceObjectType participantType) {
+        Set<ErrorDataDTO> warnings = new HashSet<>();
+        ParticipantHelper helper = getParticipantHelper(participantType);
+        Pageable pageableRequestParameter = pageableValidator
+                .validatePageableRequest(page, pageSize, warnings, participantType);
+
+        PageableDTO<PlayerDTO> playersPage = helper.getParticipantPage(pageableRequestParameter);
+        Pageable newPageableRequestParameter = pageableValidator
+                .validateUpperPage(pageableRequestParameter, playersPage.getTotalPages(), warnings, participantType);
+        if (newPageableRequestParameter != null) {
+            playersPage = helper.getParticipantPage(newPageableRequestParameter);
+        }
+
+        return new ResponseWarningDTO<>(playersPage, warnings);
     }
 
     private ParticipantHelper<?, ?> getParticipantHelper(ResourceObjectType participantType) {

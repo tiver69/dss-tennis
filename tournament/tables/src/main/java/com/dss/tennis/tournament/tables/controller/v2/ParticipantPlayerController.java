@@ -1,6 +1,8 @@
 package com.dss.tennis.tournament.tables.controller.v2;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.helper.ResponseHelper;
+import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.CretePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.UpdatePlayerRequest;
@@ -8,7 +10,7 @@ import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.model.dto.ResponseWarningDTO;
 import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +30,20 @@ public class ParticipantPlayerController {
     @Autowired
     private ConverterHelper converterHelper;
     @Autowired
+    private ResponseHelper responseHelper;
+    @Autowired
     private ParticipantService participantService;
 
     @GetMapping("/players")
-    public ResponseEntity<PageablePlayerResponse> getPageablePlayers(
+    public ResponseEntity<PageableResponse> getPageablePlayers(
             @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
             @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
-        SuccessResponseDTO<PageableDTO> pageablePlayersDto = participantService
-                .getParticipantPage(page, pageSize, PLAYER);
+        ResponseWarningDTO<PageableDTO> pageablePlayersDto = participantService
+                .getParticipantPage(page - 1, pageSize, PLAYER);
 
-        //todo: plus warnings
-        PageablePlayerResponse playersSuccessResponse = converterHelper
-                .convert(pageablePlayersDto.getData(), PageablePlayerResponse.class);
-        return new ResponseEntity<>(playersSuccessResponse, HttpStatus.OK);
+        PageableResponse playersResponse = responseHelper
+                .createPageableResponse(pageablePlayersDto, PageablePlayerResponse.class);
+        return new ResponseEntity<>(playersResponse, HttpStatus.OK);
     }
 
     @PostMapping("/players")
