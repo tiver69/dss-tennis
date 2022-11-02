@@ -1,17 +1,44 @@
 package com.dss.tennis.tournament.tables.model.definitions.team;
 
 import com.dss.tennis.tournament.tables.model.definitions.Links;
+import com.dss.tennis.tournament.tables.model.definitions.Meta;
+import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
 import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.TeamResponseData;
+import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class PageableTeamResponse {
-    private int totalPages;
-    private List<TeamResponseData> page;
+public class PageableTeamResponse implements PageableResponse {
+
+    private Meta meta;
+    private List<TeamResponseData> data;
     private List<Object> included;
     private Links links;
+
+    @Override
+    public void setData(Object data) throws ClassCastException {
+        this.data = (List<TeamResponseData>) data;
+    }
+
+    @Override
+    @JsonIgnore
+    public Class getResponseDataClass() {
+        return TeamResponseData.class;
+    }
+
+    @Override
+    @JsonIgnore
+    public ResourceObjectType getResponseDataType() {
+        return ResourceObjectType.TEAM;
+    }
+
 }

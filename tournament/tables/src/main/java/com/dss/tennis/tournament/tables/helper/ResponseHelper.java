@@ -7,7 +7,10 @@ import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.Meta;
 import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
-import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
+import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.team.PageableTeamResponse;
+import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse;
+import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.TeamResponseData;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
@@ -18,9 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ResponseHelper {
@@ -30,8 +35,33 @@ public class ResponseHelper {
     @Autowired
     private WarningHandler warningHandler;
 
-    public <D extends PageablePlayerResponse> PageableResponse createPageableResponse(ResponseWarningDTO<PageableDTO> source,
-                                                                                      Class<D> destinationClass) {
+    public TeamResponse createTeamResponse(TeamDTO teamDto) {
+        TeamResponseData responseData = converterHelper.convert(teamDto, TeamResponseData.class);
+
+        List<Object> responseIncluded = new ArrayList<>();
+        responseIncluded.add(converterHelper.convert(teamDto.getPlayerOne(), PlayerResponseData.class));
+        responseIncluded.add(converterHelper.convert(teamDto.getPlayerTwo(), PlayerResponseData.class));
+
+        return new TeamResponse(responseData, responseIncluded);
+    }
+
+    public PageableTeamResponse createPageableTeamResponse(ResponseWarningDTO<PageableDTO> source) {
+
+        PageableTeamResponse response = (PageableTeamResponse) createPageableResponse(source,
+                PageableTeamResponse.class);
+
+        List<TeamDTO> page = source.getData().getPage();
+        List<Object> responseIncluded = page.stream()
+                .flatMap(teamDto -> Stream.of(teamDto.getPlayerOne(), teamDto.getPlayerTwo()))
+                .distinct()
+                .map(playerDto -> converterHelper.convert(playerDto, PlayerResponseData.class))
+                .collect(Collectors.toList());
+        response.setIncluded(responseIncluded);
+        return response;
+    }
+
+    public <D extends PageableResponse> PageableResponse createPageableResponse(ResponseWarningDTO<PageableDTO> source,
+                                                                                Class<D> destinationClass) {
         Set<ErrorDataDTO> warningsDto = source.getWarnings();
         Set<ErrorData> responseWarnings = warningsDto == null || warningsDto.isEmpty() ? null :
                 warningsDto.stream().map(warningHandler::createErrorData).collect(Collectors.toSet());
@@ -51,6 +81,7 @@ public class ResponseHelper {
 
             return response;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
             throw new DetailedException(ErrorConstants.INTERNAL_SERVER_ERROR, "Failed to create response object");
         }
     }

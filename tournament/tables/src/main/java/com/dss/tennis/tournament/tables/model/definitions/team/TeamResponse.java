@@ -8,9 +8,11 @@ import lombok.*;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class TeamResponse {
 
     private TeamResponseData data;
+    private List<Object> included;
 
     public TeamResponse(TeamResponseData data) {
         this.data = data;
@@ -22,8 +24,7 @@ public class TeamResponse {
     public static class TeamResponseData {
         private int id;
         private final String type = ResourceObjectType.TEAM.value;
-        private TeamRelationships relationships;
-        private List<Object> included;
+        private TeamResponseRelationships relationships;
         private Links links;
     }
 
@@ -31,7 +32,8 @@ public class TeamResponse {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class TeamRelationships {
-        private List<SimpleResourceObject> players;
+    public static class TeamResponseRelationships {
+        private SimpleResourceObject playerOne;
+        private SimpleResourceObject playerTwo;
     }
 }

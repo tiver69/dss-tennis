@@ -64,7 +64,7 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
 
     protected String constructPointer(String errorConstant, String pointerString, Byte sequenceNumber) {
         String pointerFormat = environment.getProperty(errorConstant + getPointerSuffix());
-        if (pointerFormat == null) return pointerString;
+        if (pointerFormat == null || StringUtils.isNotBlank(pointerString)) return pointerString;
         if (pointerString == null && sequenceNumber == null) return pointerFormat;
         if (pointerFormat.contains(SEQUENTIAL_POINTER_KEY) && sequenceNumber != null)
             return String.format(pointerFormat, sequenceNumber);

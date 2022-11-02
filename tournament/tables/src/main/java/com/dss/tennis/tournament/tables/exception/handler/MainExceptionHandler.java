@@ -75,7 +75,7 @@ public class MainExceptionHandler extends SourceAwareExceptionHandler {
         List<ErrorData> list =
                 exception.getErrors().stream().map(this::createErrorData)
                         .collect(Collectors.toList());
-
+        exception.printStackTrace();
         return new ResponseEntity<>(new ErrorResponse(list), getHttpStatus(list));
     }
 

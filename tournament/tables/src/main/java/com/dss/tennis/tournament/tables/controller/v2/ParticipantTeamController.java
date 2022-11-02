@@ -1,12 +1,12 @@
 package com.dss.tennis.tournament.tables.controller.v2;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
+import com.dss.tennis.tournament.tables.helper.ResponseHelper;
+import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
 import com.dss.tennis.tournament.tables.model.definitions.team.CreateTeamRequest;
-import com.dss.tennis.tournament.tables.model.definitions.team.PageableTeamResponse;
 import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse;
-import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.TeamResponseData;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
-import com.dss.tennis.tournament.tables.model.dto.SuccessResponseDTO;
+import com.dss.tennis.tournament.tables.model.dto.ResponseWarningDTO;
 import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
@@ -26,37 +26,38 @@ public class ParticipantTeamController {
     @Autowired
     private ConverterHelper converterHelper;
     @Autowired
+    private ResponseHelper responseHelper;
+    @Autowired
     private ParticipantService participantService;
 
     @GetMapping("/teams/{teamId}")
     public ResponseEntity<TeamResponse> getTeamById(@PathVariable Integer teamId) {
         TeamDTO teamDto = participantService.getTeamDTO(teamId);
 
-        TeamResponseData teamResponseData = converterHelper.convert(teamDto, TeamResponseData.class);
-        return new ResponseEntity<>(new TeamResponse(teamResponseData), HttpStatus.OK);
+        TeamResponse teamResponseData = responseHelper.createTeamResponse(teamDto);
+        return new ResponseEntity<>(teamResponseData, HttpStatus.OK);
     }
 
     @GetMapping("/teams")
-    public ResponseEntity<PageableTeamResponse> getPageableTeams(
+    public ResponseEntity<PageableResponse> getPageableTeams(
             @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
             @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
-        SuccessResponseDTO<PageableDTO> pageableTeamsDto = participantService
-                .getParticipantPage1(page, pageSize, ResourceObjectType.TEAM);
+        ResponseWarningDTO<PageableDTO> pageableTeamsDto = participantService
+                .getParticipantPage(page - 1, pageSize, ResourceObjectType.TEAM);
 
-        //todo: plus warnings
-        PageableTeamResponse teamsSuccessResponse = converterHelper
-                .convert(pageableTeamsDto.getData(), PageableTeamResponse.class);
-        return new ResponseEntity<>(teamsSuccessResponse, HttpStatus.OK);
+        PageableResponse teamsResponse = responseHelper.createPageableTeamResponse(pageableTeamsDto);
+        return new ResponseEntity<>(teamsResponse, HttpStatus.OK);
     }
 
     @PostMapping("/teams")
     public ResponseEntity<?> createTeam(@RequestBody CreateTeamRequest createTeam) {
+        //todo: validation with 2 required
         TeamDTO teamDto = converterHelper.convert(createTeam, TeamDTO.class);
 
         TeamDTO newTeamDto = participantService.createNewTeam(teamDto);
 
-        TeamResponseData teamResponseData = converterHelper.convert(newTeamDto, TeamResponseData.class);
-        return new ResponseEntity<>(new TeamResponse(teamResponseData), HttpStatus.OK);
+        TeamResponse teamResponseData = responseHelper.createTeamResponse(newTeamDto);
+        return new ResponseEntity<>(teamResponseData, HttpStatus.CREATED);
     }
 
 }

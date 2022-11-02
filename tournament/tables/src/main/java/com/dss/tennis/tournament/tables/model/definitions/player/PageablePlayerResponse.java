@@ -24,6 +24,21 @@ public class PageablePlayerResponse implements PageableResponse {
     private Links links;
 
     @Override
+    public void setData(Object data) throws ClassCastException {
+        this.data = (List<PlayerResponseData>) data;
+    }
+
+    @Override
+    public List<Object> getIncluded() {
+        return null;
+    }
+
+    @Override
+    public void setIncluded(List<Object> included) {
+        //No included section
+    }
+
+    @Override
     @JsonIgnore
     public Class getResponseDataClass() {
         return PlayerResponseData.class;

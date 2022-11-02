@@ -1,13 +1,15 @@
 package com.dss.tennis.tournament.tables.converter.v2.request;
 
+import com.dss.tennis.tournament.tables.model.definitions.SimpleResourceObject;
 import com.dss.tennis.tournament.tables.model.definitions.team.CreateTeamRequest;
-import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.TeamRelationships;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,19 +18,19 @@ public class CreateTeamRequestToTeamDtoConverter implements Converter<CreateTeam
     @Override
     public TeamDTO convert(MappingContext<CreateTeamRequest, TeamDTO> context) {
         CreateTeamRequest createTeam = context.getSource();
-        TeamRelationships teamRelationships = createTeam.getRelationships();
+        if (createTeam.getRelationships() == null) return new TeamDTO();
 
-        TeamDTO teamDTO = new TeamDTO();
-        teamDTO.setPlayerOne(
-                PlayerDTO.builder()
-                        .id(teamRelationships.getPlayers().get(0).getId())
-                        .build()
-        );
-        teamDTO.setPlayerTwo(
-                PlayerDTO.builder()
-                        .id(teamRelationships.getPlayers().get(1).getId())
-                        .build()
-        );
-        return teamDTO;
+        List<SimpleResourceObject> players = createTeam.getRelationships().getPlayers();
+        PlayerDTO playerOne =
+                players != null && players.size() > 0 && players.get(0).getId() != null ? new PlayerDTO(players.get(0)
+                        .getId()) : null;
+        PlayerDTO playerTwo =
+                players != null && players.size() == 2 && players.get(1).getId() != null ? new PlayerDTO(players.get(1)
+                        .getId()) : null;
+
+        return TeamDTO.builder()
+                .playerOne(playerOne)
+                .playerTwo(playerTwo)
+                .build();
     }
 }
