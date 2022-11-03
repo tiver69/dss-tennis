@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public abstract class ParticipantHelper<T, D> {
@@ -41,6 +43,11 @@ public abstract class ParticipantHelper<T, D> {
     public abstract ArrayList<Integer> getTournamentPlayerIds(Integer tournamentId);
 
     public abstract List<Integer> getParticipantIdsForEnrolling(Integer tournamentId,
-                                                               List<ResourceObjectDTO> newParticipants,
-                                                               Set<ErrorDataDTO> warnings);
+                                                                List<ResourceObjectDTO> newParticipants,
+                                                                Set<ErrorDataDTO> warnings);
+
+    public Map<Integer, PlayerDTO> getTournamentPlayerDtoMap(Integer tournamentId) {
+        List<PlayerDTO> players = getTournamentPlayerDTOs(tournamentId);
+        return players.stream().collect(Collectors.toMap(PlayerDTO::getId, playerDTO -> playerDTO));
+    }
 }

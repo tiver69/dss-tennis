@@ -5,12 +5,17 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.model.definitions.Links;
-import com.dss.tennis.tournament.tables.model.definitions.Meta;
+import com.dss.tennis.tournament.tables.model.definitions.Meta.CommonMeta;
+import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
 import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.team.PageableTeamResponse;
 import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse;
 import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.TeamResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse;
+import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse.TournamentResponseData;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
@@ -45,6 +50,32 @@ public class ResponseHelper {
         return new TeamResponse(responseData, responseIncluded);
     }
 
+    public TournamentResponse createTournamentResponse(ResponseWarningDTO<TournamentDTO> responseWarning) {
+        TournamentResponse responseData = createTournamentResponse(responseWarning.getData());
+
+        Set<ErrorDataDTO> warningsDto = responseWarning.getWarnings();
+        Set<ErrorData> responseWarnings = warningsDto == null || warningsDto.isEmpty() ? null :
+                warningsDto.stream().map(warningHandler::createErrorData).collect(Collectors.toSet());
+        responseData.setMeta(new CommonMeta(responseWarnings));
+
+        return responseData;
+    }
+
+    public TournamentResponse createTournamentResponse(TournamentDTO tournamentDto) {
+        TournamentResponseData responseData = converterHelper.convert(tournamentDto, TournamentResponseData.class);
+
+        if (tournamentDto.getContests() == null) return new TournamentResponse(null, responseData, null);
+        List<Object> responseIncluded = new ArrayList<>();
+        tournamentDto.getContests().forEach(contest -> {
+            Class<? extends ContestInfoResponseData> responseClass = contest instanceof EliminationContestDTO ?
+                    EliminationContestInfoResponseData.class : ContestInfoResponseData.class;
+            responseIncluded
+                    .add(converterHelper.convert(contest, responseClass, String.valueOf(tournamentDto.getId())));
+        });
+
+        return new TournamentResponse(null, responseData, responseIncluded.isEmpty() ? null : responseIncluded);
+    }
+
     public PageableTeamResponse createPageableTeamResponse(ResponseWarningDTO<PageableDTO> source) {
 
         PageableTeamResponse response = (PageableTeamResponse) createPageableResponse(source,
@@ -73,7 +104,7 @@ public class ResponseHelper {
                             .map(pageItem -> converterHelper.convert(pageItem, response.getResponseDataClass()))
                             .collect(Collectors.toList());
 
-            response.setMeta(Meta.builder().totalPages(source.getData().getTotalPages())
+            response.setMeta(PageableMeta.builder().totalPages(source.getData().getTotalPages())
                     .currentPage(source.getData().getCurrentPage() + 1).warnings(responseWarnings).build());
             response.setData(responseData);
             response.setLinks(convertPageableLinks(source.getData().getTotalPages(), source.getData()

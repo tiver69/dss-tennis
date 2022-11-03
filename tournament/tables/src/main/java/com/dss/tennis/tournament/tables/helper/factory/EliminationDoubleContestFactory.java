@@ -4,12 +4,11 @@ import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
-import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.EliminationContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class EliminationDoubleContestFactory extends EliminationContestFactory {
@@ -51,6 +50,24 @@ public class EliminationDoubleContestFactory extends EliminationContestFactory {
         if (winnerId.equals(parentEliminationContest.getSecondParentContestDto().getWinnerId()))
             return getEliminationContestParticipantFromParent(parentEliminationContest.getSecondParentContestDto());
         return null;
+    }
+
+    @Override
+    public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
+        Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
+        if (contests == null) return null;
+        contests.forEach(contestDTO -> {
+            if (contestDTO instanceof DoubleContestDTO) {
+                TeamDTO teamOne = ((DoubleContestDTO) contestDTO).getTeamOne();
+                TeamDTO teamTwo = ((DoubleContestDTO) contestDTO).getTeamTwo();
+
+                teamOne.setPlayerOne(players.get(teamOne.getPlayerOne().getId()));
+                teamOne.setPlayerTwo(players.get(teamOne.getPlayerTwo().getId()));
+                teamTwo.setPlayerOne(players.get(teamTwo.getPlayerOne().getId()));
+                teamTwo.setPlayerTwo(players.get(teamTwo.getPlayerTwo().getId()));
+            }
+        });
+        return contests;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.dss.tennis.tournament.tables.model.definitions.tournament;
 
 import com.dss.tennis.tournament.tables.model.definitions.Links;
+import com.dss.tennis.tournament.tables.model.definitions.Meta.CommonMeta;
 import com.dss.tennis.tournament.tables.model.definitions.SimpleResourceObject;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.*;
@@ -9,12 +10,12 @@ import lombok.experimental.SuperBuilder;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class TournamentResponse {
-    private TournamentResponseData data;
 
-    public TournamentResponse(TournamentResponseData data) {
-        this.data = data;
-    }
+    private CommonMeta meta;
+    private TournamentResponseData data;
+    private List<Object> included;
 
     @Getter
     @Setter
@@ -24,7 +25,6 @@ public class TournamentResponse {
         private final String type = ResourceObjectType.TOURNAMENT.value;
         private TournamentResponseAttributes attributes;
         private TournamentRelationships relationships;
-        private List<Object> included;
         private Links links;
     }
 

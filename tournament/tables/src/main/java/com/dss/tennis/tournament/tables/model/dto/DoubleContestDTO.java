@@ -25,4 +25,14 @@ public class DoubleContestDTO extends ContestDTO {
     public Integer participantTwoId() {
         return teamTwo.getId();
     }
+
+    @Override
+    public Object getParticipantOne() {
+        return this.getTeamOne();
+    }
+
+    @Override
+    public Object getParticipantTwo() {
+        return this.getTeamTwo();
+    }
 }

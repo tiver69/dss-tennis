@@ -45,7 +45,8 @@ public class TournamentHelper {
         addParticipantsToTournament(tournamentDto, newParticipantIds, false);
     }
 
-    public void addParticipantsToTournament(TournamentDTO tournamentDto, List<Integer> newParticipantIds, boolean shouldCreateScore) {
+    public void addParticipantsToTournament(TournamentDTO tournamentDto, List<Integer> newParticipantIds,
+                                            boolean shouldCreateScore) {
         tournamentFactory.createContestForNewParticipants(tournamentDto, newParticipantIds, shouldCreateScore);
     }
 
@@ -73,6 +74,7 @@ public class TournamentHelper {
 
         return PageableDTO.<TournamentDTO>builder().page(tournaments)
                 .currentPage(pageableRequestParameter.getPageNumber())
+                .totalPages(tournamentsPage.getTotalPages())
                 .pageSize(pageableRequestParameter.getPageSize())
                 .totalPages(tournamentsPage.getTotalPages())
                 .build();
@@ -83,6 +85,13 @@ public class TournamentHelper {
                 new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
 
         return tournamentFactory.populateTournamentDTO(tournament, requestParameters);
+    }
+
+    public TournamentDTO getTournamentDTOExtended(Integer tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->
+                new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
+
+        return tournamentFactory.populateTournamentDtoExtended(tournament);
     }
 
     private StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate) {

@@ -53,15 +53,12 @@ public class DoubleContestDtoToContestResponseDataConverter implements Converter
     private ContestAttributes convertContestAttributes(ContestDTO contestDTO) {
         return ContestAttributes.builder()
                 .techDefeat(convertTechDefeat(contestDTO))
-                .score(convertScore(contestDTO))
+                .score(convertScore(contestDTO)) //todo tech defeat is not part of score
                 .build();
     }
 
     private TechDefeat convertTechDefeat(ContestDTO contestDTO) {
-        if (!contestDTO.isTechDefeat()) return new TechDefeat(false, false);
-        else if (contestDTO.getWinnerId() == null) return new TechDefeat(true, true);
-        else if (contestDTO.getWinnerId().equals(contestDTO.participantOneId())) return new TechDefeat(false, true);
-        return new TechDefeat(true, false);
+        return new TechDefeat(contestDTO.isParticipantOneTechDefeat(), contestDTO.isParticipantTwoTechDefeat());
     }
 
     private ContestAttributesScore convertScore(ContestDTO contestDTO) {

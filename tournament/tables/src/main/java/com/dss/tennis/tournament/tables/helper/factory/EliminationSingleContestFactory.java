@@ -10,6 +10,8 @@ import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class EliminationSingleContestFactory extends EliminationContestFactory {
 
@@ -19,7 +21,8 @@ public class EliminationSingleContestFactory extends EliminationContestFactory {
     @Override
     public Integer createFirstLineEliminationContest(Integer firstParticipantId, Integer secondParticipantId,
                                                      Integer tournamentId, boolean shouldCreateScore) {
-        return contestHelper.createNewSingleContest(firstParticipantId, secondParticipantId, tournamentId, shouldCreateScore)
+        return contestHelper
+                .createNewSingleContest(firstParticipantId, secondParticipantId, tournamentId, shouldCreateScore)
                 .getId();
     }
 
@@ -54,6 +57,21 @@ public class EliminationSingleContestFactory extends EliminationContestFactory {
     @Override
     public Class<? extends ContestDTO> getContestParticipantDtoClass() {
         return SingleContestDTO.class;
+    }
+
+    @Override
+    public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
+        Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
+        if (contests == null) return null;
+        contests.forEach(contestDTO -> {
+            if (contestDTO instanceof SingleContestDTO) {
+                Integer playerOneId = ((SingleContestDTO) contestDTO).getPlayerOne().getId();
+                Integer playerTwoId = ((SingleContestDTO) contestDTO).getPlayerTwo().getId();
+                ((SingleContestDTO) contestDTO).setPlayerOne(players.get(playerOneId));
+                ((SingleContestDTO) contestDTO).setPlayerTwo(players.get(playerTwoId));
+            }
+        });
+        return contests;
     }
 
     @Override

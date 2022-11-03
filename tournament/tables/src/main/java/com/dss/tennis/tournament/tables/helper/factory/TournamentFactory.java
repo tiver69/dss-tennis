@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 @Service
@@ -35,7 +36,8 @@ public class TournamentFactory {
     @Autowired
     private TeamHelper teamHelper;
 
-    public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds, boolean shouldCreateScore) {
+    public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds,
+                                                boolean shouldCreateScore) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
                 .getParticipantType());
         contestFactory.createContestsForTournament(tournamentDto.getId(), newParticipantIds, shouldCreateScore);
@@ -71,6 +73,19 @@ public class TournamentFactory {
                     .getTournamentPlayerDTOs(tournamentDto.getId());
             tournamentDto.setPlayers(players);
         }
+        return tournamentDto;
+    }
+
+    public TournamentDTO populateTournamentDtoExtended(Tournament tournament) {
+        TournamentDTO tournamentDto = populateTournamentDTO(tournament);
+
+        //todo refactor
+        Map<Integer, PlayerDTO> players = getParticipantHelper(tournamentDto.getParticipantType())
+                .getTournamentPlayerDtoMap(tournamentDto.getId());
+        Iterable<ContestDTO> contests = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
+                .getParticipantType()).getContestDTOs(tournamentDto.getId(), players);
+        tournamentDto.setContests(contests);
+
         return tournamentDto;
     }
 

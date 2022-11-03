@@ -2,10 +2,7 @@ package com.dss.tennis.tournament.tables.model.definitions.contest;
 
 import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.SimpleResourceObject;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Data
@@ -14,6 +11,7 @@ public class ContestInfoResponse {
     @Getter
     @Setter
     @SuperBuilder
+    @NoArgsConstructor
     public static class ContestInfoResponseData {
         private int id;
         private String type;

@@ -22,11 +22,16 @@ public class ConverterHelper {
     private ModelMapperFactory modelMapperFactory;
 
     public <S, D> D convert(S source, Class<D> destinationClass) {
-        return convert(source, destinationClass, false);
+        return convert(source, destinationClass, false, null);
     }
 
-    public <S, D> D convert(S source, Class<D> destinationClass, boolean includeSequential) {
-        Object destinationObject = modelMapperFactory.getCustomizedModelMapper().map(source, destinationClass);
+    public <S, D> D convert(S source, Class<D> destinationClass, String extraString) {
+        return convert(source, destinationClass, false, extraString);
+    }
+
+    public <S, D> D convert(S source, Class<D> destinationClass, boolean includeSequential, String extraString) {
+        Object destinationObject = modelMapperFactory.getCustomizedModelMapper(extraString)
+                .map(source, destinationClass);
         if (includeSequential) {
             addSequential(destinationObject);
         }
@@ -35,7 +40,7 @@ public class ConverterHelper {
 
     public <S, D> List<D> convert(Collection<S> sourceIterable, Class<D> destinationClass, boolean includeSequential) {
         List<D> destinationList = sourceIterable.stream()
-                .map(source -> convert(source, destinationClass, includeSequential))
+                .map(source -> convert(source, destinationClass, includeSequential, null))
                 .collect(Collectors.toList());
         if (includeSequential && AbstractSequentialDTO.class.isAssignableFrom(destinationClass))
             addSequentialToList((List<? extends AbstractSequentialDTO>) destinationList);

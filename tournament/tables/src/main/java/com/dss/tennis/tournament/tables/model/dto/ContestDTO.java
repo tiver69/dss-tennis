@@ -20,4 +20,18 @@ public abstract class ContestDTO {
     public abstract Integer participantOneId();
 
     public abstract Integer participantTwoId();
+
+    public abstract Object getParticipantOne();
+
+    public abstract Object getParticipantTwo();
+
+    public boolean isParticipantOneTechDefeat() {
+        return (techDefeat && winnerId != null && winnerId
+                .equals(participantTwoId())) || (techDefeat && winnerId == null);
+    }
+
+    public boolean isParticipantTwoTechDefeat() {
+        return (techDefeat && winnerId != null && winnerId
+                .equals(participantOneId())) || (techDefeat && winnerId == null);
+    }
 }

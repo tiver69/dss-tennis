@@ -5,19 +5,23 @@ import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoAttributes;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.TechDefeat;
+import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
 import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
+import lombok.AllArgsConstructor;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 import java.util.Map;
 
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.CONTEST;
 import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.CONTEST_INFO;
 
+@AllArgsConstructor
 public class SingleContestDtoToContestInfoResponseDataConverter implements Converter<SingleContestDTO,
         ContestInfoResponseData> {
+
+    private String extraTournamentId;
 
     @Override
     public ContestInfoResponseData convert(MappingContext<SingleContestDTO, ContestInfoResponseData> mappingContext) {
@@ -28,7 +32,7 @@ public class SingleContestDtoToContestInfoResponseDataConverter implements Conve
                 .type(CONTEST_INFO.value)
                 .attributes(convertContestInfoAttributes(contest))
                 .links(Links.builder()
-                        .self(String.format(CONTEST.selfLinkFormat, 1, contest.getId())) //todo tournamentId not here
+                        .self(String.format(CONTEST_INFO.selfLinkFormat, extraTournamentId, contest.getId()))
                         .build())
                 .build();
     }
@@ -37,7 +41,8 @@ public class SingleContestDtoToContestInfoResponseDataConverter implements Conve
     private ContestInfoAttributes convertContestInfoAttributes(SingleContestDTO contestDto) {
         ContestInfoAttributes.ContestInfoAttributesBuilder builder = ContestInfoAttributes.builder()
                 .participantOne(convertPlayerNameString(contestDto.getPlayerOne()))
-                .participantTwo(convertPlayerNameString(contestDto.getPlayerTwo()));
+                .participantTwo(convertPlayerNameString(contestDto.getPlayerTwo()))
+                .techDefeat(convertTechDefeat(contestDto));
 
         if (contestDto.getScoreDto() != null) {
             Map<SetType, SetScoreDTO> sets = contestDto.getScoreDto().getSets();
@@ -48,8 +53,7 @@ public class SingleContestDtoToContestInfoResponseDataConverter implements Conve
             builder
                     .mainScore(setOneScore + " " + setTwoScore + " " + setThreeScore)
                     .tieBreak(sets.get(SetType.TIE_BREAK).getParticipantOneScore() + ":" + sets.get(SetType.TIE_BREAK)
-                            .getParticipantTwoScore())
-                    .techDefeat(new TechDefeat());
+                            .getParticipantTwoScore());
         }
 
         return builder.build();
@@ -61,5 +65,9 @@ public class SingleContestDtoToContestInfoResponseDataConverter implements Conve
 
     private String convertSetScoreString(SetScoreDTO setScore) {
         return String.format("%d:%d", setScore.getParticipantOneScore(), setScore.getParticipantTwoScore());
+    }
+
+    private TechDefeat convertTechDefeat(ContestDTO contestDTO) {
+        return new TechDefeat(contestDTO.isParticipantOneTechDefeat(), contestDTO.isParticipantTwoTechDefeat());
     }
 }

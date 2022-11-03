@@ -34,18 +34,22 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
     protected abstract ContestDTO convertEliminationContestToBase(EliminationContestDTO eliminationContest);
 
     @Override
-    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds, boolean shouldCreateScore) {
+    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds,
+                                            boolean shouldCreateScore) {
         Integer currentFinalContestId = getFinalEliminationContestId(tournamentId);
         List<Integer> firstLineEliminationContestIds = new ArrayList<>();
         for (int i = 0; i < newPlayerIds.size(); i += 2)
             firstLineEliminationContestIds
-                    .add(createFirstLineEliminationContest(newPlayerIds.get(i), newPlayerIds.get(i + 1), tournamentId, shouldCreateScore));
+                    .add(createFirstLineEliminationContest(newPlayerIds.get(i), newPlayerIds
+                            .get(i + 1), tournamentId, shouldCreateScore));
 
         Integer newFinalContestId = createContestsForTournamentRecursively(firstLineEliminationContestIds,
                 tournamentId, shouldCreateScore);
 
         if (currentFinalContestId != null && newFinalContestId != null)
-            contestHelper.createNewEliminationContest(currentFinalContestId, newFinalContestId, tournamentId, shouldCreateScore);
+            contestHelper
+                    .createNewEliminationContest(currentFinalContestId, newFinalContestId, tournamentId,
+                            shouldCreateScore);
     }
 
     @Override
@@ -56,12 +60,14 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
     @Override
     public void removeTournamentContests(int tournamentId) {
         EliminationContestDTO contests = getContestDTOs(tournamentId);
+        if (contests == null) return;
         removeEliminationContestDtoRecursive(contests);
     }
 
     @Override
     public EliminationContestDTO getContestDTOs(Integer tournamentId) {
         List<Contest> contests = contestHelper.getTournamentContests(tournamentId);
+        if (contests == null || contests.isEmpty()) return null;
         Set<Integer> preFinalContestIds = contests.stream().filter(EliminationContest.class::isInstance)
                 .flatMap(contest -> {
                     EliminationContest eliminationContest = (EliminationContest) contest;
@@ -154,7 +160,8 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
         for (int i = 0; i < firstLineEliminationContestIds.size(); i += 2) {
             nextLineEliminationContestIds
                     .add(contestHelper.createNewEliminationContest(firstLineEliminationContestIds
-                            .get(i), firstLineEliminationContestIds.get(i + 1), tournamentId, shouldCreateScore).getId());
+                            .get(i), firstLineEliminationContestIds.get(i + 1), tournamentId, shouldCreateScore)
+                            .getId());
         }
         return createContestsForTournamentRecursively(nextLineEliminationContestIds, tournamentId, shouldCreateScore);
     }

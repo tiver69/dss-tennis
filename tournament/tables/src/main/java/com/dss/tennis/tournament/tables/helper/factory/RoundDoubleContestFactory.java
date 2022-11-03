@@ -6,10 +6,13 @@ import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
+import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
+import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoundDoubleContestFactory extends RoundContestFactory {
@@ -35,6 +38,20 @@ public class RoundDoubleContestFactory extends RoundContestFactory {
                     .updateDoubleContestTechDefeatForTeamRemoving(teamId, contestDTO));
         else
             removeContests(() -> contestRepository.findByTeamIdAndDoubleTournamentId(teamId, tournamentId));
+    }
+
+    @Override
+    public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
+        Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
+        contests.forEach(contest -> {
+            TeamDTO teamOne = ((DoubleContestDTO) contest).getTeamOne();
+            teamOne.setPlayerOne(players.get(teamOne.getPlayerOne().getId()));
+            teamOne.setPlayerTwo(players.get(teamOne.getPlayerTwo().getId()));
+            TeamDTO teamTwo = ((DoubleContestDTO) contest).getTeamTwo();
+            teamTwo.setPlayerOne(players.get(teamTwo.getPlayerOne().getId()));
+            teamTwo.setPlayerTwo(players.get(teamTwo.getPlayerTwo().getId()));
+        });
+        return contests;
     }
 
     @Override

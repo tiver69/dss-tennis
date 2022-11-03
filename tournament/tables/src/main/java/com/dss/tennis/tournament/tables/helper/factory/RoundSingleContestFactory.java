@@ -5,11 +5,13 @@ import com.dss.tennis.tournament.tables.model.db.v1.Player;
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
+import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +21,8 @@ public class RoundSingleContestFactory extends RoundContestFactory {
     private PlayerHelper playerHelper;
 
     @Override
-    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds, boolean shouldCreateScore) {
+    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds,
+                                            boolean shouldCreateScore) {
         List<Integer> currentPlayerIds = playerHelper.getTournamentParticipants(tournamentId).stream()
                 .map(Player::getId).collect(Collectors.toList());
         for (Integer newPlayerId : newPlayerIds) {
@@ -36,6 +39,18 @@ public class RoundSingleContestFactory extends RoundContestFactory {
                     .updateSingleContestTechDefeatForPlayerRemoving(playerId, contestDTO));
         else
             removeContests(() -> contestRepository.findByPlayerIdAndSingleTournamentId(playerId, tournamentId));
+    }
+
+    @Override
+    public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
+        Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
+        contests.forEach(contest -> {
+            ((SingleContestDTO) contest)
+                    .setPlayerOne(players.get(contest.participantOneId()));
+            ((SingleContestDTO) contest)
+                    .setPlayerTwo(players.get(contest.participantTwoId()));
+        });
+        return contests;
     }
 
     @Override

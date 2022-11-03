@@ -9,15 +9,22 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoRes
 import com.dss.tennis.tournament.tables.model.definitions.contest.TechDefeat;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.EliminationContestDTO;
+import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
+import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
+import lombok.AllArgsConstructor;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 import java.util.Map;
 
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.*;
+import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.CONTEST_INFO;
+import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.ELIMINATION_CONTEST_INFO;
 
+@AllArgsConstructor
 public class EliminationContestDtoToEliminationContestInfoResponseDataConverter implements Converter<EliminationContestDTO, EliminationContestInfoResponseData> {
+
+    private String extraTournamentId;
 
     @Override
     public EliminationContestInfoResponseData convert(MappingContext<EliminationContestDTO,
@@ -30,16 +37,18 @@ public class EliminationContestDtoToEliminationContestInfoResponseDataConverter 
                 .attributes(convertContestInfoAttributes(eliminationContest))
                 .relationships(convertEliminationContesInfoRelationships(eliminationContest))
                 .links(Links.builder()
-                        .self(String.format(CONTEST.selfLinkFormat, 1, eliminationContest
-                                .getId())) //todo tournamentId not here
+                        .self(String.format(ELIMINATION_CONTEST_INFO.selfLinkFormat, extraTournamentId, eliminationContest.getId()))
                         .build())
                 .build();
     }
 
     private ContestInfoAttributes convertContestInfoAttributes(EliminationContestDTO eliminationContestDto) {
+        if (eliminationContestDto.participantOneId() == null && eliminationContestDto.participantTwoId() == null)
+            return null;
+
         ContestInfoAttributes.ContestInfoAttributesBuilder builder = ContestInfoAttributes.builder()
-                .participantOne("TODO")
-                .participantTwo("TODO");
+                .participantOne(convertParticipantNameString(eliminationContestDto.getParticipantOne()))
+                .participantTwo(convertParticipantNameString(eliminationContestDto.getParticipantTwo()));
 
         if (eliminationContestDto.getScoreDto() != null) {
             Map<SetType, SetScoreDTO> sets = eliminationContestDto.getScoreDto().getSets();
@@ -55,6 +64,24 @@ public class EliminationContestDtoToEliminationContestInfoResponseDataConverter 
         }
 
         return builder.build();
+    }
+
+    private String convertParticipantNameString(Object participant) {
+        if (participant != null) {
+            return participant instanceof PlayerDTO ? convertPlayerNameString((PlayerDTO) participant) :
+                    convertTeamNameString((TeamDTO) participant);
+        }
+        return null;
+    }
+
+    private String convertPlayerNameString(PlayerDTO player) {
+        return String.format("%s %s", player.getFirstName(), player.getLastName());
+    }
+
+    private String convertTeamNameString(TeamDTO team) {
+        return String
+                .format("%s %s - %s %s", team.getPlayerOne().getFirstName(), team.getPlayerOne().getLastName(), team
+                        .getPlayerTwo().getFirstName(), team.getPlayerTwo().getLastName());
     }
 
     private String convertSetScoreString(SetScoreDTO setScore) {

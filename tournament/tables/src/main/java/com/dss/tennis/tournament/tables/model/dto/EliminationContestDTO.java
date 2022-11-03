@@ -23,6 +23,24 @@ public class EliminationContestDTO extends ContestDTO implements Iterable<Contes
     ContestDTO secondParentContestDto;
 
     @Override
+    public Object getParticipantOne() {
+        if (firstParentContestDto.participantOneId().equals(firstParentContestDto.getWinnerId()))
+            return firstParentContestDto.getParticipantOne();
+        if (firstParentContestDto.participantTwoId().equals(firstParentContestDto.getWinnerId()))
+            return firstParentContestDto.getParticipantTwo();
+        return null;
+    }
+
+    @Override
+    public Object getParticipantTwo() {
+        if (secondParentContestDto.participantOneId().equals(secondParentContestDto.getWinnerId()))
+            return secondParentContestDto.getParticipantOne();
+        if (secondParentContestDto.participantTwoId().equals(secondParentContestDto.getWinnerId()))
+            secondParentContestDto.getParticipantTwo();
+        return null;
+    }
+
+    @Override
     public Integer participantOneId() {
         return firstParentContestDto.getWinnerId();
     }

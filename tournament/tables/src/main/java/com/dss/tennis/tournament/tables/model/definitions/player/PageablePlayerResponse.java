@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.model.definitions.player;
 
 import com.dss.tennis.tournament.tables.model.definitions.Links;
-import com.dss.tennis.tournament.tables.model.definitions.Meta;
+import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
 import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 public class PageablePlayerResponse implements PageableResponse {
 
-    private Meta meta;
+    private PageableMeta meta;
     private List<PlayerResponseData> data;
     private Links links;
 

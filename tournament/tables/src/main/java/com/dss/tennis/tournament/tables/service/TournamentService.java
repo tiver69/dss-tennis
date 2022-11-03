@@ -102,7 +102,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public SuccessResponseDTO<TournamentDTO> addParticipantsToTournamentWithScore(Integer tournamentId,
+    public ResponseWarningDTO<TournamentDTO> addParticipantsToTournamentWithScore(Integer tournamentId,
                                                                                   List<ResourceObjectDTO> newParticipantsDto) {
         TournamentDTO tournamentDto = tournamentHelper.getTournamentDto(tournamentId, BASIC);
 
@@ -114,7 +114,7 @@ public class TournamentService {
                 .validateTournamentParticipantQuantity(tournamentDto, newParticipantIds.size());
 
         tournamentHelper.addParticipantsToTournament(tournamentDto, newParticipantIds, true);
-        return new SuccessResponseDTO<>(tournamentHelper.getTournamentDto(tournamentId), warnings);
+        return new ResponseWarningDTO<>(tournamentHelper.getTournamentDTOExtended(tournamentId), warnings);
     }
 
     public ContestDTO getTournamentContest(Integer contestId, Integer tournamentId) {
@@ -187,11 +187,15 @@ public class TournamentService {
         return contestHelper.getTournamentContestDTO(contestId, tournamentDTO, true);
     }
 
+    public TournamentDTO getTournament(Integer tournamentId) {
+        return tournamentHelper.getTournamentDTOExtended(tournamentId);
+    }
+
     public TournamentDTO getTournament(Integer tournamentId, RequestParameter requestParameters) {
         return tournamentHelper.getTournamentDto(tournamentId, requestParameters);
     }
 
-    public SuccessResponseDTO<PageableDTO<TournamentDTO>> getTournamentPage(int page, byte pageSize) {
+    public ResponseWarningDTO<PageableDTO> getTournamentPage(int page, byte pageSize) {
         Set<ErrorDataDTO> warnings = new HashSet<>();
         Pageable pageableRequestParameter = pageableValidator
                 .validatePageableRequest(page, pageSize, warnings, ResourceObjectType.TOURNAMENT);
@@ -204,7 +208,7 @@ public class TournamentService {
             tournamentsPage = tournamentHelper.getTournamentsPage(newPageableRequestParameter);
         }
 
-        return new SuccessResponseDTO<>(tournamentsPage, warnings);
+        return new ResponseWarningDTO<>(tournamentsPage, warnings);
     }
 
     public TournamentDTO removeParticipantFromTournament(Integer participantId, Integer tournamentId,
@@ -214,7 +218,7 @@ public class TournamentService {
         participantValidator.validateParticipantForRemoving(participantId, tournamentId);
 
         tournamentHelper.removeParticipantFromTournament(participantId, tournamentDto, techDefeat);
-        return tournamentHelper.getTournamentDto(tournamentId);
+        return tournamentHelper.getTournamentDTOExtended(tournamentId);
     }
 
     public void removeTournament(Integer tournamentId) {

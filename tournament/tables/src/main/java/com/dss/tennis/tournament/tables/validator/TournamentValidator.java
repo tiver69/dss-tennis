@@ -38,8 +38,8 @@ public class TournamentValidator {
         if (!isTournamentWithContests) return Set.of();
 
         Set<ErrorDataDTO> errors = new HashSet<>();
-        if (patch.getParticipantType() != null) errors.add(new ErrorDataDTO(PARTICIPANT_TYPE_UPDATE_FORBIDDEN));
-        if (patch.getTournamentType() != null) errors.add(new ErrorDataDTO(TOURNAMENT_TYPE_UPDATE_FORBIDDEN));
+        if (patch.getParticipantType().isPresent()) errors.add(new ErrorDataDTO(PARTICIPANT_TYPE_UPDATE_FORBIDDEN));
+        if (patch.getTournamentType().isPresent()) errors.add(new ErrorDataDTO(TOURNAMENT_TYPE_UPDATE_FORBIDDEN));
         return errors;
     }
 
