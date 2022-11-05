@@ -25,8 +25,8 @@ import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -161,11 +161,11 @@ public class TournamentService {
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
         TournamentDTO tournamentDTO = tournamentHelper.getTournamentDto(tournamentId, BASIC);
-        List<SetScore> currentScore = scoreHelper.getContestSetScores(contestId);
-        contestValidator.validateContestUpdate(contestId, tournamentDTO);
         ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
-        ScoreDTO currentScoreDTO = scoreHelper.mapSetScoreToDtoWithTechDefeatDetails(currentScore, contest);
+        contestValidator.validateContestUpdate(scorePatchDto, contest, tournamentDTO);
 
+        List<SetScore> currentScore = scoreHelper.getContestSetScores(contestId);
+        ScoreDTO currentScoreDTO = scoreHelper.mapSetScoreToDtoWithTechDefeatDetails(currentScore, contest);
         ScoreDTO patchedScoreDTO = scoreHelper.applyPatch(currentScoreDTO, scorePatchDto);
         errorSet = scoreValidator.validateUpdateScore(patchedScoreDTO);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);

@@ -9,7 +9,6 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestAttribu
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestRelationships;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.TechDefeat;
-import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
 import com.dss.tennis.tournament.tables.model.dto.SingleContestDTO;
@@ -17,10 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.dss.tennis.tournament.tables.model.db.v2.SetType.*;
@@ -33,7 +30,7 @@ import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.
 public class SingleContestDtoToContestResponseDataConverter implements Converter<SingleContestDTO,
         ContestResponseData> {
 
-    private ModelMapper modelMapper;
+    private String extraTournamentId;
 
     @Override
     public ContestResponseData convert(MappingContext<SingleContestDTO, ContestResponseData> context) {
@@ -43,9 +40,8 @@ public class SingleContestDtoToContestResponseDataConverter implements Converter
                 .id(contestDTO.getId())
                 .attributes(convertContestAttributes(contestDTO))
                 .relationships(convertContestRelationships(contestDTO))
-                .included(convertContestIncluded(contestDTO))
                 .links(Links.builder()
-                        .self(String.format(CONTEST.selfLinkFormat, 1, contestDTO.getId())) //todo: tournamentID here
+                        .self(String.format(CONTEST.selfLinkFormat, extraTournamentId, contestDTO.getId()))
                         .build())
                 .build();
     }
@@ -80,16 +76,11 @@ public class SingleContestDtoToContestResponseDataConverter implements Converter
         SimpleResourceObject winner = contestDto.getWinnerId() == null ? null : new SimpleResourceObject(contestDto
                 .getWinnerId(), PLAYER.value);
         return ContestRelationships.builder()
-                .participantOne(new SimpleResourceObject(contestDto.participantOneId(), PLAYER.value))
-                .participantTwo(new SimpleResourceObject(contestDto.participantTwoId(), PLAYER.value))
+                .participantOne(contestDto.participantOneId() == null ? null : new SimpleResourceObject(contestDto
+                        .participantOneId(), PLAYER.value))
+                .participantTwo(contestDto.participantTwoId() == null ? null : new SimpleResourceObject(contestDto
+                        .participantTwoId(), PLAYER.value))
                 .winner(winner)
                 .build();
-    }
-
-    private List<Object> convertContestIncluded(SingleContestDTO contestDto) {
-        return List.of(
-                modelMapper.map(contestDto.getPlayerOne(), PlayerResponseData.class),
-                modelMapper.map(contestDto.getPlayerTwo(), PlayerResponseData.class)
-        );
     }
 }

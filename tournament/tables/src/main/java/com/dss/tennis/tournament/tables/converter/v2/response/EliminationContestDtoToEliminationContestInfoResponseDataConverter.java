@@ -37,7 +37,9 @@ public class EliminationContestDtoToEliminationContestInfoResponseDataConverter 
                 .attributes(convertContestInfoAttributes(eliminationContest))
                 .relationships(convertEliminationContesInfoRelationships(eliminationContest))
                 .links(Links.builder()
-                        .self(String.format(ELIMINATION_CONTEST_INFO.selfLinkFormat, extraTournamentId, eliminationContest.getId()))
+                        .self(String
+                                .format(ELIMINATION_CONTEST_INFO.selfLinkFormat, extraTournamentId, eliminationContest
+                                        .getId()))
                         .build())
                 .build();
     }
@@ -50,7 +52,8 @@ public class EliminationContestDtoToEliminationContestInfoResponseDataConverter 
                 .participantOne(convertParticipantNameString(eliminationContestDto.getParticipantOne()))
                 .participantTwo(convertParticipantNameString(eliminationContestDto.getParticipantTwo()));
 
-        if (eliminationContestDto.getScoreDto() != null) {
+        if (eliminationContestDto.getScoreDto() != null && eliminationContestDto
+                .participantOneId() != null && eliminationContestDto.participantTwoId() != null) {
             Map<SetType, SetScoreDTO> sets = eliminationContestDto.getScoreDto().getSets();
             String setOneScore = convertSetScoreString(sets.get(SetType.SET_ONE));
             String setTwoScore = convertSetScoreString(sets.get(SetType.SET_TWO));
@@ -60,7 +63,8 @@ public class EliminationContestDtoToEliminationContestInfoResponseDataConverter 
                     .mainScore(setOneScore + " " + setTwoScore + " " + setThreeScore)
                     .tieBreak(sets.get(SetType.TIE_BREAK).getParticipantOneScore() + ":" + sets.get(SetType.TIE_BREAK)
                             .getParticipantTwoScore())
-                    .techDefeat(new TechDefeat());
+                    .techDefeat(new TechDefeat(eliminationContestDto.isParticipantOneTechDefeat(), eliminationContestDto
+                            .isParticipantTwoTechDefeat()));
         }
 
         return builder.build();

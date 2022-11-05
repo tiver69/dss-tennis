@@ -39,9 +39,9 @@ public interface ContestRepository extends CrudRepository<Contest, Integer> {
     @Query("SELECT dc FROM DoubleContest dc WHERE (dc.teamOne.id = ?1 OR dc.teamTwo.id = ?1) AND dc.tournamentId = ?2")
     List<Contest> findByTeamIdAndDoubleTournamentId(Integer teamId, Integer tournamentId);
 
-    @RepositoryLogRecord(method = QueryMethod.GET)
+    @RepositoryLogRecord(method = QueryMethod.IS_QUERY)
 //    SELECT * From set_score where contest_id in (SELECT contest_id from elimination_contest ec where ec.first_parent_contest_id = 285 OR ec.second_parent_contest_id = 285)
-    @Query("SELECT c.techDefeat FROM Contest c WHERE c.id = (SELECT ec.id FROM EliminationContest ec WHERE ec.firstParentContestId = ?1 OR ec.secondParentContestId = ?1)")
+    @Query("SELECT CASE WHEN count(c) = 1 AND c.techDefeat = 1 THEN true ELSE false END FROM Contest c WHERE c.id = (SELECT ec.id FROM EliminationContest ec WHERE ec.firstParentContestId = ?1 OR ec.secondParentContestId = ?1)")
     boolean isEliminationContestChildTechDefeat(Integer contestId);
 
     @RepositoryLogRecord(method = QueryMethod.GET, resultType = SINGLE_RECORD)

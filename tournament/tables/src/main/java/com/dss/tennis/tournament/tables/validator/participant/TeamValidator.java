@@ -69,14 +69,10 @@ public class TeamValidator extends ParticipantValidator<Team> {
         int playerOneId = teamDto.getPlayerOne().getId();
         int playerTwoId = teamDto.getPlayerTwo().getId();
         if (playerHelper.isParticipantNotExist(playerOneId)) {
-            ErrorDataDTO error = new ErrorDataDTO(PLAYER_NOT_FOUND, String.valueOf(playerOneId));
-            error.setPointer("/relationships/players[0]/id"); //todo: refactor
-            detailedErrorData.add(error);
+            detailedErrorData.add(new ErrorDataDTO(TEAM_PLAYER_NOT_FOUND, String.valueOf(playerOneId),(byte)0));
         }
         if (playerHelper.isParticipantNotExist(playerTwoId)) {
-            ErrorDataDTO error = new ErrorDataDTO(PLAYER_NOT_FOUND, String.valueOf(playerTwoId));
-            error.setPointer("/relationships/players[1]/id");
-            detailedErrorData.add(error);
+            detailedErrorData.add(new ErrorDataDTO(TEAM_PLAYER_NOT_FOUND, String.valueOf(playerTwoId),(byte)1));
         }
         if (playerOneId == playerTwoId)
             detailedErrorData.add(new ErrorDataDTO(TEAM_PLAYER_DUPLICATION, String.valueOf(playerTwoId)));

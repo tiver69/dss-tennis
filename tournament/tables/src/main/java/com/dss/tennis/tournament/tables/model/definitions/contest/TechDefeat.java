@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TechDefeat {
-    private boolean participantOne;
-    private boolean participantTwo;
+    private Boolean participantOne;
+    private Boolean participantTwo;
 }

@@ -41,15 +41,21 @@ public abstract class RoundContestFactory implements AbstractContestFactory {
     @Override
     public List<ContestDTO> getContestDTOs(Integer tournamentId) {
         List<Contest> contests = contestHelper.getTournamentContests(tournamentId);
+        //todo deal why setscore not populated immediately after enroll call
         return contests.stream()
                 .map(contest -> converterHelper.convert(contest, getContestParticipantDtoClass()))
+                .peek(contest -> {
+                    if (contest.getScoreDto().getSets() == null) {
+                        contestHelper.populateSetScores(contest);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public ContestDTO getBasicContestDTO(Integer contestId, Integer tournamentId) {
         Contest contest = contestRepository.findByIdAndTournamentId(contestId, tournamentId)
-                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND));
+                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND, contestId));
         return converterHelper.convert(Hibernate.unproxy(contest), getContestParticipantDtoClass());
     }
 

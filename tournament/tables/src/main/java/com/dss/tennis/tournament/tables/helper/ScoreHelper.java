@@ -1,6 +1,5 @@
 package com.dss.tennis.tournament.tables.helper;
 
-import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import com.dss.tennis.tournament.tables.model.db.v2.SetType;
 import com.dss.tennis.tournament.tables.model.dto.*;
@@ -31,8 +30,9 @@ public class ScoreHelper {
         return scoreRepository.findByContestId(contestId);
     }
 
-    public List<SetScore> getEliminationContestChildSetScores(Integer contestId) {
-        return scoreRepository.findChildByEliminationContestId(contestId);
+    public ScoreDTO getEliminationContestChildSetScores(Integer contestId) {
+        List<SetScore> setScores = scoreRepository.findChildByEliminationContestId(contestId);
+        return mapSetScoreToDto(setScores);
     }
 
     public ScoreDTO mapSetScoreToDto(List<SetScore> sets) {
@@ -41,7 +41,7 @@ public class ScoreHelper {
             scoreSets.put(set.getSetType(), new SetScoreDTO(set.getId(), set.getParticipantOne(), set
                     .getParticipantTwo()));
         });
-        return new ScoreDTO(null, scoreSets);
+        return new ScoreDTO(null, scoreSets.isEmpty() ? null : scoreSets);
     }
 
     public ScoreDTO mapSetScoreToDtoWithTechDefeatDetails(List<SetScore> sets, ContestDTO contest) {
@@ -50,10 +50,8 @@ public class ScoreHelper {
             scoreSets.put(set.getSetType(), new SetScoreDTO(set.getId(), set.getParticipantOne(), set
                     .getParticipantTwo()));
         });
-        TechDefeatDTO techDefeatDTO = new TechDefeatDTO(
-                contest.isTechDefeat() && contest.getWinnerId().equals(contest.participantTwoId()),
-                contest.isTechDefeat() && contest.getWinnerId().equals(contest.participantOneId())
-        );
+        TechDefeatDTO techDefeatDTO = new TechDefeatDTO(contest.isParticipantOneTechDefeat(), contest
+                .isParticipantTwoTechDefeat());
         return new ScoreDTO(techDefeatDTO, scoreSets);
     }
 
@@ -212,7 +210,7 @@ public class ScoreHelper {
 
     private SetScore mapSetScore(SetScoreDTO setScore, SetType setType, Integer contestId) {
         return SetScore.builder()
-                .contest(Contest.builder().id(contestId).build())
+                .contestId(contestId)
                 .participantOne(setScore.getParticipantOneScore())
                 .participantTwo(setScore.getParticipantTwoScore())
                 .setType(setType)
@@ -221,7 +219,7 @@ public class ScoreHelper {
 
     private SetScore mapEmptySetScore(SetType setType, Integer contestId) {
         return SetScore.builder()
-                .contest(Contest.builder().id(contestId).build())
+                .contestId(contestId)
                 .participantOne((byte) 0)
                 .participantTwo((byte) 0)
                 .setType(setType)

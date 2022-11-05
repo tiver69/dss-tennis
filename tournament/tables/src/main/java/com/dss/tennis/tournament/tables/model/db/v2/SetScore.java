@@ -17,7 +17,7 @@ public class SetScore {
     private Byte participantOne;
     private Byte participantTwo;
     private TieBreak tieBreak;
-    private Contest contest;
+    private Integer contestId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,14 +71,14 @@ public class SetScore {
         this.tieBreak = tieBreak;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contest_id")
-    public Contest getContest() {
-        return contest;
+    @Basic
+    @Column(name = "contest_id", nullable = false)
+    public Integer getContestId() {
+        return contestId;
     }
 
-    public void setContest(Contest contest) {
-        this.contest = contest;
+    public void setContestId(Integer contestId) {
+        this.contestId = contestId;
     }
 
     @Override

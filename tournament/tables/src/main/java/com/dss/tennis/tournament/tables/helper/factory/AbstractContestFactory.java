@@ -18,6 +18,8 @@ public interface AbstractContestFactory {
 
     ContestDTO getBasicContestDTO(Integer contestId, Integer tournamentId);
 
+    ContestDTO getContestDTO(Integer contestId, Integer tournamentId);
+
     Iterable<ContestDTO> getContestDTOs(Integer tournamentId);
 
     Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players);

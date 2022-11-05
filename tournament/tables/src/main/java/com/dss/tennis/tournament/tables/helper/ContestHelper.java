@@ -27,13 +27,14 @@ public class ContestHelper {
     @Autowired
     private TournamentFactory tournamentFactory;
 
+    public void populateSetScores(ContestDTO contestDto) {
+        ScoreDTO scoreDto = scoreHelper.getContestScoreDto(contestDto.getId());
+        //todo tech defeat is null here and its bad
+        contestDto.getScoreDto().setSets(scoreDto.getSets());
+    }
+
     public ContestDTO getTournamentContestDTO(Integer contestId, TournamentDTO tournament, boolean includeScore) {
-        ContestDTO contestDto = tournamentFactory.getTournamentContestDTO(contestId, tournament);
-        if (includeScore) {
-            ScoreDTO scoreDto = scoreHelper.getContestScoreDto(contestId);
-            contestDto.setScoreDto(scoreDto);
-        }
-        return contestDto;
+        return tournamentFactory.getTournamentContestDTO(contestId, tournament);
     }
 
     public List<Contest> getTournamentContests(Integer tournamentId) {
@@ -114,7 +115,8 @@ public class ContestHelper {
         if (scoreDto.getTechDefeat().isTechDefeat()) {
             updateContestTechDefeat(scoreDto.getTechDefeat(), contestDto);
         } else {
-            Integer winnerId = scoreHelper.getScoreWinnerIdFunctionWithCreatedScore(scoreDto.getSets()).apply(contestDto);
+            Integer winnerId = scoreHelper.getScoreWinnerIdFunctionWithCreatedScore(scoreDto.getSets())
+                    .apply(contestDto);
             contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
         }
     }
@@ -124,7 +126,7 @@ public class ContestHelper {
             Integer winnerId = contestDto.getPlayerOne().getId() == playerId ? contestDto.getPlayerTwo()
                     .getId() : contestDto.getPlayerOne().getId();
             contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-        } else if (contestDto.getWinnerId().equals(playerId)) {
+        } else if (playerId.equals(contestDto.getWinnerId())) {
             contestRepository.updateTechDefeatByContestId(null, true, contestDto.getId());
         }
     }
@@ -134,7 +136,7 @@ public class ContestHelper {
             Integer winnerId = contestDto.getTeamOne().getId().equals(teamId) ? contestDto.getTeamTwo()
                     .getId() : contestDto.getTeamOne().getId();
             contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-        } else if (contestDto.getWinnerId().equals(teamId)) {
+        } else if (teamId.equals(contestDto.getWinnerId())) {
             contestRepository.updateTechDefeatByContestId(null, true, contestDto.getId());
         }
     }

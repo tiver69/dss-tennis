@@ -43,7 +43,7 @@ public class ScoreValidator {
         Set<ErrorDataDTO> errors = new HashSet<>();
 
         if (scorePatchDto.getTechDefeat() == null && scorePatchDto.getSets() == null) {
-            errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_ATTRIBUTES_EMPTY).build());
+            errors.add(ErrorDataDTO.builder().errorConstant(CONTEST_UPDATE_ATTRIBUTES_EMPTY).build());
             return errors;
         }
 
@@ -118,6 +118,7 @@ public class ScoreValidator {
     }
 
     private Set<ErrorDataDTO> validateSetScoreLimit(Byte participantOne, Byte participantTwo, String type) {
+        //todo determine rules for tie break score
         if (participantOne != null && participantTwo != null && !scoreHelper
                 .isSetScoreValid(participantOne, participantTwo))
             return Set.of(ErrorDataDTO.builder().errorConstant(GAME_LIMIT_EXCEEDED).pointer(type)

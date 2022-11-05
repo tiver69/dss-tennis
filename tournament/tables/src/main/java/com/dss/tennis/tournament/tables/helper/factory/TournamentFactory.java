@@ -97,7 +97,7 @@ public class TournamentFactory {
     public ContestDTO getTournamentContestDTO(Integer contestId, TournamentDTO tournamentDTO) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDTO.getTournamentType(), tournamentDTO
                 .getParticipantType());
-        return contestFactory.getBasicContestDTO(contestId, tournamentDTO.getId());
+        return contestFactory.getContestDTO(contestId, tournamentDTO.getId());
     }
 
     private AbstractContestFactory getContestFactory(TournamentType type, ParticipantType participantType) {

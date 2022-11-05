@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class UpdateContestRequestToScorePatchConverter implements Converter<UpdateContestScoreRequest,
+public class UpdateContestScoreRequestToScorePatchConverter implements Converter<UpdateContestScoreRequest,
         ContestScorePatchDTO> {
 
     @Override
@@ -32,10 +32,8 @@ public class UpdateContestRequestToScorePatchConverter implements Converter<Upda
     }
 
     private TechDefeatDTO convertTechDefeat(TechDefeat techDefeat) {
-        return new TechDefeatDTO(
-                techDefeat == null ? null : techDefeat.isParticipantOne(),
-                techDefeat == null ? null : techDefeat.isParticipantOne()
-        );
+        return techDefeat == null ? null : new TechDefeatDTO(techDefeat.getParticipantOne(), techDefeat
+                .getParticipantTwo());
     }
 
     private Map<SetType, SetScoreDTO> convertScorePatchSets(ContestAttributesScore updateScore) {

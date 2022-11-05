@@ -78,7 +78,14 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
         EliminationContest finalContest = (EliminationContest) contests.stream()
                 .filter(contest -> !preFinalContestIds.contains(contest.getId())).findAny().orElse(null);
 
-        return populateEliminationContestDtoRecursive(finalContest, contests);
+        //todo deal why setscore not populated immediately after enroll call
+        EliminationContestDTO contestDTO = populateEliminationContestDtoRecursive(finalContest, contests);
+        contestDTO.forEach(contest -> {
+            if (contest.getScoreDto().getSets() == null) {
+                contestHelper.populateSetScores(contest);
+            }
+        });
+        return contestDTO;
     }
 
     @Override
@@ -95,17 +102,18 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
     public ContestDTO getBasicContestDTO(Integer contestId, Integer tournamentId) {
         List<Contest> contests = contestHelper.getTournamentContests(tournamentId);
         Contest basicContest = contests.stream().filter(contest -> contest.getId() == contestId).findFirst()
-                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND));
+                .orElseThrow(() -> new DetailedException(CONTEST_NOT_FOUND, contestId));
         if (getContestParticipantClass().isInstance(basicContest))
             return converterHelper.convert(basicContest, getContestParticipantDtoClass());
 
         EliminationContestDTO eliminationContest =
                 populateEliminationContestDtoRecursive((EliminationContest) basicContest, contests);
-        if (eliminationContest.getSecondParentContestDto().getWinnerId() == null || eliminationContest
-                .getFirstParentContestDto().getWinnerId() == null)
-            throw new DetailedException(CONTEST_NOT_REACHED);
+        //todo decide if its ok to get child contest before parent played
+//        if (eliminationContest.getSecondParentContestDto().getWinnerId() == null || eliminationContest
+//                .getFirstParentContestDto().getWinnerId() == null)
+//            throw new DetailedException(CONTEST_NOT_REACHED);
 
-        return convertEliminationContestToBase(eliminationContest);
+        return eliminationContest;
     }
 
     protected Integer getFinalEliminationContestId(Integer tournamentId) {

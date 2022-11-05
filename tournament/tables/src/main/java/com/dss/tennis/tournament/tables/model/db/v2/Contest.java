@@ -72,7 +72,8 @@ public class Contest {
         this.date = date;
     }
 
-    @OneToMany(mappedBy = "contest")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contest_id")
     public Set<SetScore> getSets() {
         return sets;
     }

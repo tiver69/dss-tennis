@@ -42,6 +42,17 @@ public class RoundSingleContestFactory extends RoundContestFactory {
     }
 
     @Override
+    public ContestDTO getContestDTO(Integer contestId, Integer tournamentId) {
+        SingleContestDTO contestDto = (SingleContestDTO) getBasicContestDTO(contestId, tournamentId);
+        PlayerDTO playerOne = playerHelper.getParticipantDto(contestDto.participantOneId());
+        PlayerDTO playerTwo = playerHelper.getParticipantDto(contestDto.participantTwoId());
+
+        contestDto.setPlayerOne(playerOne);
+        contestDto.setPlayerTwo(playerTwo);
+        return contestDto;
+    }
+
+    @Override
     public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
         Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
         contests.forEach(contest -> {

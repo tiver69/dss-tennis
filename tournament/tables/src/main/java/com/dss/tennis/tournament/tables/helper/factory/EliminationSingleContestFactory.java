@@ -40,11 +40,13 @@ public class EliminationSingleContestFactory extends EliminationContestFactory {
 
     private PlayerDTO getEliminationContestParticipantFromParent(ContestDTO parentContestDTO) {
         Integer winnerId = parentContestDTO.getWinnerId();
+        if (winnerId == null) return null;
         if (parentContestDTO instanceof SingleContestDTO) {
-            if (((SingleContestDTO) parentContestDTO).getPlayerOne().getId() == winnerId)
-                return ((SingleContestDTO) parentContestDTO).getPlayerOne();
-            if (((SingleContestDTO) parentContestDTO).getPlayerTwo().getId() == winnerId)
-                return ((SingleContestDTO) parentContestDTO).getPlayerTwo();
+            SingleContestDTO contestDTO = (SingleContestDTO) parentContestDTO;
+            if (contestDTO.getPlayerOne().getId() == winnerId)
+                return contestDTO.getPlayerOne();
+            if (contestDTO.getPlayerTwo().getId() == winnerId)
+                return contestDTO.getPlayerTwo();
         }
         EliminationContestDTO parentEliminationContest = (EliminationContestDTO) parentContestDTO;
         if (winnerId.equals(parentEliminationContest.getFirstParentContestDto().getWinnerId()))
@@ -57,6 +59,27 @@ public class EliminationSingleContestFactory extends EliminationContestFactory {
     @Override
     public Class<? extends ContestDTO> getContestParticipantDtoClass() {
         return SingleContestDTO.class;
+    }
+
+    @Override
+    public ContestDTO getContestDTO(Integer contestId, Integer tournamentId) {
+        ContestDTO contestDto = getBasicContestDTO(contestId, tournamentId);
+        if (contestDto instanceof EliminationContestDTO) {
+            ((EliminationContestDTO) contestDto).forEach(parentContestDTO -> {
+                if (parentContestDTO instanceof SingleContestDTO) {
+                    Integer playerOneId = ((SingleContestDTO) parentContestDTO).getPlayerOne().getId();
+                    Integer playerTwoId = ((SingleContestDTO) parentContestDTO).getPlayerTwo().getId();
+                    ((SingleContestDTO) parentContestDTO).setPlayerOne(playerHelper.getParticipantDto(playerOneId));
+                    ((SingleContestDTO) parentContestDTO).setPlayerTwo(playerHelper.getParticipantDto(playerTwoId));
+                }
+            });
+        } else {
+            PlayerDTO playerOne = playerHelper.getParticipantDto(contestDto.participantOneId());
+            PlayerDTO playerTwo = playerHelper.getParticipantDto(contestDto.participantTwoId());
+            ((SingleContestDTO) contestDto).setPlayerOne(playerOne);
+            ((SingleContestDTO) contestDto).setPlayerTwo(playerTwo);
+        }
+        return contestDto;
     }
 
     @Override

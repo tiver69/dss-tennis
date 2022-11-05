@@ -9,7 +9,6 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestAttribu
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestRelationships;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.TechDefeat;
-import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.TeamResponseData;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO.SetScoreDTO;
@@ -17,10 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.dss.tennis.tournament.tables.model.db.v2.SetType.*;
@@ -33,7 +30,7 @@ import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.
 public class DoubleContestDtoToContestResponseDataConverter implements Converter<DoubleContestDTO,
         ContestResponseData> {
 
-    private ModelMapper modelMapper;
+    private String extraTournamentId;
 
     @Override
     public ContestResponseData convert(MappingContext<DoubleContestDTO, ContestResponseData> context) {
@@ -43,9 +40,8 @@ public class DoubleContestDtoToContestResponseDataConverter implements Converter
                 .id(contestDTO.getId())
                 .attributes(convertContestAttributes(contestDTO))
                 .relationships(convertContestRelationships(contestDTO))
-                .included(convertContestIncluded(contestDTO))
                 .links(Links.builder()
-                        .self(String.format(CONTEST.selfLinkFormat, 1, contestDTO.getId())) //todo: tournamentID here
+                        .self(String.format(CONTEST.selfLinkFormat, extraTournamentId, contestDTO.getId())) //todo: tournamentID here
                         .build())
                 .build();
     }
@@ -84,12 +80,5 @@ public class DoubleContestDtoToContestResponseDataConverter implements Converter
                 .participantTwo(new SimpleResourceObject(contestDto.participantTwoId(), TEAM.value))
                 .winner(winner)
                 .build();
-    }
-
-    private List<Object> convertContestIncluded(DoubleContestDTO contestDto) {
-        return List.of(
-                modelMapper.map(contestDto.getTeamOne(), TeamResponseData.class),
-                modelMapper.map(contestDto.getTeamTwo(), TeamResponseData.class)
-        );
     }
 }

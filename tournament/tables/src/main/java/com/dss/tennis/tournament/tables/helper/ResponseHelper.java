@@ -10,6 +10,8 @@ import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
 import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse;
+import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.team.PageableTeamResponse;
 import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse;
@@ -40,6 +42,31 @@ public class ResponseHelper {
     @Autowired
     private WarningHandler warningHandler;
 
+    public ContestResponse createContestResponse(ContestDTO contestDTO, Integer tournamentId) {
+        ContestResponseData responseData = converterHelper
+                .convert(contestDTO, ContestResponseData.class, String.valueOf(tournamentId));
+
+        List<Object> responseIncluded = new ArrayList<>();
+        responseIncluded.addAll(convertParticipant(contestDTO.getParticipantOne()));
+        responseIncluded.addAll(convertParticipant(contestDTO.getParticipantTwo()));
+        return new ContestResponse(responseData, responseIncluded.isEmpty() ? null : responseIncluded);
+    }
+
+    private List<Object> convertParticipant(Object participant) {
+        if (participant == null) return new ArrayList<>();
+
+        List<Object> participantIncluded = new ArrayList<>();
+        if (participant instanceof PlayerDTO) {
+            participantIncluded.add(converterHelper.convert(participant, PlayerResponseData.class));
+        } else {
+            TeamDTO team = (TeamDTO) participant;
+            participantIncluded.add(converterHelper.convert(team, TeamResponseData.class));
+            participantIncluded.add(converterHelper.convert(team.getPlayerOne(), PlayerResponseData.class));
+            participantIncluded.add(converterHelper.convert(team.getPlayerTwo(), PlayerResponseData.class));
+        }
+        return participantIncluded;
+    }
+
     public TeamResponse createTeamResponse(TeamDTO teamDto) {
         TeamResponseData responseData = converterHelper.convert(teamDto, TeamResponseData.class);
 
@@ -54,10 +81,11 @@ public class ResponseHelper {
         TournamentResponse responseData = createTournamentResponse(responseWarning.getData());
 
         Set<ErrorDataDTO> warningsDto = responseWarning.getWarnings();
-        Set<ErrorData> responseWarnings = warningsDto == null || warningsDto.isEmpty() ? null :
-                warningsDto.stream().map(warningHandler::createErrorData).collect(Collectors.toSet());
-        responseData.setMeta(new CommonMeta(responseWarnings));
-
+        if (warningsDto != null && !warningsDto.isEmpty()) {
+            Set<ErrorData> responseWarnings = warningsDto.stream().map(warningHandler::createErrorData)
+                    .collect(Collectors.toSet());
+            responseData.setMeta(new CommonMeta(responseWarnings));
+        }
         return responseData;
     }
 

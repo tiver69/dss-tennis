@@ -53,6 +53,25 @@ public class EliminationDoubleContestFactory extends EliminationContestFactory {
     }
 
     @Override
+    public ContestDTO getContestDTO(Integer contestId, Integer tournamentId) {
+        ContestDTO contestDto = getBasicContestDTO(contestId, tournamentId);
+        if (contestDto instanceof EliminationContestDTO) {
+            ((EliminationContestDTO) contestDto).forEach(parentContestDTO -> {
+                if (parentContestDTO instanceof DoubleContestDTO) {
+                    ((DoubleContestDTO) parentContestDTO)
+                            .setTeamOne(teamHelper.getParticipantDto(parentContestDTO.participantOneId()));
+                    ((DoubleContestDTO) parentContestDTO)
+                            .setTeamTwo(teamHelper.getParticipantDto(parentContestDTO.participantTwoId()));
+                }
+            });
+        } else {
+            ((DoubleContestDTO) contestDto).setTeamOne(teamHelper.getParticipantDto(contestDto.participantOneId()));
+            ((DoubleContestDTO) contestDto).setTeamTwo(teamHelper.getParticipantDto(contestDto.participantTwoId()));
+        }
+        return contestDto;
+    }
+
+    @Override
     public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
         Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
         if (contests == null) return null;

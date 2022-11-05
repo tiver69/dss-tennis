@@ -4,9 +4,7 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.ContestHelper;
 import com.dss.tennis.tournament.tables.helper.ScoreHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.dto.TechDefeatDTO;
-import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
+import com.dss.tennis.tournament.tables.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,9 +29,17 @@ public class ContestValidator {
         if (isContestWithoutSetScores) throw new DetailedException(CONTEST_SCORE_NOT_FOUND);
     }
 
-    public void validateContestUpdate(Integer contestId, TournamentDTO tournamentDTO) {
-        if (TournamentType.ELIMINATION.equals(tournamentDTO.getTournamentType()))
-            validateEliminationContestUpdateForbidden(contestId);
+    public void validateContestUpdate(ContestScorePatchDTO scorePatchDto, ContestDTO contest,
+                                      TournamentDTO tournamentDTO) {
+        if (TournamentType.ELIMINATION.equals(tournamentDTO.getTournamentType())) {
+            validateEliminationContestUpdateForbidden(contest);
+            validateFullTechDefeat(scorePatchDto.getTechDefeat(), contest.getId());
+        }
+    }
+
+    public void validateFullTechDefeat(TechDefeatDTO techDefeatDto, Integer contestId) {
+        if (techDefeatDto.getParticipantOne() && techDefeatDto.getParticipantTwo())
+            throw new DetailedException(CONTEST_FULL_TECH_DEFEAT_FORBIDDEN, contestId);
     }
 
     public Set<ErrorDataDTO> validateTechDefeat(TechDefeatDTO techDefeatDto, Integer contestId,
@@ -46,8 +52,17 @@ public class ContestValidator {
         return techDefeatDtoValidatorHelper.validateObject(techDefeatDto);
     }
 
+    private void validateEliminationContestUpdateForbidden(ContestDTO contest) {
+        if (contest.participantOneId() == null || contest.participantTwoId() == null) {
+            throw new DetailedException(CONTEST_NOT_REACHED, contest.getId());
+        }
+        if (scoreHelper.getEliminationContestChildSetScores(contest.getId()).isScoreDefined() || contestHelper
+                .isEliminationContestChildTechDefeat(contest.getId()))
+            throw new DetailedException(CONTEST_SCORE_UPDATE_FORBIDDEN, contest.getId());
+    }
+
     private void validateEliminationContestUpdateForbidden(Integer contestId) {
-        if (!scoreHelper.getEliminationContestChildSetScores(contestId).isEmpty() || contestHelper
+        if (scoreHelper.getEliminationContestChildSetScores(contestId).isScoreDefined() || contestHelper
                 .isEliminationContestChildTechDefeat(contestId))
             throw new DetailedException(CONTEST_SCORE_UPDATE_FORBIDDEN, contestId);
     }

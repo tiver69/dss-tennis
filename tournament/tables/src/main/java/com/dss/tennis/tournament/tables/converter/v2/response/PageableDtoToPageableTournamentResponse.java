@@ -38,8 +38,7 @@ public class PageableDtoToPageableTournamentResponse implements Converter<Pageab
 //                                .format(PLAYER.pageableLinkFormat, currentPage - 1, pageSize))
 //                        .self(String.format(PLAYER.pageableLinkFormat, currentPage, pageSize))
 //                        .next(String
-//                                .format(PLAYER.pageableLinkFormat, currentPage + 1, pageSize)) //todo: ignore next if
-//                        // current is last
+//                                .format(PLAYER.pageableLinkFormat, currentPage + 1, pageSize))
 //                        .build())
                 .build();
     }

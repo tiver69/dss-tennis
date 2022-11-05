@@ -23,10 +23,19 @@ public class ScoreDTO {
         return sets != null && sets.get(type).isSetScoreDefined();
     }
 
+    public boolean isScoreDefined() {
+        if (sets == null) return false;
+        if (isSetScoreDefined(SetType.SET_ONE)) return true;
+        if (isSetScoreDefined(SetType.SET_TWO)) return true;
+        if (isSetScoreDefined(SetType.SET_THREE)) return true;
+        return isSetScoreDefined(SetType.TIE_BREAK);
+    }
+
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
     public static class SetScoreDTO {
         private Integer id;
 

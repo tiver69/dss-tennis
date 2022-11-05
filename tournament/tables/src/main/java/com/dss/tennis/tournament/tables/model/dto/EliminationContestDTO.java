@@ -36,7 +36,7 @@ public class EliminationContestDTO extends ContestDTO implements Iterable<Contes
         if (secondParentContestDto.participantOneId().equals(secondParentContestDto.getWinnerId()))
             return secondParentContestDto.getParticipantOne();
         if (secondParentContestDto.participantTwoId().equals(secondParentContestDto.getWinnerId()))
-            secondParentContestDto.getParticipantTwo();
+            return secondParentContestDto.getParticipantTwo();
         return null;
     }
 
