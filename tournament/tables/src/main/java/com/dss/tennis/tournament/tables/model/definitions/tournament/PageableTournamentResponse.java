@@ -3,8 +3,8 @@ package com.dss.tennis.tournament.tables.model.definitions.tournament;
 import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
 import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
+import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse.TournamentResponseData;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TOURNAMENT;
 
 @Data
 @NoArgsConstructor
@@ -38,6 +40,6 @@ public class PageableTournamentResponse implements PageableResponse {
     @Override
     @JsonIgnore
     public ResourceObjectType getResponseDataType() {
-        return ResourceObjectType.TOURNAMENT;
+        return TOURNAMENT;
     }
 }

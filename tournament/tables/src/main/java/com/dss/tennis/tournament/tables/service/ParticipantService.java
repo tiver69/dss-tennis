@@ -5,9 +5,9 @@ import com.dss.tennis.tournament.tables.helper.PatchApplierHelper;
 import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
+import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
 
 @Service
 public class ParticipantService {
@@ -90,6 +92,6 @@ public class ParticipantService {
     }
 
     private ParticipantHelper<?, ?> getParticipantHelper(ResourceObjectType participantType) {
-        return participantType == ResourceObjectType.PLAYER ? playerHelper : teamHelper;
+        return participantType == PLAYER ? playerHelper : teamHelper;
     }
 }

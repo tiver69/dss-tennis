@@ -3,13 +3,14 @@ package com.dss.tennis.tournament.tables.model.response.v1;
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TOURNAMENT;
 
 @Deprecated
 @Data
@@ -19,7 +20,7 @@ import java.time.LocalDate;
 public class GetTournament<T extends GetParticipant> {
 
     {
-        this.setType(ResourceObjectType.TOURNAMENT.value);
+        this.setType(TOURNAMENT.value);
     }
 
     private Integer id;

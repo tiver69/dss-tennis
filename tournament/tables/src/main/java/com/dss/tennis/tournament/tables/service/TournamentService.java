@@ -13,7 +13,6 @@ import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.PatchTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.ContestValidator;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.ScoreValidator;
@@ -29,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TOURNAMENT;
 
 @Service
 public class TournamentService {
@@ -127,12 +128,12 @@ public class TournamentService {
     public ResponseWarningDTO<PageableDTO> getTournamentPage(int page, byte pageSize) {
         Set<ErrorDataDTO> warnings = new HashSet<>();
         Pageable pageableRequestParameter = pageableValidator
-                .validatePageableRequest(page, pageSize, warnings, ResourceObjectType.TOURNAMENT);
+                .validatePageableRequest(page, pageSize, warnings, TOURNAMENT);
 
         PageableDTO<TournamentDTO> tournamentsPage = tournamentHelper.getTournamentsPage(pageableRequestParameter);
         Pageable newPageableRequestParameter = pageableValidator
                 .validateUpperPage(pageableRequestParameter, tournamentsPage
-                        .getTotalPages(), warnings, ResourceObjectType.TOURNAMENT);
+                        .getTotalPages(), warnings, TOURNAMENT);
         if (newPageableRequestParameter != null) {
             tournamentsPage = tournamentHelper.getTournamentsPage(newPageableRequestParameter);
         }

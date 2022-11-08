@@ -18,8 +18,8 @@ import org.modelmapper.spi.MappingContext;
 
 import java.util.Map;
 
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.CONTEST_INFO;
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.ELIMINATION_CONTEST_INFO;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.CONTEST_INFO;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.ELIMINATION_CONTEST_INFO;
 
 @AllArgsConstructor
 public class EliminationContestDtoToEliminationContestInfoResponseDataConverter implements Converter<EliminationContestDTO, EliminationContestInfoResponseData> {

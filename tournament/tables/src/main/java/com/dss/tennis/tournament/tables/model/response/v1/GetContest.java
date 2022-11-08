@@ -1,10 +1,11 @@
 package com.dss.tennis.tournament.tables.model.response.v1;
 
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.CONTEST;
 
 @Deprecated
 @Data
@@ -14,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 public class GetContest<T extends GetParticipant> {
 
     {
-        this.setType(ResourceObjectType.CONTEST.value);
+        this.setType(CONTEST.value);
     }
 
     private Integer id;

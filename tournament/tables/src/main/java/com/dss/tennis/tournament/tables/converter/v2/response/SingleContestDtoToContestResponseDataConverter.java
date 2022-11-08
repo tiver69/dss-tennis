@@ -21,8 +21,8 @@ import org.modelmapper.spi.MappingContext;
 import java.util.Map;
 
 import static com.dss.tennis.tournament.tables.model.db.v2.SetType.*;
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.CONTEST;
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.PLAYER;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.CONTEST;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
 
 @Getter
 @Setter

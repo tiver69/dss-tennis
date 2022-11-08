@@ -4,11 +4,13 @@ import com.dss.tennis.tournament.tables.model.response.v1.GetTeam.GetTeamAttribu
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TEAM;
+
 @Deprecated
 public class GetTeam extends ResourceObject<GetTeamAttributes> {
 
     {
-        setType(ResourceObjectType.TEAM.value);
+        setType(TEAM.value);
     }
 
     @Data

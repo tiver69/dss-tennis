@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.helper;
 
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
+import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -24,11 +25,11 @@ public class RequestParameterHelper {
 
     @PostConstruct
     protected void initialize() {
-        pageableSortParameters.put(ResourceObjectType.TOURNAMENT, List
+        pageableSortParameters.put(TOURNAMENT, List
                 .of(new Order(DESC, "status"), new Order(DESC, "beginningDate")));
-        pageableSortParameters.put(ResourceObjectType.PLAYER, List
+        pageableSortParameters.put(PLAYER, List
                 .of(new Order(ASC, "lastName"), new Order(ASC, "firstName")));
-        pageableSortParameters.put(ResourceObjectType.TEAM, List
+        pageableSortParameters.put(TEAM, List
                 .of(new Order(ASC, "playerOneId"), new Order(ASC, "playerTwoId")));
     }
 

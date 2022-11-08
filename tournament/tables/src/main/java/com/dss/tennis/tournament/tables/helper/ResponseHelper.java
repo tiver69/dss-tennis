@@ -8,6 +8,7 @@ import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.CommonMeta;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
 import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
+import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse;
@@ -20,7 +21,6 @@ import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentR
 import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse.TournamentResponseData;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

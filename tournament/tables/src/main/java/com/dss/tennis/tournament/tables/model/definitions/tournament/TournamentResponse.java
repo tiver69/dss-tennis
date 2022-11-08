@@ -3,11 +3,12 @@ package com.dss.tennis.tournament.tables.model.definitions.tournament;
 import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.CommonMeta;
 import com.dss.tennis.tournament.tables.model.definitions.SimpleResourceObject;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TOURNAMENT;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class TournamentResponse {
     @Builder
     public static class TournamentResponseData {
         private int id;
-        private final String type = ResourceObjectType.TOURNAMENT.value;
+        private final String type = TOURNAMENT.value;
         private TournamentResponseAttributes attributes;
         private TournamentRelationships relationships;
         private Links links;

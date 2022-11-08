@@ -1,11 +1,12 @@
 package com.dss.tennis.tournament.tables.model.definitions.player;
 
 import com.dss.tennis.tournament.tables.model.definitions.Links;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
 
 @Data
 public class PlayerResponse {
@@ -20,7 +21,7 @@ public class PlayerResponse {
     @Setter
     public static class PlayerResponseData {
         private int id;
-        private final String type = ResourceObjectType.PLAYER.value;
+        private final String type = PLAYER.value;
         private PlayerResponseAttributes attributes;
         private Links links;
     }

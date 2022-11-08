@@ -2,8 +2,8 @@ package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
+import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;

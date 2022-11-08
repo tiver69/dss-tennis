@@ -8,13 +8,13 @@ import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResponseWarningDTO;
 import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TEAM;
 import static com.dss.tennis.tournament.tables.validator.PageableValidator.PAGE_DEFAULT_STRING;
 import static com.dss.tennis.tournament.tables.validator.PageableValidator.PAGE_SIZE_DEFAULT_STRING;
 
@@ -43,7 +43,7 @@ public class ParticipantTeamController {
             @RequestParam(required = false, defaultValue = PAGE_DEFAULT_STRING) int page,
             @RequestParam(required = false, defaultValue = PAGE_SIZE_DEFAULT_STRING) byte pageSize) {
         ResponseWarningDTO<PageableDTO> pageableTeamsDto = participantService
-                .getParticipantPage(page - 1, pageSize, ResourceObjectType.TEAM);
+                .getParticipantPage(page - 1, pageSize, TEAM);
 
         PageableResponse teamsResponse = responseHelper.createPageableTeamResponse(pageableTeamsDto);
         return new ResponseEntity<>(teamsResponse, HttpStatus.OK);

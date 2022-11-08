@@ -12,7 +12,7 @@ import org.modelmapper.spi.MappingContext;
 import java.time.LocalDate;
 import java.time.Period;
 
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.PLAYER;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
 
 @Getter
 @Setter

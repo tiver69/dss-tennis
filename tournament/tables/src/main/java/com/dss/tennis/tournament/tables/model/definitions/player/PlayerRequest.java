@@ -1,6 +1,5 @@
 package com.dss.tennis.tournament.tables.model.definitions.player;
 
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,13 +7,15 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
+
 public class PlayerRequest {
 
     @Getter
     @Setter
     @NoArgsConstructor
     public static class CretePlayerRequest {
-        private final String type = ResourceObjectType.PLAYER.value;
+        private final String type = PLAYER.value;
         private PlayerRequestAttributes attributes;
     }
 

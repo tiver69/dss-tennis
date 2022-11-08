@@ -13,8 +13,8 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.PLAYER;
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.TEAM;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TEAM;
 
 @Getter
 @Setter

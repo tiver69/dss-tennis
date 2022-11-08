@@ -1,11 +1,12 @@
 package com.dss.tennis.tournament.tables.model.response.v1;
 
 import com.dss.tennis.tournament.tables.model.db.v1.LeadingHand;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
 
 @Deprecated
 @Data
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class GetPlayer {
 
     {
-        setType(ResourceObjectType.PLAYER.value);
+        setType(PLAYER.value);
     }
 
     private Integer id;

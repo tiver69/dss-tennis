@@ -19,7 +19,7 @@ import java.util.List;
 
 import static com.dss.tennis.tournament.tables.model.db.v1.TournamentType.ELIMINATION;
 import static com.dss.tennis.tournament.tables.model.db.v1.TournamentType.ROUND;
-import static com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType.*;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.*;
 
 @AllArgsConstructor
 public class TournamentDtoToTournamentResponseDataConverter implements Converter<TournamentDTO,

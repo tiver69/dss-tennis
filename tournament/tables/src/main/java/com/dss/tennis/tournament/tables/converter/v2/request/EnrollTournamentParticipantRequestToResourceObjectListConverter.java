@@ -1,9 +1,9 @@
 package com.dss.tennis.tournament.tables.converter.v2.request;
 
+import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.definitions.SimpleResourceObject;
 import com.dss.tennis.tournament.tables.model.definitions.tournament.EnrollTournamentParticipantRequest;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 

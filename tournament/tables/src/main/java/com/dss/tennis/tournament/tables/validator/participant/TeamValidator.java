@@ -8,7 +8,6 @@ import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResourceObjectDTO;
 import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import com.dss.tennis.tournament.tables.validator.ValidatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TEAM;
 
 @Component
 public class TeamValidator extends ParticipantValidator<Team> {
@@ -36,7 +36,7 @@ public class TeamValidator extends ParticipantValidator<Team> {
     @Override
     public ErrorDataDTO validateParticipantForEnrolling(List<Integer> currentPlayerIds, ResourceObjectDTO newTeam) {
         Integer newTeamId = newTeam.getId();
-        if (ResourceObjectType.TEAM != newTeam.getType())
+        if (TEAM != newTeam.getType())
             return new ErrorDataDTO(UNSUPPORTED_RESOURCE_TYPE, newTeam.getType().value, newTeam
                     .getSequenceNumber());
 

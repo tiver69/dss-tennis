@@ -1,7 +1,6 @@
 package com.dss.tennis.tournament.tables.model.definitions.tournament;
 
 import com.dss.tennis.tournament.tables.model.definitions.SimpleResourceObject;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,13 +8,15 @@ import lombok.Setter;
 
 import java.util.List;
 
+import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TOURNAMENT;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class EnrollTournamentParticipantRequest {
 
     private int id;
-    private final String type = ResourceObjectType.TOURNAMENT.value;
+    private final String type = TOURNAMENT.value;
     private EnrollTournamentParticipantRelationships relationships;
 
     @Getter
