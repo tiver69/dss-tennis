@@ -4,6 +4,7 @@ import com.dss.tennis.tournament.tables.model.response.v1.GetTeam.GetTeamAttribu
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Deprecated
 public class GetTeam extends ResourceObject<GetTeamAttributes> {
 
     {

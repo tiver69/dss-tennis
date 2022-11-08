@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Deprecated
 @Data
 @Builder
 @AllArgsConstructor

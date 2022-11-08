@@ -29,27 +29,24 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
     protected ConverterHelper converterHelper;
 
     public abstract Integer createFirstLineEliminationContest(Integer firstParticipantId, Integer secondParticipantId,
-                                                              Integer tournamentId, boolean shouldCreateScore);
+                                                              Integer tournamentId);
 
     protected abstract ContestDTO convertEliminationContestToBase(EliminationContestDTO eliminationContest);
 
     @Override
-    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds,
-                                            boolean shouldCreateScore) {
+    public void createContestsForTournament(Integer tournamentId, List<Integer> newPlayerIds) {
         Integer currentFinalContestId = getFinalEliminationContestId(tournamentId);
         List<Integer> firstLineEliminationContestIds = new ArrayList<>();
         for (int i = 0; i < newPlayerIds.size(); i += 2)
             firstLineEliminationContestIds
                     .add(createFirstLineEliminationContest(newPlayerIds.get(i), newPlayerIds
-                            .get(i + 1), tournamentId, shouldCreateScore));
+                            .get(i + 1), tournamentId));
 
         Integer newFinalContestId = createContestsForTournamentRecursively(firstLineEliminationContestIds,
-                tournamentId, shouldCreateScore);
+                tournamentId);
 
         if (currentFinalContestId != null && newFinalContestId != null)
-            contestHelper
-                    .createNewEliminationContest(currentFinalContestId, newFinalContestId, tournamentId,
-                            shouldCreateScore);
+            contestHelper.createNewEliminationContest(currentFinalContestId, newFinalContestId, tournamentId);
     }
 
     @Override
@@ -160,7 +157,7 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
     }
 
     protected Integer createContestsForTournamentRecursively(List<Integer> firstLineEliminationContestIds,
-                                                             Integer tournamentId, boolean shouldCreateScore) {
+                                                             Integer tournamentId) {
         if (firstLineEliminationContestIds == null || firstLineEliminationContestIds.isEmpty()) return null;
         if (firstLineEliminationContestIds.size() == 1) return firstLineEliminationContestIds.get(0);
 
@@ -168,10 +165,9 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
         for (int i = 0; i < firstLineEliminationContestIds.size(); i += 2) {
             nextLineEliminationContestIds
                     .add(contestHelper.createNewEliminationContest(firstLineEliminationContestIds
-                            .get(i), firstLineEliminationContestIds.get(i + 1), tournamentId, shouldCreateScore)
-                            .getId());
+                            .get(i), firstLineEliminationContestIds.get(i + 1), tournamentId).getId());
         }
-        return createContestsForTournamentRecursively(nextLineEliminationContestIds, tournamentId, shouldCreateScore);
+        return createContestsForTournamentRecursively(nextLineEliminationContestIds, tournamentId);
     }
 
     private void removeEliminationContestDtoRecursive(ContestDTO eliminationContest) {

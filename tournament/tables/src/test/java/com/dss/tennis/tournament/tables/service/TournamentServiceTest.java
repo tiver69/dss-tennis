@@ -5,20 +5,15 @@ import com.dss.tennis.tournament.tables.helper.TournamentHelper;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.validator.TournamentValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TournamentServiceTest {
@@ -99,13 +94,13 @@ class TournamentServiceTest {
 //        verify(warningHandlerMock, never()).createWarning(any(WarningConstant.class), any(Byte.class));
 //    }
 
-    @Test
-    public void shouldGetTournament() {
-        RequestParameter requestParameter = new RequestParameter();
-        when(tournamentHelperMock.getTournamentDto(TOURNAMENT_ID, requestParameter)).thenReturn(responseTournamentDtoSpy);
-
-        Assertions.assertEquals(responseTournamentDtoSpy, testInstance.getTournament(TOURNAMENT_ID, requestParameter));
-    }
+//    @Test
+//    public void shouldGetTournament() {
+//        RequestParameter requestParameter = new RequestParameter();
+//        when(tournamentHelperMock.getTournamentDto(TOURNAMENT_ID, requestParameter)).thenReturn(responseTournamentDtoSpy);
+//
+//        Assertions.assertEquals(responseTournamentDtoSpy, testInstance.getTournament(TOURNAMENT_ID, requestParameter));
+//    }
 
 //    @Test
 //    public void shouldReturnExceptionWhenValidationFailOnCreateNewTournament() {

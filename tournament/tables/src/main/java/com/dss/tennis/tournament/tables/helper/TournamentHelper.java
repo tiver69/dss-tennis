@@ -5,7 +5,6 @@ import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
-import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +41,7 @@ public class TournamentHelper {
     }
 
     public void addParticipantsToTournament(TournamentDTO tournamentDto, List<Integer> newParticipantIds) {
-        addParticipantsToTournament(tournamentDto, newParticipantIds, false);
-    }
-
-    public void addParticipantsToTournament(TournamentDTO tournamentDto, List<Integer> newParticipantIds,
-                                            boolean shouldCreateScore) {
-        tournamentFactory.createContestForNewParticipants(tournamentDto, newParticipantIds, shouldCreateScore);
+        tournamentFactory.createContestForNewParticipants(tournamentDto, newParticipantIds);
     }
 
     @Transactional
@@ -60,10 +54,6 @@ public class TournamentHelper {
     public void removeTournament(TournamentDTO tournamentDto) {
         tournamentFactory.removeTournamentContests(tournamentDto);
         tournamentRepository.deleteById(tournamentDto.getId());
-    }
-
-    public TournamentDTO getTournamentDto(Integer tournamentId) {
-        return getTournamentDto(tournamentId, RequestParameter.DEFAULT);
     }
 
     public PageableDTO<TournamentDTO> getTournamentsPage(Pageable pageableRequestParameter) {
@@ -80,11 +70,11 @@ public class TournamentHelper {
                 .build();
     }
 
-    public TournamentDTO getTournamentDto(Integer tournamentId, RequestParameter requestParameters) {
+    public TournamentDTO getTournamentDto(Integer tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->
                 new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
 
-        return tournamentFactory.populateTournamentDTO(tournament, requestParameters);
+        return tournamentFactory.populateTournamentDTO(tournament);
     }
 
     public TournamentDTO getTournamentDTOExtended(Integer tournamentId) {

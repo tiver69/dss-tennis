@@ -20,10 +20,8 @@ public class EliminationSingleContestFactory extends EliminationContestFactory {
 
     @Override
     public Integer createFirstLineEliminationContest(Integer firstParticipantId, Integer secondParticipantId,
-                                                     Integer tournamentId, boolean shouldCreateScore) {
-        return contestHelper
-                .createNewSingleContest(firstParticipantId, secondParticipantId, tournamentId, shouldCreateScore)
-                .getId();
+                                                     Integer tournamentId) {
+        return contestHelper.createNewSingleContest(firstParticipantId, secondParticipantId, tournamentId).getId();
     }
 
     @Override

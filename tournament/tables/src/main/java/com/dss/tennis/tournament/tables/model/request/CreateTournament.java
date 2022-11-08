@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Deprecated
 @Data
 @Builder
 @AllArgsConstructor

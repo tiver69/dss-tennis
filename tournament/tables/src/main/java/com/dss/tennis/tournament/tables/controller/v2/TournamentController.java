@@ -95,12 +95,11 @@ public class TournamentController {
         List<ResourceObjectDTO> participantsDto = converterHelper.convert(participants, List.class);
 
         ResponseWarningDTO<TournamentDTO> tournamentDTO = tournamentService
-                .addParticipantsToTournamentWithScore(tournamentId, participantsDto);
+                .addParticipantsToTournament(tournamentId, participantsDto);
 
         TournamentResponse tournamentResponse = responseHelper.createTournamentResponse(tournamentDTO);
         return new ResponseEntity<>(tournamentResponse, HttpStatus.CREATED);
     }
-
 
     @DeleteMapping("/{tournamentId}/withdraw/{participantId}")
     public ResponseEntity<TournamentResponse> removeParticipantFromTournament(

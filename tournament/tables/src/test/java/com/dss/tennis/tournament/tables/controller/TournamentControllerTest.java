@@ -4,8 +4,6 @@ import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
 import com.dss.tennis.tournament.tables.model.request.CreateTournament;
@@ -15,30 +13,17 @@ import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
-import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Set;
-
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.INTERNAL_SERVER_ERROR;
-import static com.dss.tennis.tournament.tables.helper.RequestParameterHelper.INCLUDE_KEY;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -99,27 +84,27 @@ class TournamentControllerTest {
 //                .getContentAsString());
 //    }
 
-    @Test
-    public void shouldPerformGetTournamentWithIncorrectIncludeParameter() throws Exception {
-        Set<ErrorDataDTO> includeWarnings = Sets.newSet(new ErrorDataDTO(INTERNAL_SERVER_ERROR));
-        when(requestParameterHelperMock
-                .populateRequestParameter(eq(INCLUDE_KEY), eq(INCLUDE_PARAMETER), any(RequestParameter.class)))
-                .thenReturn(includeWarnings);
-        when(tournamentServiceMock.getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class)))
-                .thenReturn(tournamentDtoSpy);
-        when(responseHelperMock.createSuccessResponse(tournamentDtoSpy, includeWarnings))
-                .thenReturn(prepareSuccessGetTournament());
-
-        MvcResult content = mockMvc
-                .perform(get("/tournaments/" + TOURNAMENT_ID + "?include=" + INCLUDE_PARAMETER))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        verify(tournamentServiceMock).getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class));
-        verify(responseHelperMock).createSuccessResponse(any(TournamentDTO.class), eq(includeWarnings));
-        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament()), content
-                .getResponse().getContentAsString());
-    }
+//    @Test
+//    public void shouldPerformGetTournamentWithIncorrectIncludeParameter() throws Exception {
+//        Set<ErrorDataDTO> includeWarnings = Sets.newSet(new ErrorDataDTO(INTERNAL_SERVER_ERROR));
+//        when(requestParameterHelperMock
+//                .populateRequestParameter(eq(INCLUDE_KEY), eq(INCLUDE_PARAMETER), any(RequestParameter.class)))
+//                .thenReturn(includeWarnings);
+//        when(tournamentServiceMock.getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class)))
+//                .thenReturn(tournamentDtoSpy);
+//        when(responseHelperMock.createSuccessResponse(tournamentDtoSpy, includeWarnings))
+//                .thenReturn(prepareSuccessGetTournament());
+//
+//        MvcResult content = mockMvc
+//                .perform(get("/tournaments/" + TOURNAMENT_ID + "?include=" + INCLUDE_PARAMETER))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        verify(tournamentServiceMock).getTournament(eq(TOURNAMENT_ID), any(RequestParameter.class));
+//        verify(responseHelperMock).createSuccessResponse(any(TournamentDTO.class), eq(includeWarnings));
+//        Assertions.assertEquals(objectMapper.writeValueAsString(prepareSuccessGetTournament()), content
+//                .getResponse().getContentAsString());
+//    }
 
     private SuccessResponse<GetTournament> prepareSuccessGetTournament() {
         return new SuccessResponse<>(prepareGetTournament(), Set

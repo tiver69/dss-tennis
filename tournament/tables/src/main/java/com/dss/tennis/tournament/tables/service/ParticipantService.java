@@ -1,6 +1,5 @@
 package com.dss.tennis.tournament.tables.service;
 
-import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.PatchApplierHelper;
 import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
@@ -33,8 +32,6 @@ public class ParticipantService {
     private PlayerValidator playerValidator;
     @Autowired
     private TeamValidator teamValidator;
-    @Autowired
-    private ConverterHelper converterHelper;
     @Autowired
     private PatchApplierHelper patchApplierHelper;
 
@@ -73,23 +70,6 @@ public class ParticipantService {
 
     public TeamDTO getTeamDTO(Integer teamId) {
         return teamHelper.getParticipantDto(teamId);
-    }
-
-    public SuccessResponseDTO<PageableDTO> getParticipantPage1(int page, byte pageSize,
-                                                               ResourceObjectType participantType) {
-        Set<ErrorDataDTO> warnings = new HashSet<>();
-        ParticipantHelper helper = getParticipantHelper(participantType);
-        Pageable pageableRequestParameter = pageableValidator
-                .validatePageableRequest(page, pageSize, warnings, participantType);
-
-        PageableDTO<PlayerDTO> playersPage = helper.getParticipantPage(pageableRequestParameter);
-        Pageable newPageableRequestParameter = pageableValidator
-                .validateUpperPage(pageableRequestParameter, playersPage.getTotalPages(), warnings, participantType);
-        if (newPageableRequestParameter != null) {
-            playersPage = helper.getParticipantPage(newPageableRequestParameter);
-        }
-
-        return new SuccessResponseDTO<>(playersPage, warnings);
     }
 
     public ResponseWarningDTO<PageableDTO> getParticipantPage(int page, byte pageSize,

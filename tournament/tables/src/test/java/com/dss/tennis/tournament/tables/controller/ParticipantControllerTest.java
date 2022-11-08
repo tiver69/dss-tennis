@@ -7,9 +7,7 @@ import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -52,23 +44,23 @@ class ParticipantControllerTest {
         objectMapper.setSerializationInclusion(Include.NON_NULL);
     }
 
-    @Test
-    public void shouldPerformGetPlayer() throws Exception {
-        SuccessResponse<GetPlayer> successResponse = prepareSuccessGetPlayer();
-        when(participantServiceMock.getPlayerDTO(PLAYER_ID)).thenReturn(playerDtoSpy);
-        when(responseHelperMock.createSuccessResponse(playerDtoSpy, GetPlayer.class))
-                .thenReturn(successResponse);
-
-        MvcResult content = mockMvc
-                .perform(get("/participants/players/" + PLAYER_ID))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        verify(participantServiceMock).getPlayerDTO(PLAYER_ID);
-        verify(responseHelperMock).createSuccessResponse(playerDtoSpy, GetPlayer.class);
-        Assertions.assertEquals(objectMapper.writeValueAsString(successResponse), content
-                .getResponse().getContentAsString());
-    }
+//    @Test
+//    public void shouldPerformGetPlayer() throws Exception {
+//        SuccessResponse<GetPlayer> successResponse = prepareSuccessGetPlayer();
+//        when(participantServiceMock.getPlayerDTO(PLAYER_ID)).thenReturn(playerDtoSpy);
+//        when(responseHelperMock.createSuccessResponse(playerDtoSpy, GetPlayer.class))
+//                .thenReturn(successResponse);
+//
+//        MvcResult content = mockMvc
+//                .perform(get("/participants/players/" + PLAYER_ID))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        verify(participantServiceMock).getPlayerDTO(PLAYER_ID);
+//        verify(responseHelperMock).createSuccessResponse(playerDtoSpy, GetPlayer.class);
+//        Assertions.assertEquals(objectMapper.writeValueAsString(successResponse), content
+//                .getResponse().getContentAsString());
+//    }
 
     private SuccessResponse<GetPlayer> prepareSuccessGetPlayer() {
         GetPlayer player = GetPlayer.builder()

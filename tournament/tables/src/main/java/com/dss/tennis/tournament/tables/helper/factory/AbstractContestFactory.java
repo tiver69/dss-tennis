@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 public interface AbstractContestFactory {
 
-    void createContestsForTournament(Integer tournamentId, List<Integer> newParticipantsId, boolean shouldCreateScore);
+    void createContestsForTournament(Integer tournamentId, List<Integer> newParticipantsId);
 
     void removeParticipantFromTournament(Integer participantId, int tournamentId, boolean techDefeat);
 

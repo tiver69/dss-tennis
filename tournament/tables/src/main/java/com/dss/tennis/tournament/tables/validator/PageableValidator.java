@@ -1,7 +1,6 @@
 package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
-import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject.ResourceObjectType;
@@ -23,8 +22,6 @@ public class PageableValidator {
     public static String PAGE_KEY = "page";
     public static String PAGE_SIZE_KEY = "pageSize";
 
-    @Autowired
-    private WarningHandler warningHandler;
     @Autowired
     private RequestParameterHelper requestParameterHelper;
 

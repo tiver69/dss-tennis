@@ -9,7 +9,6 @@ import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,11 +35,10 @@ public class TournamentFactory {
     @Autowired
     private TeamHelper teamHelper;
 
-    public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds,
-                                                boolean shouldCreateScore) {
+    public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
                 .getParticipantType());
-        contestFactory.createContestsForTournament(tournamentDto.getId(), newParticipantIds, shouldCreateScore);
+        contestFactory.createContestsForTournament(tournamentDto.getId(), newParticipantIds);
     }
 
     public void removeParticipantFromTournament(Integer participantId, TournamentDTO tournamentDto,
@@ -58,22 +56,6 @@ public class TournamentFactory {
 
     public TournamentDTO populateTournamentDTO(Tournament tournament) {
         return converterHelper.convert(tournament, TournamentDTO.class);
-    }
-
-    public TournamentDTO populateTournamentDTO(Tournament tournament, RequestParameter requestParameters) {
-        TournamentDTO tournamentDto = populateTournamentDTO(tournament);
-
-        if (requestParameters.isIncludeContests()) {
-            Iterable<ContestDTO> contests = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
-                    .getParticipantType()).getContestDTOs(tournamentDto.getId());
-            tournamentDto.setContests(contests);
-        }
-        if (requestParameters.isIncludePlayers()) {
-            List<PlayerDTO> players = getParticipantHelper(tournamentDto.getParticipantType())
-                    .getTournamentPlayerDTOs(tournamentDto.getId());
-            tournamentDto.setPlayers(players);
-        }
-        return tournamentDto;
     }
 
     public TournamentDTO populateTournamentDtoExtended(Tournament tournament) {

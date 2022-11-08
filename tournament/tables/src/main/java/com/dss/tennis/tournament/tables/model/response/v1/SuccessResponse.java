@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+@Deprecated
 @Data
 @Builder
 @AllArgsConstructor
