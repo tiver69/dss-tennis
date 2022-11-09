@@ -41,8 +41,7 @@ public class ParticipantPlayerController {
         ResponseWarningDTO<PageableDTO> pageablePlayersDto = participantService
                 .getParticipantPage(page - 1, pageSize, PLAYER);
 
-        PageableResponse playersResponse = responseHelper
-                .createPageableResponse(pageablePlayersDto, PageablePlayerResponse.class);
+        PageableResponse playersResponse = converterHelper.convert(pageablePlayersDto, PageablePlayerResponse.class);
         return new ResponseEntity<>(playersResponse, HttpStatus.OK);
     }
 

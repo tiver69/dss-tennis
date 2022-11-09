@@ -7,6 +7,9 @@ import com.dss.tennis.tournament.tables.converter.v2.dto.EliminationContestToEli
 import com.dss.tennis.tournament.tables.converter.v2.dto.SingleContestToSingleContestDtoConverter;
 import com.dss.tennis.tournament.tables.converter.v2.request.*;
 import com.dss.tennis.tournament.tables.converter.v2.response.*;
+import com.dss.tennis.tournament.tables.converter.v2.response.pageable.PageableDtoToPageablePlayerResponse;
+import com.dss.tennis.tournament.tables.converter.v2.response.pageable.PageableDtoToPageableTeamResponse;
+import com.dss.tennis.tournament.tables.converter.v2.response.pageable.PageableDtoToPageableTournamentResponse;
 import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
 import com.dss.tennis.tournament.tables.model.db.v2.EliminationContest;
 import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
@@ -14,6 +17,7 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoRes
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestRequest.UpdateContestScoreRequest;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestResponseData;
+import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.CretePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.UpdatePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerResponse.PlayerResponseData;
@@ -64,6 +68,8 @@ public class ModelMapperFactory {
                 .setConverter(new UpdatePlayerRequestToPatchPlayerConverter());
         modelMapper.createTypeMap(CretePlayerRequest.class, PlayerDTO.class)
                 .setConverter(new CreatePlayerRequestToPlayerDtoConverter());
+        modelMapper.createTypeMap(PageableDTO.class, PageablePlayerResponse.class)
+                .setConverter(new PageableDtoToPageablePlayerResponse(modelMapper));
         modelMapper.createTypeMap(TeamDTO.class, TeamResponseData.class)
                 .setConverter(new TeamDtoToTeamResponseDataConverter(modelMapper));
         modelMapper.createTypeMap(PageableDTO.class, PageableTeamResponse.class)

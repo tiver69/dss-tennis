@@ -54,9 +54,9 @@ public class TournamentController {
         ResponseWarningDTO<PageableDTO> pageableTournamentsDto = tournamentService
                 .getTournamentPage(page - 1, pageSize);
 
-        PageableResponse tournamentsSuccessResponse = responseHelper
-                .createPageableResponse(pageableTournamentsDto, PageableTournamentResponse.class);
-        return new ResponseEntity<>(tournamentsSuccessResponse, HttpStatus.OK);
+        PageableResponse tournamentsResponse = converterHelper
+                .convert(pageableTournamentsDto, PageableTournamentResponse.class);
+        return new ResponseEntity<>(tournamentsResponse, HttpStatus.OK);
     }
 
     @PostMapping
