@@ -77,11 +77,11 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
 
         //todo deal why setscore not populated immediately after enroll call
         EliminationContestDTO contestDTO = populateEliminationContestDtoRecursive(finalContest, contests);
-        contestDTO.forEach(contest -> {
-            if (contest.getScoreDto().getSets() == null) {
-                contestHelper.populateSetScores(contest);
-            }
-        });
+//        contestDTO.forEach(contest -> {
+//            if (contest.getScoreDto().getSets() == null) {
+//                contestHelper.populateSetScores(contest);
+//            }
+//        });
         return contestDTO;
     }
 

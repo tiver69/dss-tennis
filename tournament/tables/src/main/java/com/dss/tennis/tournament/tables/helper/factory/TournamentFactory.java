@@ -51,7 +51,8 @@ public class TournamentFactory {
     public void removeTournamentContests(TournamentDTO tournamentDto) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
                 .getParticipantType());
-        contestFactory.removeTournamentContests(tournamentDto.getId());
+        contestFactory.
+                removeTournamentContests(tournamentDto.getId());
     }
 
     public TournamentDTO populateTournamentDTO(Tournament tournament) {

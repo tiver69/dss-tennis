@@ -19,7 +19,10 @@ public class Contest {
     private Integer winnerId;
     private boolean techDefeat;
     private Date date;
+    @Transient
     private Set<SetScore> sets;
+    private Score participantOneScore;
+    private Score participantTwoScore;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,14 +75,38 @@ public class Contest {
         this.date = date;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "contest_id")
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "contest_id")
+
+    @Transient
     public Set<SetScore> getSets() {
         return sets;
     }
 
+
+    @Transient
     public void setSets(Set<SetScore> sets) {
         this.sets = sets;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "participant_one_score_id")
+    public Score getParticipantOneScore() {
+        return participantOneScore;
+    }
+
+    public void setParticipantOneScore(Score participantOneScore) {
+        this.participantOneScore = participantOneScore;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "participant_two_score_id")
+    public Score getParticipantTwoScore() {
+        return participantTwoScore;
+    }
+
+    public void setParticipantTwoScore(Score participantTwoScore) {
+        this.participantTwoScore = participantTwoScore;
     }
 
     @Override
@@ -111,6 +138,7 @@ public class Contest {
                 ", tournamentId=" + tournamentId +
                 ", winner=" + winnerId +
                 ", techDefeat=" + techDefeat +
-                ", date=" + date;
+                ", date=" + date +
+                ", ";
     }
 }

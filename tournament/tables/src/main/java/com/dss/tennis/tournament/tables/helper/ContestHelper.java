@@ -53,15 +53,21 @@ public class ContestHelper {
                 .collect(Collectors.toList());
     }
 
+    public Contest getEliminationContestChildContest(Integer eliminationContestId) {
+        return contestRepository.findChildContestByEliminationContestId(eliminationContestId);
+    }
+
     public Contest createNewSingleContest(Integer playerOneId, Integer playerTwoId, Integer tournamentId) {
         Contest contest = SingleContest.builder()
                 .playerOneId(playerOneId)
                 .playerTwoId(playerTwoId)
                 .tournamentId(tournamentId)
+                .participantOneScore(scoreHelper.mapEmptyParticipantScore())
+                .participantTwoScore(scoreHelper.mapEmptyParticipantScore())
                 .build();
 
         Contest createdContest = contestRepository.save(contest);
-        scoreHelper.createEmptyContestScore(createdContest.getId());
+//        scoreHelper.createEmptyContestScore(createdContest.getId());
         return createdContest;
     }
 
@@ -70,10 +76,12 @@ public class ContestHelper {
                 .teamOne(teamOne)
                 .teamTwo(teamTwo)
                 .tournamentId(tournamentId)
+                .participantOneScore(scoreHelper.mapEmptyParticipantScore())
+                .participantTwoScore(scoreHelper.mapEmptyParticipantScore())
                 .build();
 
         Contest createdContest = contestRepository.save(contest);
-        scoreHelper.createEmptyContestScore(createdContest.getId());
+//        scoreHelper.createEmptyContestScore(createdContest.getId());
         return createdContest;
     }
 
@@ -83,42 +91,52 @@ public class ContestHelper {
                 .firstParentContestId(firstParentContestId)
                 .secondParentContestId(secondParentContestId)
                 .tournamentId(tournamentId)
+                .participantOneScore(scoreHelper.mapEmptyParticipantScore())
+                .participantTwoScore(scoreHelper.mapEmptyParticipantScore())
                 .build();
 
         Contest createdContest = contestRepository.save(contest);
-        scoreHelper.createEmptyContestScore(createdContest.getId());
+//        scoreHelper.createEmptyContestScore(createdContest.getId());
         return createdContest;
     }
 
     public void updateContestScore(ScoreDTO scoreDto, ContestDTO contestDto) {
         scoreHelper.updateContestScore(scoreDto);
-        if (scoreDto.getTechDefeat().isTechDefeat()) {
-            updateContestTechDefeat(scoreDto.getTechDefeat(), contestDto);
-        } else {
-            Integer winnerId = scoreHelper.getScoreWinnerIdFunctionWithCreatedScore(scoreDto.getSets())
-                    .apply(contestDto);
-            contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
-        }
+
+        Integer winnerId = scoreHelper.getWinnerIdFunctionByUpdatedScore(scoreDto).apply(contestDto);
+        contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
     }
 
     public void updateSingleContestTechDefeatForPlayerRemoving(Integer playerId, SingleContestDTO contestDto) {
-        if (!contestDto.isTechDefeat()) {
-            Integer winnerId = contestDto.getPlayerOne().getId() == playerId ? contestDto.getPlayerTwo()
-                    .getId() : contestDto.getPlayerOne().getId();
-            contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-        } else if (playerId.equals(contestDto.getWinnerId())) {
-            contestRepository.updateTechDefeatByContestId(null, true, contestDto.getId());
+        ScoreDTO scoreDto = contestDto.getScoreDto();
+        int techDefeatScoreId;
+        if (playerId.equals(contestDto.getPlayerOne().getId())) {
+            techDefeatScoreId = scoreDto.getParticipantOneScoreId();
+            scoreDto.getTechDefeat().setParticipantOne(true);
+        } else {
+            techDefeatScoreId = scoreDto.getParticipantTwoScoreId();
+            scoreDto.getTechDefeat().setParticipantTwo(true);
         }
+
+        Integer winnerId = scoreHelper.getTechDefeatWinnerIdFunction(scoreDto.getTechDefeat()).apply(contestDto);
+        scoreHelper.updateContestScoreTechDefeat(techDefeatScoreId);
+        contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
     }
 
     public void updateDoubleContestTechDefeatForTeamRemoving(Integer teamId, DoubleContestDTO contestDto) {
-        if (!contestDto.isTechDefeat()) {
-            Integer winnerId = contestDto.getTeamOne().getId().equals(teamId) ? contestDto.getTeamTwo()
-                    .getId() : contestDto.getTeamOne().getId();
-            contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-        } else if (teamId.equals(contestDto.getWinnerId())) {
-            contestRepository.updateTechDefeatByContestId(null, true, contestDto.getId());
+        ScoreDTO scoreDto = contestDto.getScoreDto();
+        int techDefeatScoreId;
+        if (teamId.equals(contestDto.getTeamOne().getId())) {
+            techDefeatScoreId = scoreDto.getParticipantOneScoreId();
+            scoreDto.getTechDefeat().setParticipantOne(true);
+        } else {
+            techDefeatScoreId = scoreDto.getParticipantTwoScoreId();
+            scoreDto.getTechDefeat().setParticipantTwo(true);
         }
+
+        Integer winnerId = scoreHelper.getTechDefeatWinnerIdFunction(scoreDto.getTechDefeat()).apply(contestDto);
+        scoreHelper.updateContestScoreTechDefeat(techDefeatScoreId);
+        contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
     }
 
     public void updateContestTechDefeat(TechDefeatDTO techDefeatDto, ContestDTO contestDto) {
@@ -133,6 +151,10 @@ public class ContestHelper {
             Integer winnerId = scoreHelper.getScoreWinnerIdFunction(scoreDTO.getSets()).apply(contestDto);
             contestRepository.updateTechDefeatByContestId(winnerId, false, contestDto.getId());
         }
+    }
+
+    public void removeContest(Contest contest) {
+        contestRepository.delete(contest);
     }
 
     public void removeContestById(Integer contestId) {

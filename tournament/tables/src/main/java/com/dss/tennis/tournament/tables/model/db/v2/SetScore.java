@@ -10,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Deprecated
 public class SetScore {
 
     private int id;
@@ -70,9 +71,9 @@ public class SetScore {
     public void setTieBreak(TieBreak tieBreak) {
         this.tieBreak = tieBreak;
     }
-
-    @Basic
-    @Column(name = "contest_id", nullable = false)
+//
+//    @Basic
+//    @Column(name = "contest_id", nullable = false)
     public Integer getContestId() {
         return contestId;
     }

@@ -10,7 +10,6 @@ import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
-import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.PatchTournament;
 import com.dss.tennis.tournament.tables.validator.ContestValidator;
@@ -102,7 +101,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public ContestDTO updateContestScore(Integer contestId, Integer tournamentId, ContestScorePatchDTO scorePatchDto) {
+    public ContestDTO updateContestScore(Integer contestId, Integer tournamentId, ScoreDTO scorePatchDto) {
         Set<ErrorDataDTO> errorSet = scoreValidator.validateUpdateScorePatch(scorePatchDto);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
@@ -110,9 +109,7 @@ public class TournamentService {
         ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
         contestValidator.validateContestUpdate(scorePatchDto, contest, tournamentDTO);
 
-        List<SetScore> currentScore = scoreHelper.getContestSetScores(contestId);
-        ScoreDTO currentScoreDTO = scoreHelper.mapSetScoreToDtoWithTechDefeatDetails(currentScore, contest);
-        ScoreDTO patchedScoreDTO = scoreHelper.applyPatch(currentScoreDTO, scorePatchDto);
+        ScoreDTO patchedScoreDTO = scoreHelper.applyPatch(contest.getScoreDto(), scorePatchDto);
         errorSet = scoreValidator.validateUpdateScore(patchedScoreDTO);
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 

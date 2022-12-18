@@ -6,15 +6,14 @@ import com.dss.tennis.tournament.tables.logger.anotation.RepositoryLogRecord.Res
 import com.dss.tennis.tournament.tables.model.db.v2.SetScore;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
 import static com.dss.tennis.tournament.tables.logger.anotation.RepositoryLogRecord.QueryMethod.SAVE;
 
-public interface SetScoreRepository extends CrudRepository<SetScore, Integer> {
+public interface SetScoreRepository {//extends CrudRepository<SetScore, Integer> {
 
-    @Override
+//    @Override
     @RepositoryLogRecord(method = SAVE)
     <S extends SetScore> S save(S setScore);
 

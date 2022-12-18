@@ -5,7 +5,7 @@ import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestRequest.UpdateContestScoreRequest;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.ContestScorePatchDTO;
+import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,8 +38,8 @@ public class TournamentContestController {
                                                        @PathVariable Integer contestId,
                                                        @RequestBody UpdateContestScoreRequest updateContestScoreRequest) {
         //todo: validate id from body and url
-        ContestScorePatchDTO scorePatchDto = converterHelper
-                .convert(updateContestScoreRequest, ContestScorePatchDTO.class);
+        ScoreDTO scorePatchDto = converterHelper
+                .convert(updateContestScoreRequest, ScoreDTO.class);
 
         ContestDTO contestDto = tournamentService.updateContestScore(contestId, tournamentId, scorePatchDto);
 

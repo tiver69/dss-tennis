@@ -44,11 +44,11 @@ public abstract class RoundContestFactory implements AbstractContestFactory {
         //todo deal why setscore not populated immediately after enroll call
         return contests.stream()
                 .map(contest -> converterHelper.convert(contest, getContestParticipantDtoClass()))
-                .peek(contest -> {
-                    if (contest.getScoreDto().getSets() == null) {
-                        contestHelper.populateSetScores(contest);
-                    }
-                })
+//                .peek(contest -> {
+//                    if (contest.getScoreDto().getSets() == null) {
+//                        contestHelper.populateSetScores(contest);
+//                    }
+//                })
                 .collect(Collectors.toList());
     }
 
@@ -60,6 +60,6 @@ public abstract class RoundContestFactory implements AbstractContestFactory {
     }
 
     protected void removeContests(Supplier<List<Contest>> contestsToRemove) {
-        contestsToRemove.get().stream().map(Contest::getId).forEach(contestHelper::removeContestById);
+        contestsToRemove.get().forEach(contestHelper::removeContest);
     }
 }
