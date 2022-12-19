@@ -45,7 +45,7 @@ public class AdminDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Admin admin = adminsMap.get(username);
-        if (admin == null) throw new DetailedException(ErrorConstants.AUTHENTICATION_FAILED);
+        if (admin == null) throw new DetailedException(ErrorConstants.ErrorKey.AUTHENTICATION_FAILED);
         return admin;
     }
 
@@ -56,7 +56,7 @@ public class AdminDetailsService implements UserDetailsService {
                     .getSeconds() >= ALLOWED_TIME_RESET_COUNTER) {
                 resetUnsuccessfulCounter(username);
             } else {
-                throw new DetailedException(ErrorConstants.ACCOUNT_LOCKED);
+                throw new DetailedException(ErrorConstants.ErrorKey.ACCOUNT_LOCKED);
             }
         }
     }

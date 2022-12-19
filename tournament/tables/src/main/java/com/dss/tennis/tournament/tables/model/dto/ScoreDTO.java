@@ -1,10 +1,7 @@
 package com.dss.tennis.tournament.tables.model.dto;
 
-import com.dss.tennis.tournament.tables.model.db.v2.SetType;
 import com.dss.tennis.tournament.tables.validator.anotation.Required;
 import lombok.*;
-
-import java.util.Map;
 
 @Data
 @Builder
@@ -12,7 +9,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class ScoreDTO {
 
-    private Map<SetType, SetScoreDTO> sets;
     private int participantOneScoreId;
     private int participantTwoScoreId;
 
@@ -22,21 +18,8 @@ public class ScoreDTO {
     private SetScoreDTO tieBreak;
     private TechDefeatDTO techDefeat;
 
-    public ScoreDTO(TechDefeatDTO techDefeat, Map<SetType, SetScoreDTO> sets) {
-        this.sets = sets;
-        this.techDefeat = techDefeat;
-    }
-
-    public boolean isSetScoreNotDefined(SetType type) {
-        return sets == null || sets.get(type).isSetScoreNotDefined();
-    }
-
-    public boolean isSetScoreDefined(SetType type) {
-        return sets != null && sets.get(type).isSetScoreDefined();
-    }
-
     public boolean isSetOneScoreNotDefined() {
-        return setOne == null || setOne.isSetScoreNotDefined();
+        return !isSetOneScoreDefined();
     }
 
     public boolean isSetOneScoreDefined() {
@@ -44,7 +27,7 @@ public class ScoreDTO {
     }
 
     public boolean isSetTwoScoreNotDefined() {
-        return setTwo == null || setTwo.isSetScoreNotDefined();
+        return !isSetTwoScoreDefined();
     }
 
     public boolean isSetTwoScoreDefined() {
@@ -52,7 +35,7 @@ public class ScoreDTO {
     }
 
     public boolean isSetThreeScoreNotDefined() {
-        return setThree == null || setThree.isSetScoreNotDefined();
+        return !isSetThreeScoreDefined();
     }
 
     public boolean isSetThreeScoreDefined() {
@@ -60,23 +43,16 @@ public class ScoreDTO {
     }
 
     public boolean isTieBreakScoreNotDefined() {
-        return tieBreak == null || tieBreak.isSetScoreNotDefined();
+        return !isTieBreakScoreDefined();
     }
 
     public boolean isTieBreakScoreDefined() {
         return tieBreak != null && tieBreak.isSetScoreDefined();
     }
 
-    public boolean isScoreDefined() {
-        if (sets == null) return false;
-        if (isSetScoreDefined(SetType.SET_ONE)) return true;
-        if (isSetScoreDefined(SetType.SET_TWO)) return true;
-        if (isSetScoreDefined(SetType.SET_THREE)) return true;
-        return isSetScoreDefined(SetType.TIE_BREAK);
-    }
-
     public boolean isScoreNotDefined() {
-        return setOne == null && setTwo == null && setThree == null && tieBreak == null;
+        return isSetOneScoreNotDefined() && isSetTwoScoreNotDefined()
+                && isSetThreeScoreNotDefined() && isTieBreakScoreNotDefined();
     }
 
     @Getter
@@ -92,15 +68,6 @@ public class ScoreDTO {
 
         @Required(message = "PARTICIPANT_TWO_SCORE_EMPTY")
         private Byte participantTwoScore;
-
-        public SetScoreDTO(Integer id) {
-            this.id = id;
-        }
-
-        public SetScoreDTO(Byte participantOneScore, Byte participantTwoScore) {
-            this.participantOneScore = participantOneScore;
-            this.participantTwoScore = participantTwoScore;
-        }
 
         public boolean isSetScoreNotDefined() {
             return ((participantOneScore == null || participantTwoScore == null) ||

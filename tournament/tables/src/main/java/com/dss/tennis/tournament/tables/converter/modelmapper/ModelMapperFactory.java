@@ -98,8 +98,6 @@ public class ModelMapperFactory {
                 .setConverter(new EnrollTournamentParticipantRequestToResourceObjectListConverter());
         modelMapper.createTypeMap(EliminationContestDTO.class, ContestResponseData.class)
                 .setConverter(new EliminationContestDtoToContestResponseDataConverter(extraString));
-        modelMapper.createTypeMap(UpdateContestScoreRequest.class, ContestScorePatchDTO.class)
-                .setConverter(new UpdateContestScoreRequestToScorePatchConverter());
         modelMapper.createTypeMap(UpdateContestScoreRequest.class, ScoreDTO.class)
                 .setConverter(new UpdateContestScoreRequestToScoreDtoConverter());
 

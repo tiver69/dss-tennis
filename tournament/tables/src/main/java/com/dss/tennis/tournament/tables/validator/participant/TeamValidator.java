@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
 import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TEAM;
 
 @Component
@@ -41,11 +41,11 @@ public class TeamValidator extends ParticipantValidator<Team> {
                     .getSequenceNumber());
 
         if (teamHelper.isParticipantNotExist(newTeamId))
-            return new ErrorDataDTO(ErrorConstants.TEAM_NOT_FOUND, newTeamId.toString(), newTeam
+            return new ErrorDataDTO(ErrorConstants.ErrorKey.TEAM_NOT_FOUND, newTeamId.toString(), newTeam
                     .getSequenceNumber());
         Team team = teamHelper.getParticipant(newTeamId);
         if (currentPlayerIds.contains(team.getPlayerOneId()) || currentPlayerIds.contains(team.getPlayerTwoId()))
-            return new ErrorDataDTO(ErrorConstants.PARTICIPANT_DUPLICATION, newTeamId.toString(), newTeam
+            return new ErrorDataDTO(ErrorConstants.ErrorKey.PARTICIPANT_DUPLICATION, newTeamId.toString(), newTeam
                     .getSequenceNumber());
 
         return null;

@@ -35,7 +35,7 @@ public class RoundSingleContestFactory extends RoundContestFactory {
     public void removeParticipantFromTournament(Integer playerId, int tournamentId, boolean techDefeat) {
         if (techDefeat)
             contestHelper.getTournamentPlayerContests(playerId, tournamentId).forEach(contestDTO -> contestHelper
-                    .updateSingleContestTechDefeatForPlayerRemoving(playerId, contestDTO));
+                    .updateContestTechDefeatForParticipantRemoving(playerId, contestDTO));
         else
             removeContests(() -> contestRepository.findByPlayerIdAndSingleTournamentId(playerId, tournamentId));
     }
@@ -43,8 +43,8 @@ public class RoundSingleContestFactory extends RoundContestFactory {
     @Override
     public ContestDTO getContestDTO(Integer contestId, Integer tournamentId) {
         SingleContestDTO contestDto = (SingleContestDTO) getBasicContestDTO(contestId, tournamentId);
-        PlayerDTO playerOne = playerHelper.getParticipantDto(contestDto.participantOneId());
-        PlayerDTO playerTwo = playerHelper.getParticipantDto(contestDto.participantTwoId());
+        PlayerDTO playerOne = playerHelper.getParticipantDto(contestDto.getParticipantOneId());
+        PlayerDTO playerTwo = playerHelper.getParticipantDto(contestDto.getParticipantTwoId());
 
         contestDto.setPlayerOne(playerOne);
         contestDto.setPlayerTwo(playerTwo);
@@ -56,9 +56,9 @@ public class RoundSingleContestFactory extends RoundContestFactory {
         Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
         contests.forEach(contest -> {
             ((SingleContestDTO) contest)
-                    .setPlayerOne(players.get(contest.participantOneId()));
+                    .setPlayerOne(players.get(contest.getParticipantOneId()));
             ((SingleContestDTO) contest)
-                    .setPlayerTwo(players.get(contest.participantTwoId()));
+                    .setPlayerTwo(players.get(contest.getParticipantTwoId()));
         });
         return contests;
     }

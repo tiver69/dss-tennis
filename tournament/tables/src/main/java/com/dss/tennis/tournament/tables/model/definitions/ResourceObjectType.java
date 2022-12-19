@@ -5,7 +5,7 @@ import com.dss.tennis.tournament.tables.exception.DetailedException;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.UNSUPPORTED_RESOURCE_TYPE;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.UNSUPPORTED_RESOURCE_TYPE;
 
 public enum ResourceObjectType {
     PLAYER("player", "/participants/players"),

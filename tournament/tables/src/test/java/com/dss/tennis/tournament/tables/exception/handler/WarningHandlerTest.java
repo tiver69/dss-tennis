@@ -1,6 +1,7 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +15,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class WarningHandlerTest {
 
-    private static final ErrorConstants TEST_CONSTANT = ErrorConstants.PARTICIPANT_DUPLICATION;
+    private static final ErrorKey TEST_CONSTANT = ErrorConstants.ErrorKey.PARTICIPANT_DUPLICATION;
     private static final String ANY_DETAIL = "Detail";
     private static final String POINTER_SUFFIX = ".warning.pointer";
     private static final String WARNING_PARAMETER = "parameter";

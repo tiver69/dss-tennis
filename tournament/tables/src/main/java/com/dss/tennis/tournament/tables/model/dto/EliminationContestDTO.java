@@ -24,29 +24,29 @@ public class EliminationContestDTO extends ContestDTO implements Iterable<Contes
 
     @Override
     public Object getParticipantOne() {
-        if (firstParentContestDto.participantOneId().equals(firstParentContestDto.getWinnerId()))
+        if (firstParentContestDto.getParticipantOneId().equals(firstParentContestDto.getWinnerId()))
             return firstParentContestDto.getParticipantOne();
-        if (firstParentContestDto.participantTwoId().equals(firstParentContestDto.getWinnerId()))
+        if (firstParentContestDto.getParticipantTwoId().equals(firstParentContestDto.getWinnerId()))
             return firstParentContestDto.getParticipantTwo();
         return null;
     }
 
     @Override
     public Object getParticipantTwo() {
-        if (secondParentContestDto.participantOneId().equals(secondParentContestDto.getWinnerId()))
+        if (secondParentContestDto.getParticipantOneId().equals(secondParentContestDto.getWinnerId()))
             return secondParentContestDto.getParticipantOne();
-        if (secondParentContestDto.participantTwoId().equals(secondParentContestDto.getWinnerId()))
+        if (secondParentContestDto.getParticipantTwoId().equals(secondParentContestDto.getWinnerId()))
             return secondParentContestDto.getParticipantTwo();
         return null;
     }
 
     @Override
-    public Integer participantOneId() {
+    public Integer getParticipantOneId() {
         return firstParentContestDto.getWinnerId();
     }
 
     @Override
-    public Integer participantTwoId() {
+    public Integer getParticipantTwoId() {
         return secondParentContestDto.getWinnerId();
     }
 

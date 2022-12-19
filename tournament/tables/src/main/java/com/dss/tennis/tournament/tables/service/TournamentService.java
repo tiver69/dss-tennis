@@ -92,12 +92,12 @@ public class TournamentService {
                 .validateTournamentParticipantQuantity(tournamentDto, newParticipantIds.size());
 
         tournamentHelper.addParticipantsToTournament(tournamentDto, newParticipantIds);
-        return new ResponseWarningDTO<>(tournamentHelper.getTournamentDTOExtended(tournamentId), warnings);
+        return new ResponseWarningDTO<>(tournamentHelper.getTournamentDTOWithContests(tournamentId), warnings);
     }
 
     public ContestDTO getTournamentContest(Integer contestId, Integer tournamentId) {
         TournamentDTO tournamentDto = tournamentHelper.getTournamentDto(tournamentId);
-        return contestHelper.getTournamentContestDTO(contestId, tournamentDto, true);
+        return contestHelper.getTournamentContestDTO(contestId, tournamentDto);
     }
 
     @Transactional
@@ -106,7 +106,7 @@ public class TournamentService {
         if (!errorSet.isEmpty()) throw new DetailedException(errorSet);
 
         TournamentDTO tournamentDTO = tournamentHelper.getTournamentDto(tournamentId);
-        ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO, false);
+        ContestDTO contest = contestHelper.getTournamentContestDTO(contestId, tournamentDTO);
         contestValidator.validateContestUpdate(scorePatchDto, contest, tournamentDTO);
 
         ScoreDTO patchedScoreDTO = scoreHelper.applyPatch(contest.getScoreDto(), scorePatchDto);
@@ -115,11 +115,11 @@ public class TournamentService {
 
         contestHelper.updateContestScore(patchedScoreDTO, contest);
 
-        return contestHelper.getTournamentContestDTO(contestId, tournamentDTO, true);
+        return contestHelper.getTournamentContestDTO(contestId, tournamentDTO);
     }
 
     public TournamentDTO getTournament(Integer tournamentId) {
-        return tournamentHelper.getTournamentDTOExtended(tournamentId);
+        return tournamentHelper.getTournamentDTOWithContests(tournamentId);
     }
 
     public ResponseWarningDTO<PageableDTO> getTournamentPage(int page, byte pageSize) {
@@ -145,7 +145,7 @@ public class TournamentService {
         participantValidator.validateParticipantForRemoving(participantId, tournamentId);
 
         tournamentHelper.removeParticipantFromTournament(participantId, tournamentDto, techDefeat);
-        return tournamentHelper.getTournamentDTOExtended(tournamentId);
+        return tournamentHelper.getTournamentDTOWithContests(tournamentId);
     }
 
     public void removeTournament(Integer tournamentId) {

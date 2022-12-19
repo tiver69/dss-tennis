@@ -55,7 +55,7 @@ public class PlayerHelper extends ParticipantHelper<Player, PlayerDTO> {
     public Player getParticipant(Integer playerId) {
         Optional<Player> repositoryPlayer = playerRepository.findById(playerId);
         if (!repositoryPlayer.isPresent())
-            throw new DetailedException(ErrorConstants.PLAYER_NOT_FOUND, playerId);
+            throw new DetailedException(ErrorConstants.ErrorKey.PLAYER_NOT_FOUND, playerId);
 
         return repositoryPlayer.get();
     }

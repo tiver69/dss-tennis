@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
 
 @Component
 public class TournamentValidator {

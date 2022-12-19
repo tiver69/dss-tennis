@@ -15,7 +15,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NAME_EMPTY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.TOURNAMENT_NAME_EMPTY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -76,7 +76,7 @@ class ValidatorHelperTest {
                 () -> assertFalse(result.isEmpty()),
                 () -> assertEquals(1, result.size()),
                 () -> assertTrue(result.stream()
-                        .anyMatch(tt -> tt.getErrorConstant().equals(TOURNAMENT_NAME_EMPTY))),
+                        .anyMatch(tt -> tt.getErrorKey().equals(TOURNAMENT_NAME_EMPTY))),
                 () -> assertFalse(result.stream()
                         .anyMatch(tt -> tt.getSequentNumber() != null))
         );

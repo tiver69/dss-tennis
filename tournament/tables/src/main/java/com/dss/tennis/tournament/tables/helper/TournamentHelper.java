@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.TOURNAMENT_NOT_FOUND;
 
 @Service
 public class TournamentHelper {
@@ -77,11 +77,11 @@ public class TournamentHelper {
         return tournamentFactory.populateTournamentDTO(tournament);
     }
 
-    public TournamentDTO getTournamentDTOExtended(Integer tournamentId) {
+    public TournamentDTO getTournamentDTOWithContests(Integer tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->
                 new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
 
-        return tournamentFactory.populateTournamentDtoExtended(tournament);
+        return tournamentFactory.populateTournamentDtoWithContests(tournament);
     }
 
     private StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate) {

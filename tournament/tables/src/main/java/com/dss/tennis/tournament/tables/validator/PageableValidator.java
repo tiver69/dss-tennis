@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.validator;
 
-import com.dss.tennis.tournament.tables.exception.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
 import static com.dss.tennis.tournament.tables.helper.RequestParameterHelper.PARAMETER_URL_SEPARATOR;
 
 @Component
@@ -58,9 +58,9 @@ public class PageableValidator {
         return null;
     }
 
-    private ErrorDataDTO createWarningsForNotAllowedParameter(ErrorConstants key, String notAllowedValue,
+    private ErrorDataDTO createWarningsForNotAllowedParameter(ErrorKey key, String notAllowedValue,
                                                               String notAllowedKey) {
-        return ErrorDataDTO.builder().errorConstant(key).detailParameter(notAllowedValue)
+        return ErrorDataDTO.builder().errorKey(key).detailParameter(notAllowedValue)
                 .pointer(PARAMETER_URL_SEPARATOR + notAllowedKey).build();
     }
 }

@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.model.db.v2;
 
+@Deprecated
 public enum SetType {
     SET_ONE("setOne"),
     SET_TWO("setTwo"),

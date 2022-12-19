@@ -31,7 +31,6 @@ public class DoubleContestToDoubleContestDtoConverter extends ContestToContestDt
                         .playerTwo(PlayerDTO.builder().id(contest.getTeamTwo().getPlayerTwoId()).build())
                         .build())
                 .winnerId(contest.getWinnerId())
-                .techDefeat(contest.isTechDefeat())
                 .scoreDto(convertSetScoreDto(contest))
                 .build();
     }

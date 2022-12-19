@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.CONTEST_NOT_FOUND;
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.FORBIDDEN_PARTICIPANT_QUANTITY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.CONTEST_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.FORBIDDEN_PARTICIPANT_QUANTITY;
 
 public abstract class RoundContestFactory implements AbstractContestFactory {
 
@@ -41,14 +41,8 @@ public abstract class RoundContestFactory implements AbstractContestFactory {
     @Override
     public List<ContestDTO> getContestDTOs(Integer tournamentId) {
         List<Contest> contests = contestHelper.getTournamentContests(tournamentId);
-        //todo deal why setscore not populated immediately after enroll call
         return contests.stream()
                 .map(contest -> converterHelper.convert(contest, getContestParticipantDtoClass()))
-//                .peek(contest -> {
-//                    if (contest.getScoreDto().getSets() == null) {
-//                        contestHelper.populateSetScores(contest);
-//                    }
-//                })
                 .collect(Collectors.toList());
     }
 

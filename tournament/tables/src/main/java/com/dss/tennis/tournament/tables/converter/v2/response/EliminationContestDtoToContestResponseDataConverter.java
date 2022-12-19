@@ -37,10 +37,10 @@ public class EliminationContestDtoToContestResponseDataConverter extends Contest
 
         SimpleResourceObject participantOne = contestDto
                 .getParticipantOne() != null ? new SimpleResourceObject(contestDto
-                .participantOneId(), participantResourceType) : null;
+                .getParticipantOneId(), participantResourceType) : null;
         SimpleResourceObject participantTwo = contestDto
                 .getParticipantTwo() != null ? new SimpleResourceObject(contestDto
-                .participantTwoId(), participantResourceType) : null;
+                .getParticipantTwoId(), participantResourceType) : null;
         SimpleResourceObject winner = contestDto.getWinnerId() == null ? null : new SimpleResourceObject(contestDto
                 .getWinnerId(), participantResourceType);
 

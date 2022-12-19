@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.AUTHENTICATION_FAILED;
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.INTERNAL_SERVER_ERROR;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.AUTHENTICATION_FAILED;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 public class MainExceptionHandler extends SourceAwareExceptionHandler {

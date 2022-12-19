@@ -31,7 +31,6 @@ public class RepositoryLoggerAspect {
         repositoryToEntityName.put("com.dss.tennis.tournament.tables.repository.ContestRepository", "CONTEST");
         repositoryToEntityName.put("com.dss.tennis.tournament.tables.repository.ScoreRepository", "SCORE");
         repositoryToEntityName.put("com.dss.tennis.tournament.tables.repository.PlayerRepository", "PLAYER");
-        repositoryToEntityName.put("com.dss.tennis.tournament.tables.repository.SetScoreRepository", "SETS_SCORE");
         repositoryToEntityName.put("com.dss.tennis.tournament.tables.repository.TeamRepository", "TEAM");
         repositoryToEntityName.put("com.dss.tennis.tournament.tables.repository.TournamentRepository", "TOURNAMENT");
     }

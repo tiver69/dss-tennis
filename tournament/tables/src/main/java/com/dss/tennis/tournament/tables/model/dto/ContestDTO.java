@@ -13,25 +13,14 @@ public abstract class ContestDTO {
 
     private int id;
     private Integer winnerId;
-    private boolean techDefeat;
     private ScoreDTO scoreDto;
 
-    //get word is missing due to model mapper which is trying to access GetParticipant constructor
-    public abstract Integer participantOneId();
+    //todo: ?? get word is missing due to model mapper which is trying to access GetParticipant constructor
+    public abstract Integer getParticipantOneId();
 
-    public abstract Integer participantTwoId();
+    public abstract Integer getParticipantTwoId();
 
     public abstract Object getParticipantOne();
 
     public abstract Object getParticipantTwo();
-
-    public boolean isParticipantOneTechDefeat() {
-        return (techDefeat && winnerId != null && winnerId
-                .equals(participantTwoId())) || (techDefeat && winnerId == null);
-    }
-
-    public boolean isParticipantTwoTechDefeat() {
-        return (techDefeat && winnerId != null && winnerId
-                .equals(participantOneId())) || (techDefeat && winnerId == null);
-    }
 }

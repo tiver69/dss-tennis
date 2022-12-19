@@ -67,13 +67,13 @@ public class TournamentDtoToTournamentResponseDataConverter implements Converter
         return 0;
     }
 
-    //todo check progress with full techDefeats
     private byte countProgressPercentage(Iterable<ContestDTO> contests) {
         if (contests == null) return 0;
         byte contestsPlayed = 0;
         byte contestsTotal = 0;
         for (ContestDTO contestDto : contests) { //todo extend iterable contest to return size
-            if (contestDto.getWinnerId() != null || contestDto.isTechDefeat()) contestsPlayed++;
+            if (contestDto.getWinnerId() != null || contestDto.getScoreDto().getTechDefeat().isTechDefeat())
+                contestsPlayed++;
             contestsTotal++;
         }
         return (contestsTotal == 0) ? (byte) 0 : (byte) ((contestsPlayed * 100) / contestsTotal);

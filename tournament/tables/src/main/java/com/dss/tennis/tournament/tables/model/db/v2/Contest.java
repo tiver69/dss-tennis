@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -17,10 +16,7 @@ public class Contest {
     private int id;
     private Integer tournamentId;
     private Integer winnerId;
-    private boolean techDefeat;
     private Date date;
-    @Transient
-    private Set<SetScore> sets;
     private Score participantOneScore;
     private Score participantTwoScore;
 
@@ -56,16 +52,6 @@ public class Contest {
     }
 
     @Basic
-    @Column(name = "tech_defeat")
-    public boolean isTechDefeat() {
-        return techDefeat;
-    }
-
-    public void setTechDefeat(boolean techDefeat) {
-        this.techDefeat = techDefeat;
-    }
-
-    @Basic
     @Column(name = "date")
     public Date getDate() {
         return date;
@@ -73,20 +59,6 @@ public class Contest {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "contest_id")
-
-    @Transient
-    public Set<SetScore> getSets() {
-        return sets;
-    }
-
-
-    @Transient
-    public void setSets(Set<SetScore> sets) {
-        this.sets = sets;
     }
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -134,11 +106,13 @@ public class Contest {
 
     @Override
     public String toString() {
-        return "id=" + id +
+        return "Contest{" +
+                "id=" + id +
                 ", tournamentId=" + tournamentId +
-                ", winner=" + winnerId +
-                ", techDefeat=" + techDefeat +
+                ", winnerId=" + winnerId +
                 ", date=" + date +
-                ", ";
+                ", participantOneScore=" + participantOneScore +
+                ", participantTwoScore=" + participantTwoScore +
+                '}';
     }
 }

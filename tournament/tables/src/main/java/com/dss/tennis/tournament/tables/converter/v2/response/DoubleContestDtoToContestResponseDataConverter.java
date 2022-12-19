@@ -33,8 +33,8 @@ public class DoubleContestDtoToContestResponseDataConverter extends ContestDtoTo
         SimpleResourceObject winner = contestDto.getWinnerId() == null ? null : new SimpleResourceObject(contestDto
                 .getWinnerId(), TEAM.value);
         return ContestRelationships.builder()
-                .participantOne(new SimpleResourceObject(contestDto.participantOneId(), TEAM.value))
-                .participantTwo(new SimpleResourceObject(contestDto.participantTwoId(), TEAM.value))
+                .participantOne(new SimpleResourceObject(contestDto.getParticipantOneId(), TEAM.value))
+                .participantTwo(new SimpleResourceObject(contestDto.getParticipantTwoId(), TEAM.value))
                 .winner(winner)
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
-import com.dss.tennis.tournament.tables.exception.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData.ErrorDataSource;
@@ -26,7 +26,7 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
     protected final String STRING_POINTER_KEY = "%s";
 
     public ErrorData createErrorData(ErrorDataDTO currentError) {
-        String errorConstant = currentError.getErrorConstant().toString();
+        String errorConstant = currentError.getErrorKey().toString();
         ErrorDataSource errorDataSource = constructErrorDataSource(errorConstant, currentError
                 .getDetailParameter(), currentError.getPointer(), currentError.getSequentNumber());
 
@@ -35,7 +35,7 @@ public abstract class SourceAwareExceptionHandler extends ResponseEntityExceptio
         return errorData;
     }
 
-    protected ErrorData createErrorData(ErrorConstants errorConstantEnum, String detailParameter, String pointer) {
+    protected ErrorData createErrorData(ErrorKey errorConstantEnum, String detailParameter, String pointer) {
         String errorConstant = errorConstantEnum.toString();
         ErrorData errorData = createErrorDataBase(errorConstant);
         errorData.setSource(constructErrorDataSource(errorConstant, detailParameter, pointer, null));

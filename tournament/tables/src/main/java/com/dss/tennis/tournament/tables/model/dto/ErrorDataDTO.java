@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.model.dto;
 
-import com.dss.tennis.tournament.tables.exception.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,30 +13,30 @@ import lombok.NoArgsConstructor;
 public class ErrorDataDTO {
 
     public ErrorDataDTO(String errorConstantString) {
-        this.errorConstant = ErrorConstants.valueOf(errorConstantString);
+        this.errorKey = ErrorKey.valueOf(errorConstantString);
     }
 
-    public ErrorDataDTO(ErrorConstants errorConstant) {
-        this.errorConstant = errorConstant;
+    public ErrorDataDTO(ErrorKey errorKey) {
+        this.errorKey = errorKey;
     }
 
-    public ErrorDataDTO(ErrorConstants errorConstant, String detailParameter) {
-        this.errorConstant = errorConstant;
+    public ErrorDataDTO(ErrorKey errorKey, String detailParameter) {
+        this.errorKey = errorKey;
         this.detailParameter = detailParameter;
     }
 
-    public ErrorDataDTO(ErrorConstants errorConstant, Byte sequentNumber) {
-        this.errorConstant = errorConstant;
+    public ErrorDataDTO(ErrorKey errorKey, Byte sequentNumber) {
+        this.errorKey = errorKey;
         this.sequentNumber = sequentNumber;
     }
 
-    public ErrorDataDTO(ErrorConstants errorConstant, String detailParameter, Byte sequentNumber) {
-        this.errorConstant = errorConstant;
+    public ErrorDataDTO(ErrorKey errorKey, String detailParameter, Byte sequentNumber) {
+        this.errorKey = errorKey;
         this.detailParameter = detailParameter;
         this.sequentNumber = sequentNumber;
     }
 
-    private ErrorConstants errorConstant;
+    private ErrorKey errorKey;
     private String detailParameter;
     private String pointer;
     private Byte sequentNumber;

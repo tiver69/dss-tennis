@@ -51,15 +51,14 @@ public class TournamentFactory {
     public void removeTournamentContests(TournamentDTO tournamentDto) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
                 .getParticipantType());
-        contestFactory.
-                removeTournamentContests(tournamentDto.getId());
+        contestFactory.removeTournamentContests(tournamentDto.getId());
     }
 
     public TournamentDTO populateTournamentDTO(Tournament tournament) {
         return converterHelper.convert(tournament, TournamentDTO.class);
     }
 
-    public TournamentDTO populateTournamentDtoExtended(Tournament tournament) {
+    public TournamentDTO populateTournamentDtoWithContests(Tournament tournament) {
         TournamentDTO tournamentDto = populateTournamentDTO(tournament);
 
         //todo refactor

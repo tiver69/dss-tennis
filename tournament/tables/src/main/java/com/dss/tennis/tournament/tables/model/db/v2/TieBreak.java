@@ -2,7 +2,7 @@ package com.dss.tennis.tournament.tables.model.db.v2;
 
 import javax.persistence.*;
 
-@Entity
+@Deprecated
 public class TieBreak {
 
     private int id;

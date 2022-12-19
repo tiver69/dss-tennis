@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
-import static com.dss.tennis.tournament.tables.model.db.v2.SetType.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorPointerKey.*;
 
 @Component
 public class ScoreValidator {
@@ -28,7 +28,7 @@ public class ScoreValidator {
         Set<ErrorDataDTO> errors = new HashSet<>();
 
         if (scorePatchDto.getTechDefeat() == null && scorePatchDto.isScoreNotDefined()) {
-            errors.add(ErrorDataDTO.builder().errorConstant(CONTEST_UPDATE_ATTRIBUTES_EMPTY).build());
+            errors.add(ErrorDataDTO.builder().errorKey(CONTEST_UPDATE_ATTRIBUTES_EMPTY).build());
             return errors;
         }
 
@@ -46,9 +46,9 @@ public class ScoreValidator {
         Set<ErrorDataDTO> errors = new HashSet<>();
         //todo define rule for tie break
         if (score.isSetOneScoreNotDefined() && score.isSetTwoScoreDefined())
-            errors.add(ErrorDataDTO.builder().errorConstant(SET_SCORE_EMPTY).pointer(SET_ONE.value).build());
+            errors.add(ErrorDataDTO.builder().errorKey(SET_SCORE_EMPTY).pointer(SET_ONE.value).build());
         if (score.isSetTwoScoreNotDefined() && score.isSetThreeScoreDefined())
-            errors.add(ErrorDataDTO.builder().errorConstant(SET_SCORE_EMPTY).pointer(SET_TWO.value).build());
+            errors.add(ErrorDataDTO.builder().errorKey(SET_SCORE_EMPTY).pointer(SET_TWO.value).build());
         return errors;
     }
 
@@ -64,7 +64,7 @@ public class ScoreValidator {
         //todo determine rules for tie break score
         if (participantOne != null && participantTwo != null && !scoreHelper
                 .isSetScoreValid(participantOne, participantTwo))
-            return Set.of(ErrorDataDTO.builder().errorConstant(GAME_LIMIT_EXCEEDED).pointer(type)
+            return Set.of(ErrorDataDTO.builder().errorKey(GAME_LIMIT_EXCEEDED).pointer(type)
                     .detailParameter(String.format("%d:%d", participantOne, participantTwo)).build());
         return new HashSet<>();
     }

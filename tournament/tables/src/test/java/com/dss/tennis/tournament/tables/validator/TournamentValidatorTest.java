@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NAME_DUPLICATE;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.TOURNAMENT_NAME_DUPLICATE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +72,7 @@ class TournamentValidatorTest {
                 () -> assertFalse(result.isEmpty()),
                 () -> assertEquals(1, result.size()),
                 () -> assertTrue(result.stream()
-                        .anyMatch(tt -> tt.getErrorConstant().equals(TOURNAMENT_NAME_DUPLICATE)))
+                        .anyMatch(tt -> tt.getErrorKey().equals(TOURNAMENT_NAME_DUPLICATE)))
         );
     }
 }

@@ -19,7 +19,6 @@ public class EliminationContestToEliminationContestDtoConverter extends ContestT
         return EliminationContestDTO.builder()
                 .id(contest.getId())
                 .winnerId(contest.getWinnerId())
-                .techDefeat(contest.isTechDefeat())
                 .scoreDto(convertSetScoreDto(contest))
                 .build();
     }

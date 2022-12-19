@@ -35,7 +35,7 @@ public class RoundDoubleContestFactory extends RoundContestFactory {
     public void removeParticipantFromTournament(Integer teamId, int tournamentId, boolean techDefeat) {
         if (techDefeat)
             contestHelper.getTournamentTeamContests(teamId, tournamentId).forEach(contestDTO -> contestHelper
-                    .updateDoubleContestTechDefeatForTeamRemoving(teamId, contestDTO));
+                    .updateContestTechDefeatForParticipantRemoving(teamId, contestDTO));
         else
             removeContests(() -> contestRepository.findByTeamIdAndDoubleTournamentId(teamId, tournamentId));
     }
@@ -44,8 +44,8 @@ public class RoundDoubleContestFactory extends RoundContestFactory {
     public ContestDTO getContestDTO(Integer contestId, Integer tournamentId) {
         DoubleContestDTO contest = (DoubleContestDTO) getBasicContestDTO(contestId, tournamentId);
 
-        contest.setTeamOne(teamHelper.getParticipantDto(contest.participantOneId()));
-        contest.setTeamTwo(teamHelper.getParticipantDto(contest.participantTwoId()));
+        contest.setTeamOne(teamHelper.getParticipantDto(contest.getParticipantOneId()));
+        contest.setTeamTwo(teamHelper.getParticipantDto(contest.getParticipantTwoId()));
         return contest;
     }
 

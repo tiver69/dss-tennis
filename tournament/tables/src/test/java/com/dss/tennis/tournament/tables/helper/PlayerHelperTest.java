@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.PLAYER_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.PLAYER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -69,7 +69,7 @@ class PlayerHelperTest {
         Assertions.assertAll(
                 () -> assertFalse(result.getErrors().isEmpty()),
                 () -> assertEquals(1, result.getErrors().size()),
-                () -> assertTrue(result.getErrors().stream().map(ErrorDataDTO::getErrorConstant)
+                () -> assertTrue(result.getErrors().stream().map(ErrorDataDTO::getErrorKey)
                         .allMatch(errorConstant -> PLAYER_NOT_FOUND == errorConstant))
         );
     }

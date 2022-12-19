@@ -2,6 +2,7 @@ package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
+import com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse;
 import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
@@ -25,8 +26,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.PLAYER_FIRST_NAME_EMPTY;
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NAME_EMPTY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.PLAYER_FIRST_NAME_EMPTY;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.TOURNAMENT_NAME_EMPTY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class MainExceptionHandlerTest {
 
-    private static final ErrorConstants TEST_CONSTANT = ErrorConstants.TOURNAMENT_NAME_DUPLICATE;
+    private static final ErrorKey TEST_CONSTANT = ErrorConstants.ErrorKey.TOURNAMENT_NAME_DUPLICATE;
     private static final String RUNTIME_MESSAGE = "Runtime message";
     private static final String ANY_DETAIL = "Detail";
     private static final String ERROR_DETAIL_DATA = "DetailData";

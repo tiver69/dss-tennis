@@ -4,7 +4,7 @@ import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorDat
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.GENERAL_BAD_REQUEST;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.GENERAL_BAD_REQUEST;
 
 @Service
 public class TypeMismatchExceptionHandler extends SourceAwareExceptionHandler implements JacksonExceptionHandler {

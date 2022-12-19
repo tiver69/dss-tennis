@@ -72,8 +72,8 @@ public class EliminationSingleContestFactory extends EliminationContestFactory {
                 }
             });
         } else {
-            PlayerDTO playerOne = playerHelper.getParticipantDto(contestDto.participantOneId());
-            PlayerDTO playerTwo = playerHelper.getParticipantDto(contestDto.participantTwoId());
+            PlayerDTO playerOne = playerHelper.getParticipantDto(contestDto.getParticipantOneId());
+            PlayerDTO playerTwo = playerHelper.getParticipantDto(contestDto.getParticipantTwoId());
             ((SingleContestDTO) contestDto).setPlayerOne(playerOne);
             ((SingleContestDTO) contestDto).setPlayerTwo(playerTwo);
         }

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.UNAUTHORIZED;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.UNAUTHORIZED;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {

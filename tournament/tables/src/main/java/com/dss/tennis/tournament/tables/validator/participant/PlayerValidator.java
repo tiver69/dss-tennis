@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
 import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
 
 @Component
@@ -59,11 +59,11 @@ public class PlayerValidator extends ParticipantValidator<Player> {
         Set<ErrorDataDTO> detailedErrorData = validatorHelper.validateObject(playerDTO);
 
         if (detailedErrorData.isEmpty() && playerHelper.isPlayerExist(playerDTO))
-            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.PLAYER_DUPLICATION));
+            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.ErrorKey.PLAYER_DUPLICATION));
         if (playerDTO.getBirthDate() != null && LocalDate.now().isBefore(playerDTO.getBirthDate()))
-            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.BIRTH_DATE_ILLEGAL));
+            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.ErrorKey.BIRTH_DATE_ILLEGAL));
         if (playerDTO.getExperienceYear() != null && LocalDate.now().getYear() < playerDTO.getExperienceYear())
-            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.EXPERIENCE_YEAR_ILLEGAL));
+            detailedErrorData.add(new ErrorDataDTO(ErrorConstants.ErrorKey.EXPERIENCE_YEAR_ILLEGAL));
 
         return detailedErrorData;
     }

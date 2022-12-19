@@ -3,10 +3,12 @@ package com.dss.tennis.tournament.tables.helper;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.Team;
-import com.dss.tennis.tournament.tables.model.db.v2.*;
+import com.dss.tennis.tournament.tables.model.db.v2.Contest;
+import com.dss.tennis.tournament.tables.model.db.v2.DoubleContest;
+import com.dss.tennis.tournament.tables.model.db.v2.EliminationContest;
+import com.dss.tennis.tournament.tables.model.db.v2.SingleContest;
 import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
-import com.dss.tennis.tournament.tables.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +23,11 @@ public class ContestHelper {
     @Autowired
     private ConverterHelper converterHelper;
     @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
     private ScoreHelper scoreHelper;
     @Autowired
     private TournamentFactory tournamentFactory;
 
-    public void populateSetScores(ContestDTO contestDto) {
-        ScoreDTO scoreDto = scoreHelper.getContestScoreDto(contestDto.getId());
-        //todo tech defeat is null here and its bad
-        contestDto.getScoreDto().setSets(scoreDto.getSets());
-    }
-
-    public ContestDTO getTournamentContestDTO(Integer contestId, TournamentDTO tournament, boolean includeScore) {
+    public ContestDTO getTournamentContestDTO(Integer contestId, TournamentDTO tournament) {
         return tournamentFactory.getTournamentContestDTO(contestId, tournament);
     }
 
@@ -53,10 +47,6 @@ public class ContestHelper {
                 .collect(Collectors.toList());
     }
 
-    public Contest getEliminationContestChildContest(Integer eliminationContestId) {
-        return contestRepository.findChildContestByEliminationContestId(eliminationContestId);
-    }
-
     public Contest createNewSingleContest(Integer playerOneId, Integer playerTwoId, Integer tournamentId) {
         Contest contest = SingleContest.builder()
                 .playerOneId(playerOneId)
@@ -66,9 +56,7 @@ public class ContestHelper {
                 .participantTwoScore(scoreHelper.mapEmptyParticipantScore())
                 .build();
 
-        Contest createdContest = contestRepository.save(contest);
-//        scoreHelper.createEmptyContestScore(createdContest.getId());
-        return createdContest;
+        return contestRepository.save(contest);
     }
 
     public Contest createNewDoubleContest(Team teamOne, Team teamTwo, Integer tournamentId) {
@@ -80,9 +68,7 @@ public class ContestHelper {
                 .participantTwoScore(scoreHelper.mapEmptyParticipantScore())
                 .build();
 
-        Contest createdContest = contestRepository.save(contest);
-//        scoreHelper.createEmptyContestScore(createdContest.getId());
-        return createdContest;
+        return contestRepository.save(contest);
     }
 
     public Contest createNewEliminationContest(Integer firstParentContestId, Integer secondParentContestId,
@@ -95,9 +81,7 @@ public class ContestHelper {
                 .participantTwoScore(scoreHelper.mapEmptyParticipantScore())
                 .build();
 
-        Contest createdContest = contestRepository.save(contest);
-//        scoreHelper.createEmptyContestScore(createdContest.getId());
-        return createdContest;
+        return contestRepository.save(contest);
     }
 
     public void updateContestScore(ScoreDTO scoreDto, ContestDTO contestDto) {
@@ -107,10 +91,10 @@ public class ContestHelper {
         contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
     }
 
-    public void updateSingleContestTechDefeatForPlayerRemoving(Integer playerId, SingleContestDTO contestDto) {
+    public void updateContestTechDefeatForParticipantRemoving(Integer participantId, ContestDTO contestDto) {
         ScoreDTO scoreDto = contestDto.getScoreDto();
         int techDefeatScoreId;
-        if (playerId.equals(contestDto.getPlayerOne().getId())) {
+        if (participantId.equals(contestDto.getParticipantOneId())) {
             techDefeatScoreId = scoreDto.getParticipantOneScoreId();
             scoreDto.getTechDefeat().setParticipantOne(true);
         } else {
@@ -120,37 +104,7 @@ public class ContestHelper {
 
         Integer winnerId = scoreHelper.getTechDefeatWinnerIdFunction(scoreDto.getTechDefeat()).apply(contestDto);
         scoreHelper.updateContestScoreTechDefeat(techDefeatScoreId);
-        contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-    }
-
-    public void updateDoubleContestTechDefeatForTeamRemoving(Integer teamId, DoubleContestDTO contestDto) {
-        ScoreDTO scoreDto = contestDto.getScoreDto();
-        int techDefeatScoreId;
-        if (teamId.equals(contestDto.getTeamOne().getId())) {
-            techDefeatScoreId = scoreDto.getParticipantOneScoreId();
-            scoreDto.getTechDefeat().setParticipantOne(true);
-        } else {
-            techDefeatScoreId = scoreDto.getParticipantTwoScoreId();
-            scoreDto.getTechDefeat().setParticipantTwo(true);
-        }
-
-        Integer winnerId = scoreHelper.getTechDefeatWinnerIdFunction(scoreDto.getTechDefeat()).apply(contestDto);
-        scoreHelper.updateContestScoreTechDefeat(techDefeatScoreId);
-        contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-    }
-
-    public void updateContestTechDefeat(TechDefeatDTO techDefeatDto, ContestDTO contestDto) {
-        if (techDefeatDto.isTechDefeat()) {
-            Integer winnerId = scoreHelper.getTechDefeatWinnerIdFunction(techDefeatDto).apply(contestDto);
-            contestRepository.updateTechDefeatByContestId(winnerId, true, contestDto.getId());
-        }
-        if (contestDto.isTechDefeat() && !techDefeatDto.isTechDefeat()) {
-            List<SetScore> sets = scoreHelper.getContestSetScores(contestDto.getId());
-            ScoreDTO scoreDTO = scoreHelper.mapSetScoreToDto(sets);
-
-            Integer winnerId = scoreHelper.getScoreWinnerIdFunction(scoreDTO.getSets()).apply(contestDto);
-            contestRepository.updateTechDefeatByContestId(winnerId, false, contestDto.getId());
-        }
+        contestRepository.updateWinnerIdByContestId(winnerId, contestDto.getId());
     }
 
     public void removeContest(Contest contest) {
@@ -158,11 +112,12 @@ public class ContestHelper {
     }
 
     public void removeContestById(Integer contestId) {
-        scoreHelper.removeContestScore(contestId);
         contestRepository.deleteById(contestId);
     }
 
-    public boolean isEliminationContestChildTechDefeat(Integer contestId) {
-        return contestRepository.isEliminationContestChildTechDefeat(contestId);
+    public boolean isEliminationContestChildScoreDefined(Integer contestId) {
+        return !contestRepository.isEliminationContestFinal(contestId) && (
+                contestRepository.isEliminationContestChildScoreDefined(contestId) || contestRepository
+                        .isEliminationContestChildTechDefeat(contestId));
     }
 }

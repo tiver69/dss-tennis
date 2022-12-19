@@ -63,6 +63,6 @@ public class AuthenticationController {
             String jwt = jwtTokenProvider.generateToken(SecurityContextHolder.getContext().getAuthentication());
             return new ResponseEntity<>(new AuthenticationResponse(jwt, admin.getRefreshToken()), HttpStatus.OK);
         }
-        throw new DetailedException(ErrorConstants.AUTHENTICATION_FAILED);
+        throw new DetailedException(ErrorConstants.ErrorKey.AUTHENTICATION_FAILED);
     }
 }

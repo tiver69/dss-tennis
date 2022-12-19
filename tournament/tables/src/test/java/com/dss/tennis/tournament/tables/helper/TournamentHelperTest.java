@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.TOURNAMENT_NOT_FOUND;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.TOURNAMENT_NOT_FOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -95,7 +95,7 @@ class TournamentHelperTest {
         Assertions.assertAll(
                 () -> assertFalse(result.isEmpty()),
                 () -> assertEquals(1, result.size()),
-                () -> assertTrue(result.stream().map(ErrorDataDTO::getErrorConstant)
+                () -> assertTrue(result.stream().map(ErrorDataDTO::getErrorKey)
                         .anyMatch(tt -> tt.equals(TOURNAMENT_NOT_FOUND)))
         );
     }

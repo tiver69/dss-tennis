@@ -59,14 +59,14 @@ public class EliminationDoubleContestFactory extends EliminationContestFactory {
             ((EliminationContestDTO) contestDto).forEach(parentContestDTO -> {
                 if (parentContestDTO instanceof DoubleContestDTO) {
                     ((DoubleContestDTO) parentContestDTO)
-                            .setTeamOne(teamHelper.getParticipantDto(parentContestDTO.participantOneId()));
+                            .setTeamOne(teamHelper.getParticipantDto(parentContestDTO.getParticipantOneId()));
                     ((DoubleContestDTO) parentContestDTO)
-                            .setTeamTwo(teamHelper.getParticipantDto(parentContestDTO.participantTwoId()));
+                            .setTeamTwo(teamHelper.getParticipantDto(parentContestDTO.getParticipantTwoId()));
                 }
             });
         } else {
-            ((DoubleContestDTO) contestDto).setTeamOne(teamHelper.getParticipantDto(contestDto.participantOneId()));
-            ((DoubleContestDTO) contestDto).setTeamTwo(teamHelper.getParticipantDto(contestDto.participantTwoId()));
+            ((DoubleContestDTO) contestDto).setTeamOne(teamHelper.getParticipantDto(contestDto.getParticipantOneId()));
+            ((DoubleContestDTO) contestDto).setTeamTwo(teamHelper.getParticipantDto(contestDto.getParticipantTwoId()));
         }
         return contestDto;
     }

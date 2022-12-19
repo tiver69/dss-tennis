@@ -41,14 +41,14 @@ public class EliminationContestDtoToEliminationContestInfoResponseDataConverter 
     }
 
     private ContestInfoAttributes convertContestInfoAttributes(EliminationContestDTO eliminationContestDto) {
-        if (eliminationContestDto.participantOneId() == null && eliminationContestDto.participantTwoId() == null)
+        if (eliminationContestDto.getParticipantOneId() == null && eliminationContestDto.getParticipantTwoId() == null)
             return null;
 
         ContestInfoAttributes.ContestInfoAttributesBuilder builder = ContestInfoAttributes.builder()
                 .participantOne(convertParticipantNameString(eliminationContestDto.getParticipantOne()))
                 .participantTwo(convertParticipantNameString(eliminationContestDto.getParticipantTwo()));
         if (eliminationContestDto.getScoreDto() != null && eliminationContestDto
-                .participantOneId() != null && eliminationContestDto.participantTwoId() != null)
+                .getParticipantOneId() != null && eliminationContestDto.getParticipantTwoId() != null)
             convertContestScoreInfoAttributes(eliminationContestDto.getScoreDto(), builder);
 
         return builder.build();

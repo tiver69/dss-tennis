@@ -37,7 +37,7 @@ public abstract class AbstractPageableDtoToPageableResponse<S, D extends Pageabl
             return response;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
-            throw new DetailedException(ErrorConstants.INTERNAL_SERVER_ERROR, "Failed to create response object");
+            throw new DetailedException(ErrorConstants.ErrorKey.INTERNAL_SERVER_ERROR, "Failed to create response object");
         }
     }
 

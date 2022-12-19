@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.GENERAL_BAD_REQUEST;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.GENERAL_BAD_REQUEST;
 
 @Service
 public class InvalidFormatExceptionHandler extends SourceAwareExceptionHandler implements JacksonExceptionHandler {

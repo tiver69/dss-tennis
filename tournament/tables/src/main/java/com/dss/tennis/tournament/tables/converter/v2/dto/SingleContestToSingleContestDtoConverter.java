@@ -22,7 +22,6 @@ public class SingleContestToSingleContestDtoConverter extends ContestToContestDt
                 .playerOne(PlayerDTO.builder().id(contest.getPlayerOneId()).build())
                 .playerTwo(PlayerDTO.builder().id(contest.getPlayerTwoId()).build())
                 .winnerId(contest.getWinnerId())
-                .techDefeat(contest.isTechDefeat())
                 .scoreDto(convertSetScoreDto(contest))
                 .build();
     }

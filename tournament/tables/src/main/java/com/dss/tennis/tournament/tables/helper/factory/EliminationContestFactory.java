@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
 
 @Service
 public abstract class EliminationContestFactory implements AbstractContestFactory {
@@ -75,14 +75,7 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
         EliminationContest finalContest = (EliminationContest) contests.stream()
                 .filter(contest -> !preFinalContestIds.contains(contest.getId())).findAny().orElse(null);
 
-        //todo deal why setscore not populated immediately after enroll call
-        EliminationContestDTO contestDTO = populateEliminationContestDtoRecursive(finalContest, contests);
-//        contestDTO.forEach(contest -> {
-//            if (contest.getScoreDto().getSets() == null) {
-//                contestHelper.populateSetScores(contest);
-//            }
-//        });
-        return contestDTO;
+        return populateEliminationContestDtoRecursive(finalContest, contests);
     }
 
     @Override

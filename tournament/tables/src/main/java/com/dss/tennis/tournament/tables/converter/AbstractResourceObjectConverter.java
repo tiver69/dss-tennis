@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
 
 @AllArgsConstructor
 public abstract class AbstractResourceObjectConverter {
@@ -19,7 +19,7 @@ public abstract class AbstractResourceObjectConverter {
         Set<ErrorDataDTO> errors = new HashSet<>();
         if (validateBaseResourceObjectMapping(resourceObject, customPointer, errors)) return errors;
         if (resourceObject.getId() == null)
-            errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_ID_EMPTY).pointer(customPointer)
+            errors.add(ErrorDataDTO.builder().errorKey(RESOURCE_OBJECT_ID_EMPTY).pointer(customPointer)
                     .build());
         return errors;
     }
@@ -29,7 +29,7 @@ public abstract class AbstractResourceObjectConverter {
         Set<ErrorDataDTO> errors = new HashSet<>();
         if (validateBaseResourceObjectMapping(resourceObject, customPointer, errors)) return errors;
         if (resourceObject.getAttributes() == null)
-            errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_ATTRIBUTES_EMPTY).pointer(customPointer)
+            errors.add(ErrorDataDTO.builder().errorKey(RESOURCE_OBJECT_ATTRIBUTES_EMPTY).pointer(customPointer)
                     .build());
         return errors;
     }
@@ -38,11 +38,11 @@ public abstract class AbstractResourceObjectConverter {
                                                       Set<ErrorDataDTO> errors) {
         if (resourceObject == null) return true;
         if (resourceObject.isInitializedEmpty()) {
-            errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_EMPTY).pointer(customPointer).build());
+            errors.add(ErrorDataDTO.builder().errorKey(RESOURCE_OBJECT_EMPTY).pointer(customPointer).build());
             return true;
         }
         if (!allowedResourceType.equals(resourceObject.getType()))
-            errors.add(ErrorDataDTO.builder().errorConstant(RESOURCE_OBJECT_TYPE_FORBIDDEN).pointer(customPointer)
+            errors.add(ErrorDataDTO.builder().errorKey(RESOURCE_OBJECT_TYPE_FORBIDDEN).pointer(customPointer)
                     .build());
         return false;
     }

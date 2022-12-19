@@ -1,15 +1,7 @@
 package com.dss.tennis.tournament.tables.model.db.v2;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Deprecated
 public class SetScore {
 
@@ -71,9 +63,9 @@ public class SetScore {
     public void setTieBreak(TieBreak tieBreak) {
         this.tieBreak = tieBreak;
     }
-//
-//    @Basic
-//    @Column(name = "contest_id", nullable = false)
+
+    @Basic
+    @Column(name = "contest_id", nullable = false)
     public Integer getContestId() {
         return contestId;
     }

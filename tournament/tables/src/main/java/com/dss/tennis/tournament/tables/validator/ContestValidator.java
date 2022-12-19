@@ -2,7 +2,6 @@ package com.dss.tennis.tournament.tables.validator;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.ContestHelper;
-import com.dss.tennis.tournament.tables.helper.ScoreHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
@@ -11,13 +10,11 @@ import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.dss.tennis.tournament.tables.exception.ErrorConstants.*;
+import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.*;
 
 @Component
 public class ContestValidator {
 
-    @Autowired
-    private ScoreHelper scoreHelper;
     @Autowired
     private ContestHelper contestHelper;
 
@@ -34,11 +31,10 @@ public class ContestValidator {
     }
 
     private void validateEliminationContestUpdateForbidden(ContestDTO contest) {
-        if (contest.participantOneId() == null || contest.participantTwoId() == null) {
+        if (contest.getParticipantOneId() == null || contest.getParticipantTwoId() == null) {
             throw new DetailedException(CONTEST_NOT_REACHED, contest.getId());
         }
-        if (scoreHelper.isEliminationContestChildScoreDefined(contest.getId()) || contestHelper
-                .isEliminationContestChildTechDefeat(contest.getId()))
+        if (contestHelper.isEliminationContestChildScoreDefined(contest.getId()))
             throw new DetailedException(CONTEST_SCORE_UPDATE_FORBIDDEN, contest.getId());
     }
 }

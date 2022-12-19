@@ -17,12 +17,12 @@ public class SingleContestDTO extends ContestDTO {
     private PlayerDTO playerTwo;
 
     @Override
-    public Integer participantOneId() {
+    public Integer getParticipantOneId() {
         return playerOne == null ? null : playerOne.getId();
     }
 
     @Override
-    public Integer participantTwoId() {
+    public Integer getParticipantTwoId() {
         return playerTwo == null ? null : playerTwo.getId();
     }
 

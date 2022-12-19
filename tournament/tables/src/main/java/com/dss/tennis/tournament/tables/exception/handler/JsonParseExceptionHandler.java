@@ -27,7 +27,7 @@ public class JsonParseExceptionHandler extends SourceAwareExceptionHandler imple
         String pointer = StringUtils
                 .substringBetween(castedException.getLocation().toString(), LOCATION_OPEN, LOCATION_CLOSE);
 
-        ErrorData errorData = super.createErrorData(ErrorConstants.GENERAL_BAD_REQUEST, parameter, pointer);
+        ErrorData errorData = super.createErrorData(ErrorConstants.ErrorKey.GENERAL_BAD_REQUEST, parameter, pointer);
         errorData.setDetail(StringUtils.capitalize(detail));
         return errorData;
     }

@@ -44,7 +44,7 @@ public class TeamHelper extends ParticipantHelper<Team, TeamDTO> {
     public Team getParticipant(Integer teamId) {
         Optional<Team> repositoryTeam = teamRepository.findById(teamId);
         if (!repositoryTeam.isPresent())
-            throw new DetailedException(ErrorConstants.TEAM_NOT_FOUND, teamId);
+            throw new DetailedException(ErrorConstants.ErrorKey.TEAM_NOT_FOUND, teamId);
 
         return repositoryTeam.get();
     }
