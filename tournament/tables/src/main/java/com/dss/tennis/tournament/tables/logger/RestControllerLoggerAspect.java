@@ -18,7 +18,7 @@ import java.lang.reflect.Parameter;
 @Component
 public class RestControllerLoggerAspect {
 
-    @Pointcut("within(com.dss.tennis.tournament.tables.controller.*)")
+    @Pointcut("within(com.dss.tennis.tournament.tables.controller..*)")
     public void controllerMethod() {
     }
 

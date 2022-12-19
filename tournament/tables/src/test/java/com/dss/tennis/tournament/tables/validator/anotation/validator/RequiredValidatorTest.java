@@ -1,5 +1,6 @@
 package com.dss.tennis.tournament.tables.validator.anotation.validator;
 
+import com.dss.tennis.tournament.tables.validator.constraint.RequiredValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

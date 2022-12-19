@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.model.dto;
 
 import com.dss.tennis.tournament.tables.model.db.v1.LeadingHand;
-import com.dss.tennis.tournament.tables.validator.anotation.Required;
+import com.dss.tennis.tournament.tables.validator.constraint.anotation.Required;
 import lombok.*;
 
 import java.time.LocalDate;

@@ -10,6 +10,7 @@ import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.EliminationContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.IterableUtils;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -55,10 +56,7 @@ public class TournamentDtoToTournamentResponseDataConverter implements Converter
 
     private byte countParticipants(TournamentType type, Iterable<ContestDTO> contests) {
         if (contests == null) return 0;
-        byte contestsTotal = 0;
-        for (ContestDTO contestDto : contests) { //todo extend iterable contest to return size
-            contestsTotal++;
-        }
+        int contestsTotal = IterableUtils.size(contests);
         if (ROUND.equals(type))
             return (contestsTotal == 0) ? (byte) 0 : (byte) ((1 + Math.sqrt(1 + 8 * contestsTotal)) / 2);
         else if (ELIMINATION.equals(type)) {
@@ -71,7 +69,7 @@ public class TournamentDtoToTournamentResponseDataConverter implements Converter
         if (contests == null) return 0;
         byte contestsPlayed = 0;
         byte contestsTotal = 0;
-        for (ContestDTO contestDto : contests) { //todo extend iterable contest to return size
+        for (ContestDTO contestDto : contests) {
             if (contestDto.getWinnerId() != null || contestDto.getScoreDto().getTechDefeat().isTechDefeat())
                 contestsPlayed++;
             contestsTotal++;

@@ -61,6 +61,10 @@ public class ScoreHelper {
         return isSimpleScoreValid || isExtraSetScoreValid;
     }
 
+    public boolean isTieBreakScoreValid(byte gameScore, byte otherGameScore) {
+        return (gameScore >= 0 && gameScore <= 50) && (otherGameScore >= 0 && otherGameScore <= 50);
+    }
+
     public Function<ContestDTO, Integer> getWinnerIdFunctionByUpdatedScore(ScoreDTO scoreDto) {
         if (scoreDto.getTechDefeat().isTechDefeat()) {
             return getTechDefeatWinnerIdFunction(scoreDto.getTechDefeat());

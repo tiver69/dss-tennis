@@ -96,14 +96,7 @@ public abstract class EliminationContestFactory implements AbstractContestFactor
         if (getContestParticipantClass().isInstance(basicContest))
             return converterHelper.convert(basicContest, getContestParticipantDtoClass());
 
-        EliminationContestDTO eliminationContest =
-                populateEliminationContestDtoRecursive((EliminationContest) basicContest, contests);
-        //todo decide if its ok to get child contest before parent played
-//        if (eliminationContest.getSecondParentContestDto().getWinnerId() == null || eliminationContest
-//                .getFirstParentContestDto().getWinnerId() == null)
-//            throw new DetailedException(CONTEST_NOT_REACHED);
-
-        return eliminationContest;
+        return populateEliminationContestDtoRecursive((EliminationContest) basicContest, contests);
     }
 
     protected Integer getFinalEliminationContestId(Integer tournamentId) {

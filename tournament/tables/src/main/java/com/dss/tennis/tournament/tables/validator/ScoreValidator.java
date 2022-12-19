@@ -38,17 +38,19 @@ public class ScoreValidator {
         errors.addAll(validateSetScorePatch(scorePatchDto.getSetOne(), SET_ONE.value));
         errors.addAll(validateSetScorePatch(scorePatchDto.getSetTwo(), SET_TWO.value));
         errors.addAll(validateSetScorePatch(scorePatchDto.getSetThree(), SET_THREE.value));
-        errors.addAll(validateSetScorePatch(scorePatchDto.getTieBreak(), TIE_BREAK.value));
+        errors.addAll(validateTieBreakScorePatch(scorePatchDto.getTieBreak()));
         return errors;
     }
 
     public Set<ErrorDataDTO> validateUpdateScore(ScoreDTO score) {
         Set<ErrorDataDTO> errors = new HashSet<>();
-        //todo define rule for tie break
         if (score.isSetOneScoreNotDefined() && score.isSetTwoScoreDefined())
             errors.add(ErrorDataDTO.builder().errorKey(SET_SCORE_EMPTY).pointer(SET_ONE.value).build());
         if (score.isSetTwoScoreNotDefined() && score.isSetThreeScoreDefined())
             errors.add(ErrorDataDTO.builder().errorKey(SET_SCORE_EMPTY).pointer(SET_TWO.value).build());
+        if (score.isTieBreakScoreDefined() && score.isSetOneScoreNotDefined())
+            errors.add(ErrorDataDTO.builder().errorKey(SET_SCORE_EMPTY).pointer(TIE_BREAK.value).build());
+
         return errors;
     }
 
@@ -60,11 +62,26 @@ public class ScoreValidator {
                 .getParticipantOneScore(), setScoreDTO.getParticipantTwoScore(), type) : errorDataDTOs;
     }
 
+    private Set<ErrorDataDTO> validateTieBreakScorePatch(SetScoreDTO setScoreDTO) {
+        if (setScoreDTO == null) return Set.of();
+        Set<ErrorDataDTO> errorDataDTOs = setScoreValidatorHelper.validateObject(setScoreDTO, TIE_BREAK.value);
+
+        return errorDataDTOs.isEmpty() ? validateTieBreakScoreLimit(setScoreDTO.getParticipantOneScore(), setScoreDTO
+                .getParticipantTwoScore()) : errorDataDTOs;
+    }
+
     private Set<ErrorDataDTO> validateSetScoreLimit(Byte participantOne, Byte participantTwo, String type) {
-        //todo determine rules for tie break score
         if (participantOne != null && participantTwo != null && !scoreHelper
                 .isSetScoreValid(participantOne, participantTwo))
             return Set.of(ErrorDataDTO.builder().errorKey(GAME_LIMIT_EXCEEDED).pointer(type)
+                    .detailParameter(String.format("%d:%d", participantOne, participantTwo)).build());
+        return new HashSet<>();
+    }
+
+    private Set<ErrorDataDTO> validateTieBreakScoreLimit(Byte participantOne, Byte participantTwo) {
+        if (participantOne != null && participantTwo != null && !scoreHelper
+                .isTieBreakScoreValid(participantOne, participantTwo))
+            return Set.of(ErrorDataDTO.builder().errorKey(GAME_LIMIT_EXCEEDED).pointer(TIE_BREAK.value)
                     .detailParameter(String.format("%d:%d", participantOne, participantTwo)).build());
         return new HashSet<>();
     }

@@ -15,6 +15,7 @@ import com.dss.tennis.tournament.tables.model.dto.ResponseWarningDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.PatchTournament;
 import com.dss.tennis.tournament.tables.service.TournamentService;
+import com.dss.tennis.tournament.tables.validator.aop.anotation.PatchIdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,9 +71,9 @@ public class TournamentController {
     }
 
     @PatchMapping("/{tournamentId}")
+    @PatchIdValidator(pathIdParameterName = "tournamentId")
     public ResponseEntity<TournamentResponse> updateTournament(@RequestBody UpdateTournamentRequest updateTournamentRequest,
                                                                @PathVariable Integer tournamentId) {
-        //todo: validate ids form request and model
         PatchTournament patch = converterHelper.convert(updateTournamentRequest, PatchTournament.class);
 
         TournamentDTO updatedTournament = tournamentService.updateTournament(patch, tournamentId);
@@ -88,10 +89,10 @@ public class TournamentController {
     }
 
     @PostMapping("/{tournamentId}/enroll")
+    @PatchIdValidator(pathIdParameterName = "tournamentId")
     public ResponseEntity<TournamentResponse> enrollTournamentParticipant(
             @PathVariable Integer tournamentId,
             @RequestBody EnrollTournamentParticipantRequest participants) {
-        //todo: validate ids form request and model
         List<ResourceObjectDTO> participantsDto = converterHelper.convert(participants, List.class);
 
         ResponseWarningDTO<TournamentDTO> tournamentDTO = tournamentService

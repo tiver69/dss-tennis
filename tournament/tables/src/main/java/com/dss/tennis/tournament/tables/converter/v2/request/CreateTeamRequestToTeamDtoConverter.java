@@ -25,7 +25,7 @@ public class CreateTeamRequestToTeamDtoConverter implements Converter<CreateTeam
                 players != null && players.size() > 0 && players.get(0).getId() != null ? new PlayerDTO(players.get(0)
                         .getId()) : null;
         PlayerDTO playerTwo =
-                players != null && players.size() == 2 && players.get(1).getId() != null ? new PlayerDTO(players.get(1)
+                players != null && players.size() > 1 && players.get(1).getId() != null ? new PlayerDTO(players.get(1)
                         .getId()) : null;
 
         return TeamDTO.builder()

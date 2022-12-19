@@ -1,6 +1,6 @@
-package com.dss.tennis.tournament.tables.validator.anotation.validator;
+package com.dss.tennis.tournament.tables.validator.constraint;
 
-import com.dss.tennis.tournament.tables.validator.anotation.Required;
+import com.dss.tennis.tournament.tables.validator.constraint.anotation.Required;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;

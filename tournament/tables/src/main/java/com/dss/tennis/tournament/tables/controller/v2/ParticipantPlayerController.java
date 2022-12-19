@@ -13,6 +13,7 @@ import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResponseWarningDTO;
 import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
+import com.dss.tennis.tournament.tables.validator.aop.anotation.PatchIdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +57,9 @@ public class ParticipantPlayerController {
     }
 
     @PatchMapping("/players/{playerId}")
+    @PatchIdValidator(pathIdParameterName = "playerId")
     public ResponseEntity<PlayerResponse> updatePlayer(@RequestBody UpdatePlayerRequest updatePlayer,
                                                        @PathVariable Integer playerId) {
-        //todo: validate ids form request and model
         PatchPlayer patch = converterHelper.convert(updatePlayer, PatchPlayer.class);
 
         PlayerDTO updatedPlayer = participantService.updatePlayer(patch, playerId);

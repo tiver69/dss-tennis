@@ -10,6 +10,7 @@ import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResponseWarningDTO;
 import com.dss.tennis.tournament.tables.model.dto.TeamDTO;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
+import com.dss.tennis.tournament.tables.validator.aop.anotation.TeamCreationBeforeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +52,8 @@ public class ParticipantTeamController {
     }
 
     @PostMapping("/teams")
+    @TeamCreationBeforeValidator
     public ResponseEntity<?> createTeam(@RequestBody CreateTeamRequest createTeam) {
-        //todo: validation with 2 required
         TeamDTO teamDto = converterHelper.convert(createTeam, TeamDTO.class);
 
         TeamDTO newTeamDto = participantService.createNewTeam(teamDto);

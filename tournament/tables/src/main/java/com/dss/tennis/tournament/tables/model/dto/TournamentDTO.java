@@ -3,7 +3,7 @@ package com.dss.tennis.tournament.tables.model.dto;
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
-import com.dss.tennis.tournament.tables.validator.anotation.Required;
+import com.dss.tennis.tournament.tables.validator.constraint.anotation.Required;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

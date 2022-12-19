@@ -7,6 +7,7 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestRespons
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.ScoreDTO;
 import com.dss.tennis.tournament.tables.service.TournamentService;
+import com.dss.tennis.tournament.tables.validator.aop.anotation.PatchIdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,10 @@ public class TournamentContestController {
     }
 
     @PatchMapping("/{tournamentId}/contest/{contestId}/score")
+    @PatchIdValidator(pathIdParameterName = "contestId")
     public ResponseEntity<ContestResponse> updateScore(@PathVariable Integer tournamentId,
                                                        @PathVariable Integer contestId,
                                                        @RequestBody UpdateContestScoreRequest updateContestScoreRequest) {
-        //todo: validate id from body and url
         ScoreDTO scorePatchDto = converterHelper
                 .convert(updateContestScoreRequest, ScoreDTO.class);
 
