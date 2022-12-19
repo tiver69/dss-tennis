@@ -13,18 +13,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ModelMapperFactoryTest {
 
-    private final ModelMapperFactory testIntense = new ModelMapperFactory();
+//    private final ModelMapperFactory testIntense = new ModelMapperFactory();
 
-    @Test
-    public void shouldReturnModelMapper() {
-        ModelMapper result = testIntense.getModelMapper();
-
-        Assertions.assertNotNull(result);
-    }
+//    @Test
+//    public void shouldReturnModelMapper() {
+//        ModelMapper result = testIntense.getModelMapper();
+//
+//        Assertions.assertNotNull(result);
+//    }
 
     @Test
     public void shouldReturnCustomizedModelMapper() {
-        ModelMapper result = testIntense.getCustomizedModelMapper();
+        ModelMapper result = ModelMapperFactory.getStatelessInstance();
 
         Assertions.assertAll(
                 () -> assertNotNull(result.getTypeMap(SingleContestDTO.class, GetContest.class).getPostConverter()),

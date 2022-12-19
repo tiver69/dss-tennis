@@ -15,7 +15,7 @@ import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectT
 public class SingleContestDtoToContestInfoResponseDataConverter extends ContestDtoToContestInfoResponseDataConverter
         implements Converter<SingleContestDTO, ContestInfoResponseData> {
 
-    private String extraTournamentId;
+    private final Integer extraTournamentId;
 
     @Override
     public ContestInfoResponseData convert(MappingContext<SingleContestDTO, ContestInfoResponseData> mappingContext) {

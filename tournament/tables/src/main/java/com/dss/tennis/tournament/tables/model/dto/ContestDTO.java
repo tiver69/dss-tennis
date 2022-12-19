@@ -15,7 +15,6 @@ public abstract class ContestDTO {
     private Integer winnerId;
     private ScoreDTO scoreDto;
 
-    //todo: ?? get word is missing due to model mapper which is trying to access GetParticipant constructor
     public abstract Integer getParticipantOneId();
 
     public abstract Integer getParticipantTwoId();

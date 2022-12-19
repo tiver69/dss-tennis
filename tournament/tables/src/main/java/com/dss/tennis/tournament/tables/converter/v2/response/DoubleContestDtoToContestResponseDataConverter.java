@@ -5,20 +5,16 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestRespons
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestResponse.ContestResponseData;
 import com.dss.tennis.tournament.tables.model.dto.DoubleContestDTO;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TEAM;
 
-@Getter
-@Setter
 @AllArgsConstructor
 public class DoubleContestDtoToContestResponseDataConverter extends ContestDtoToContestResponseDataConverter
         implements Converter<DoubleContestDTO, ContestResponseData> {
 
-    private String extraTournamentId;
+    private final Integer extraTournamentId;
 
     @Override
     public ContestResponseData convert(MappingContext<DoubleContestDTO, ContestResponseData> context) {

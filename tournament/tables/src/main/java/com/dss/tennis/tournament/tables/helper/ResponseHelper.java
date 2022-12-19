@@ -32,7 +32,7 @@ public class ResponseHelper {
 
     public ContestResponse createContestResponse(ContestDTO contestDTO, Integer tournamentId) {
         ContestResponseData responseData = converterHelper
-                .convert(contestDTO, ContestResponseData.class, String.valueOf(tournamentId));
+                .convert(contestDTO, ContestResponseData.class, tournamentId);
 
         List<Object> responseIncluded = new ArrayList<>();
         responseIncluded.addAll(convertParticipant(contestDTO.getParticipantOne()));
@@ -86,7 +86,7 @@ public class ResponseHelper {
             Class<? extends ContestInfoResponseData> responseClass = contest instanceof EliminationContestDTO ?
                     EliminationContestInfoResponseData.class : ContestInfoResponseData.class;
             responseIncluded
-                    .add(converterHelper.convert(contest, responseClass, String.valueOf(tournamentDto.getId())));
+                    .add(converterHelper.convert(contest, responseClass, tournamentDto.getId()));
         });
 
         return new TournamentResponse(null, responseData, responseIncluded.isEmpty() ? null : responseIncluded);

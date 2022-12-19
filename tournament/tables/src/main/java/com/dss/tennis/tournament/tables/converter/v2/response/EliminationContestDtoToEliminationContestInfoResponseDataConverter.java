@@ -20,7 +20,7 @@ import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectT
 public class EliminationContestDtoToEliminationContestInfoResponseDataConverter extends ContestDtoToContestInfoResponseDataConverter
         implements Converter<EliminationContestDTO, EliminationContestInfoResponseData> {
 
-    private String extraTournamentId;
+    private final Integer extraTournamentId;
 
     @Override
     public EliminationContestInfoResponseData convert(MappingContext<EliminationContestDTO,

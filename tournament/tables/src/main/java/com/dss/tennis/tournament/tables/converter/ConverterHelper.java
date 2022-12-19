@@ -17,16 +17,17 @@ import java.util.stream.Collectors;
 public class ConverterHelper {
 
     @Autowired
-    private ModelMapperFactory modelMapperFactory;
-    @Autowired
     private WarningHandler warningHandler;
 
     public <S, D> D convert(S source, Class<D> destinationClass) {
-        return convert(source, destinationClass, null);
+        Object destinationObject = ModelMapperFactory.getStatelessInstance()
+                .map(source, destinationClass);
+
+        return destinationClass.cast(destinationObject);
     }
 
-    public <S, D> D convert(S source, Class<D> destinationClass, String extraString) {
-        Object destinationObject = modelMapperFactory.getCustomizedModelMapper(extraString)
+    public <S, D> D convert(S source, Class<D> destinationClass, Integer extraInteger) {
+        Object destinationObject = ModelMapperFactory.getStatefulInstance(extraInteger)
                 .map(source, destinationClass);
 
         return destinationClass.cast(destinationObject);

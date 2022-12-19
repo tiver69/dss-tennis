@@ -33,25 +33,49 @@ import com.dss.tennis.tournament.tables.model.dto.*;
 import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.model.request.PatchTournament;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class ModelMapperFactory {
 
-    public ModelMapper getModelMapper() {
-        return new ModelMapper();
+    private static volatile ModelMapper instance;
+    private static final Object mutex = new Object();
+
+    public static ModelMapper getStatelessInstance() {
+        ModelMapper result = instance;
+        if (result == null) {
+            synchronized (mutex) {
+                result = instance;
+                if (result == null)
+                    instance = result = getStatelessModelMapper();
+            }
+        }
+        return result;
     }
 
-    public ModelMapper getCustomizedModelMapper() {
-        return getCustomizedModelMapper(null);
+    public static ModelMapper getStatefulInstance(Integer extraInteger) {
+        ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.createTypeMap(EliminationContestDTO.class, EliminationContestInfoResponseData.class)
+                .setConverter(new EliminationContestDtoToEliminationContestInfoResponseDataConverter(extraInteger));
+        modelMapper.createTypeMap(SingleContestDTO.class, ContestInfoResponseData.class)
+                .setConverter(new SingleContestDtoToContestInfoResponseDataConverter(extraInteger));
+        modelMapper.createTypeMap(SingleContestDTO.class, ContestResponseData.class)
+                .setConverter(new SingleContestDtoToContestResponseDataConverter(extraInteger));
+        modelMapper.createTypeMap(DoubleContestDTO.class, ContestInfoResponseData.class)
+                .setConverter(new DoubleContestDtoToContestInfoResponseDataConverter(extraInteger));
+        modelMapper.createTypeMap(DoubleContestDTO.class, ContestResponseData.class)
+                .setConverter(new DoubleContestDtoToContestResponseDataConverter(extraInteger));
+        modelMapper.createTypeMap(EliminationContestDTO.class, ContestResponseData.class)
+                .setConverter(new EliminationContestDtoToContestResponseDataConverter(extraInteger));
+
+        return modelMapper;
     }
 
-    public ModelMapper getCustomizedModelMapper(String extraString) {
-        ModelMapper modelMapper = getModelMapper();
+    private static ModelMapper getStatelessModelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
 
-        applyConvertersForV2(modelMapper, extraString);
+        applyConvertersForV2(modelMapper);
 
         //patch appliers
         modelMapper.createTypeMap(PatchPlayer.class, PlayerDTO.class)
@@ -61,7 +85,7 @@ public class ModelMapperFactory {
         return modelMapper;
     }
 
-    private void applyConvertersForV2(ModelMapper modelMapper, String extraString) {
+    private static void applyConvertersForV2(ModelMapper modelMapper) {
         modelMapper.createTypeMap(PlayerDTO.class, PlayerResponseData.class)
                 .setConverter(new PlayerDtoToPlayerResponseDataConverter());
         modelMapper.createTypeMap(UpdatePlayerRequest.class, PatchPlayer.class)
@@ -78,16 +102,6 @@ public class ModelMapperFactory {
                 .setConverter(new CreateTeamRequestToTeamDtoConverter());
         modelMapper.createTypeMap(TournamentDTO.class, TournamentResponseData.class)
                 .setConverter(new TournamentDtoToTournamentResponseDataConverter(modelMapper));
-        modelMapper.createTypeMap(EliminationContestDTO.class, EliminationContestInfoResponseData.class)
-                .setConverter(new EliminationContestDtoToEliminationContestInfoResponseDataConverter(extraString));
-        modelMapper.createTypeMap(SingleContestDTO.class, ContestInfoResponseData.class)
-                .setConverter(new SingleContestDtoToContestInfoResponseDataConverter(extraString));
-        modelMapper.createTypeMap(SingleContestDTO.class, ContestResponseData.class)
-                .setConverter(new SingleContestDtoToContestResponseDataConverter(extraString));
-        modelMapper.createTypeMap(DoubleContestDTO.class, ContestInfoResponseData.class)
-                .setConverter(new DoubleContestDtoToContestInfoResponseDataConverter(extraString));
-        modelMapper.createTypeMap(DoubleContestDTO.class, ContestResponseData.class)
-                .setConverter(new DoubleContestDtoToContestResponseDataConverter(extraString));
         modelMapper.createTypeMap(PageableDTO.class, PageableTournamentResponse.class)
                 .setConverter(new PageableDtoToPageableTournamentResponse(modelMapper));
         modelMapper.createTypeMap(CreteTournamentRequest.class, TournamentDTO.class)
@@ -96,8 +110,6 @@ public class ModelMapperFactory {
                 .setConverter(new UpdateTournamentRequestToPatchTournamentConverter());
         modelMapper.createTypeMap(EnrollTournamentParticipantRequest.class, List.class)
                 .setConverter(new EnrollTournamentParticipantRequestToResourceObjectListConverter());
-        modelMapper.createTypeMap(EliminationContestDTO.class, ContestResponseData.class)
-                .setConverter(new EliminationContestDtoToContestResponseDataConverter(extraString));
         modelMapper.createTypeMap(UpdateContestScoreRequest.class, ScoreDTO.class)
                 .setConverter(new UpdateContestScoreRequestToScoreDtoConverter());
 

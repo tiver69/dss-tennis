@@ -6,21 +6,17 @@ import com.dss.tennis.tournament.tables.model.definitions.contest.ContestRespons
 import com.dss.tennis.tournament.tables.model.dto.EliminationContestDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.PLAYER;
 import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType.TEAM;
 
-@Getter
-@Setter
 @AllArgsConstructor
 public class EliminationContestDtoToContestResponseDataConverter extends ContestDtoToContestResponseDataConverter
         implements Converter<EliminationContestDTO, ContestResponseData> {
 
-    private String extraTournamentId;
+    private final Integer extraTournamentId;
 
     @Override
     public ContestResponseData convert(MappingContext<EliminationContestDTO, ContestResponseData> context) {

@@ -16,7 +16,7 @@ import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectT
 
 public class ContestDtoToContestResponseDataConverter {
 
-    public ContestResponseDataBuilder getCommonContestBuilder(ContestDTO contestDTO, String extraTournamentId) {
+    public ContestResponseDataBuilder getCommonContestBuilder(ContestDTO contestDTO, Integer extraTournamentId) {
         return ContestResponseData.builder()
                 .id(contestDTO.getId())
                 .attributes(convertContestAttributes(contestDTO.getScoreDto()))
