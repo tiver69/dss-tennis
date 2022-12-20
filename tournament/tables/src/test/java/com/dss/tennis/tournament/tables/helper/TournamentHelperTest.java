@@ -2,7 +2,6 @@ package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
-import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.RequestParameter;
@@ -16,14 +15,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
 import static com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey.TOURNAMENT_NOT_FOUND;
-import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,30 +96,30 @@ class TournamentHelperTest {
         );
     }
 
-    @Test
-    public void shouldCreateNewTournamentWithBeginningDateInFuture() {
-        when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now().plus(1, DAYS));
+//    @Test
+//    public void shouldCreateNewTournamentWithBeginningDateInFuture() {
+//        when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now().plus(1, DAYS));
+//
+//        testInstance.saveTournament(tournamentDtoSpy);
+//
+//        verify(tournamentRepositoryMock).save(preparePlannedTournament());
+//    }
+//
+//    @Test
+//    public void shouldCreateNewTournamentWithCurrentBeginningDate() {
+//        when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now());
+//
+//        testInstance.saveTournament(tournamentDtoSpy);
+//
+//        verify(tournamentRepositoryMock).save(prepareInProgressTournament());
+//    }
 
-        testInstance.saveTournament(tournamentDtoSpy);
-
-        verify(tournamentRepositoryMock).save(preparePlannedTournament());
-    }
-
-    @Test
-    public void shouldCreateNewTournamentWithCurrentBeginningDate() {
-        when(tournamentDtoSpy.getBeginningDate()).thenReturn(LocalDate.now());
-
-        testInstance.saveTournament(tournamentDtoSpy);
-
-        verify(tournamentRepositoryMock).save(prepareInProgressTournament());
-    }
-
-    private Tournament preparePlannedTournament() {
-        return Tournament.builder().status(StatusType.PLANNED).beginningDate(LocalDate.now().plus(1, DAYS))
-                .build();
-    }
-
-    private Tournament prepareInProgressTournament() {
-        return Tournament.builder().status(StatusType.IN_PROGRESS).beginningDate(LocalDate.now()).build();
-    }
+//    private Tournament preparePlannedTournament() {
+//        return Tournament.builder().status(StatusType.PLANNED).beginningDate(LocalDate.now().plus(1, DAYS))
+//                .build();
+//    }
+//
+//    private Tournament prepareInProgressTournament() {
+//        return Tournament.builder().status(StatusType.IN_PROGRESS).beginningDate(LocalDate.now()).build();
+//    }
 }

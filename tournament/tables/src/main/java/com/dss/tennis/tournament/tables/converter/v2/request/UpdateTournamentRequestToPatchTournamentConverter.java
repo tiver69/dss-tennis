@@ -25,7 +25,6 @@ public class UpdateTournamentRequestToPatchTournamentConverter implements Conver
         patchTournament.setTournamentType(Optional.ofNullable(tournamentAttributes.getTournamentType()));
         patchTournament.setParticipantType(Optional.ofNullable(tournamentAttributes.getParticipantType()));
         patchTournament.setBeginningDate(Optional.ofNullable(tournamentAttributes.getBeginningDate()));
-        //todo: business logic with status
         return patchTournament;
     }
 }

@@ -25,8 +25,7 @@ public class RequestParameterHelper {
 
     @PostConstruct
     protected void initialize() {
-        pageableSortParameters.put(TOURNAMENT, List
-                .of(new Order(DESC, "status"), new Order(DESC, "beginningDate")));
+        pageableSortParameters.put(TOURNAMENT, List.of(new Order(DESC, "beginningDate")));
         pageableSortParameters.put(PLAYER, List
                 .of(new Order(ASC, "lastName"), new Order(ASC, "firstName")));
         pageableSortParameters.put(TEAM, List

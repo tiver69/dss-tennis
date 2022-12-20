@@ -23,7 +23,6 @@ public class CreateTournamentRequestToTournamentDtoConverter implements Converte
         tournamentDTO.setTournamentType(tournamentAttributes.getTournamentType());
         tournamentDTO.setBeginningDate(tournamentAttributes.getBeginningDate());
         tournamentDTO.setParticipantType(tournamentAttributes.getParticipantType());
-        tournamentDTO.setStatus(tournamentAttributes.getStatus());
         return tournamentDTO;
     }
 }

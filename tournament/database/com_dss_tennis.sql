@@ -236,7 +236,6 @@ CREATE TABLE `tournament` (
   `name` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   `tournament_type` enum('ROUND','ELIMINATION') COLLATE utf8_unicode_ci NOT NULL,
   `participant_type` enum('SINGLE','DOUBLE') COLLATE utf8_unicode_ci NOT NULL,
-  `status` enum('PLANNED','IN_PROGRESS','PLAYED') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'PLANNED',
   `beginning_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
@@ -261,4 +260,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-19 22:02:50
+-- Dump completed on 2022-12-20 16:56:06

@@ -1,7 +1,6 @@
 package com.dss.tennis.tournament.tables.model.response.v1;
 
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
-import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +27,6 @@ public class GetTournament<T extends GetParticipant> {
     private String name;
     private TournamentType tournamentType;
     private ParticipantType participantType;
-    private StatusType status;
     private LocalDate beginningDate;
     private Iterable<T> contests;
 }

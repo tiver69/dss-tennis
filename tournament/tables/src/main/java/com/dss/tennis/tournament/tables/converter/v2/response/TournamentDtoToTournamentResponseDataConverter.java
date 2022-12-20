@@ -47,7 +47,6 @@ public class TournamentDtoToTournamentResponseDataConverter implements Converter
                 .name(tournament.getName())
                 .tournamentType(tournament.getTournamentType())
                 .participantType(tournament.getParticipantType())
-                .status(tournament.getStatus())
                 .beginningDate(tournament.getBeginningDate())
                 .participantsNumber(countParticipants(tournament.getTournamentType(), tournament.getContests()))
                 .progress(countProgressPercentage(tournament.getContests()))

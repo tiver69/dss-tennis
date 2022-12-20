@@ -1,6 +1,5 @@
 package com.dss.tennis.tournament.tables.validator;
 
-import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import com.dss.tennis.tournament.tables.model.request.PatchTournament;
@@ -46,8 +45,7 @@ public class TournamentValidator {
     public Set<ErrorDataDTO> validateUpdatedTournament(TournamentDTO updatedTournament) {
         Set<ErrorDataDTO> errors = validateCreateTournament(updatedTournament);
         boolean isTournamentWithContests = contestRepository.isTournamentHasContests(updatedTournament.getId());
-        if (isTournamentWithContests && updatedTournament.getStatus() == StatusType.IN_PROGRESS && updatedTournament
-                .getBeginningDate().isAfter(LocalDate.now())) {
+        if (isTournamentWithContests && updatedTournament.getBeginningDate().isAfter(LocalDate.now())) {
             errors.add(new ErrorDataDTO(BEGINNING_DATE_UPDATE_FORBIDDEN));
         }
         return errors;

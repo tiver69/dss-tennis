@@ -1,7 +1,6 @@
 package com.dss.tennis.tournament.tables.model.dto;
 
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
-import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.validator.constraint.anotation.Required;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,6 @@ public class TournamentDTO {
     private TournamentType tournamentType;
     @Required(message = "PARTICIPANT_TYPE_EMPTY")
     private ParticipantType participantType;
-    private StatusType status;
     private LocalDate beginningDate;
     private Iterable<ContestDTO> contests;
     private List<PlayerDTO> players;

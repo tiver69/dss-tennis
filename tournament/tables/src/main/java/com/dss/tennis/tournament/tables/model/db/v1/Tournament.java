@@ -17,7 +17,6 @@ public class Tournament {
     private String name;
     private TournamentType tournamentType;
     private ParticipantType participantType;
-    private StatusType status;
     private LocalDate beginningDate;
 
     public Tournament(int id) {
@@ -68,17 +67,6 @@ public class Tournament {
     }
 
     @Basic
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    public StatusType getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusType status) {
-        this.status = status;
-    }
-
-    @Basic
     @Column(name = "beginning_date", nullable = false)
     public LocalDate getBeginningDate() {
         return beginningDate;
@@ -94,7 +82,7 @@ public class Tournament {
         if (o == null || getClass() != o.getClass()) return false;
         Tournament that = (Tournament) o;
         return id == that.id && Objects
-                .equals(name, that.name) && tournamentType == that.tournamentType && participantType == that.participantType && status == that.status && Objects
+                .equals(name, that.name) && tournamentType == that.tournamentType && participantType == that.participantType && Objects
                 .equals(beginningDate, that.beginningDate);
     }
 
@@ -104,7 +92,6 @@ public class Tournament {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (tournamentType != null ? tournamentType.hashCode() : 0);
         result = 31 * result + (participantType != null ? participantType.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
         return 31 * result + (beginningDate != null ? beginningDate.hashCode() : 0);
     }
 
@@ -115,7 +102,6 @@ public class Tournament {
                 ", name='" + name + '\'' +
                 ", tournamentType=" + tournamentType +
                 ", participantType=" + participantType +
-                ", status=" + status +
                 ", beginningDate=" + beginningDate +
                 '}';
     }

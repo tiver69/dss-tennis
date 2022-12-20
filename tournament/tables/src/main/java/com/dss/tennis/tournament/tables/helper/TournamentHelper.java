@@ -2,7 +2,6 @@ package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.helper.factory.TournamentFactory;
-import com.dss.tennis.tournament.tables.model.db.v1.StatusType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +32,6 @@ public class TournamentHelper {
                 .name(tournamentDTO.getName())
                 .tournamentType(tournamentDTO.getTournamentType())
                 .participantType(tournamentDTO.getParticipantType())
-                .status(getStatusBaseOnBeginningDate(tournamentDTO.getBeginningDate()))
                 .beginningDate(tournamentDTO.getBeginningDate())
                 .build();
         return tournamentRepository.save(tournament);
@@ -82,11 +79,5 @@ public class TournamentHelper {
                 new DetailedException(TOURNAMENT_NOT_FOUND, tournamentId.toString()));
 
         return tournamentFactory.populateTournamentDtoWithContests(tournament);
-    }
-
-    private StatusType getStatusBaseOnBeginningDate(LocalDate beginningDate) {
-        if (beginningDate == null || beginningDate.isAfter(LocalDate.now()))
-            return StatusType.PLANNED;
-        return StatusType.IN_PROGRESS;
     }
 }
