@@ -22,7 +22,7 @@ public class TeamResponse {
     @Getter
     @Setter
     @Builder
-    public static class TeamResponseData {
+    public static class TeamResponseData implements com.dss.tennis.tournament.tables.model.definitions.Data {
         private int id;
         private final String type = TEAM.value;
         private TeamResponseRelationships relationships;

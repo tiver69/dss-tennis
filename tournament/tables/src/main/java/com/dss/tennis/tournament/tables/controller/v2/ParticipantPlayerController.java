@@ -2,7 +2,7 @@ package com.dss.tennis.tournament.tables.controller.v2;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
-import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
+import com.dss.tennis.tournament.tables.model.definitions.Pageable.PageableResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PageablePlayerResponse;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.CretePlayerRequest;
 import com.dss.tennis.tournament.tables.model.definitions.player.PlayerRequest.UpdatePlayerRequest;
@@ -42,7 +42,8 @@ public class ParticipantPlayerController {
         ResponseWarningDTO<PageableDTO> pageablePlayersDto = participantService
                 .getParticipantPage(page - 1, pageSize, PLAYER);
 
-        PageableResponse playersResponse = converterHelper.convert(pageablePlayersDto, PageablePlayerResponse.class);
+        PageableResponse playersResponse = converterHelper
+                .convertPageable(pageablePlayersDto, PageablePlayerResponse.class);
         return new ResponseEntity<>(playersResponse, HttpStatus.OK);
     }
 

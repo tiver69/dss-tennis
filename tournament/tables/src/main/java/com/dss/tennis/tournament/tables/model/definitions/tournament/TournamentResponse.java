@@ -21,7 +21,7 @@ public class TournamentResponse {
     @Getter
     @Setter
     @Builder
-    public static class TournamentResponseData {
+    public static class TournamentResponseData implements com.dss.tennis.tournament.tables.model.definitions.Data {
         private int id;
         private final String type = TOURNAMENT.value;
         private TournamentResponseAttributes attributes;

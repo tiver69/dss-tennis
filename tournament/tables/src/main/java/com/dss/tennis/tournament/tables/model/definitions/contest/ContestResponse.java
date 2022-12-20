@@ -18,7 +18,7 @@ public class ContestResponse {
     @Getter
     @Setter
     @Builder
-    public static class ContestResponseData {
+    public static class ContestResponseData implements com.dss.tennis.tournament.tables.model.definitions.Data {
         private int id;
         private final String type = CONTEST.value;
         private ContestAttributes attributes;

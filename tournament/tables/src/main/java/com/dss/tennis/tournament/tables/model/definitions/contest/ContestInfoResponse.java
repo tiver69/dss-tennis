@@ -12,7 +12,7 @@ public class ContestInfoResponse {
     @Setter
     @SuperBuilder
     @NoArgsConstructor
-    public static class ContestInfoResponseData {
+    public static class ContestInfoResponseData implements com.dss.tennis.tournament.tables.model.definitions.Data {
         private int id;
         private String type;
         private ContestInfoAttributes attributes;

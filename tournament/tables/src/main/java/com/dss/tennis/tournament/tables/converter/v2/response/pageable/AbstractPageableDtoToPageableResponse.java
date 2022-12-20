@@ -2,9 +2,10 @@ package com.dss.tennis.tournament.tables.converter.v2.response.pageable;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
+import com.dss.tennis.tournament.tables.model.definitions.Data;
 import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
-import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
+import com.dss.tennis.tournament.tables.model.definitions.Pageable.PageableTypedResponse;
 import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public abstract class AbstractPageableDtoToPageableResponse<S, D extends PageableResponse> {
+public abstract class AbstractPageableDtoToPageableResponse<S, D extends PageableTypedResponse<? extends Data>> {
 
     @Getter
     protected final ModelMapper modelMapper;
@@ -25,19 +26,20 @@ public abstract class AbstractPageableDtoToPageableResponse<S, D extends Pageabl
         try {
             D response = destinationClass.getConstructor().newInstance();
             List responseData = source.getPage().stream()
-                    .map(pageItem -> modelMapper.map(pageItem, response.getResponseDataClass())) //todo cast
+                    .map(pageItem -> modelMapper.map(pageItem, response.getResponseDataClass()))
                     .collect(Collectors.toList());
 
             response.setMeta(PageableMeta.builder().totalPages(source.getTotalPages())
                     .currentPage(source.getCurrentPage() + 1).build());
             response.setData(responseData);
-            response.setLinks(convertPageableLinks(source.getTotalPages(), source
-                    .getPageSize(), source.getCurrentPage() + 1, response.getResponseDataType()));
+            response.setLinks(convertPageableLinks(source.getTotalPages(), source.getPageSize(), source
+                    .getCurrentPage() + 1, response.getResponseDataType()));
 
             return response;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
-            throw new DetailedException(ErrorConstants.ErrorKey.INTERNAL_SERVER_ERROR, "Failed to create response object");
+            throw new DetailedException(ErrorConstants.ErrorKey.INTERNAL_SERVER_ERROR, "Failed to create response " +
+                    "object");
         }
     }
 

@@ -3,7 +3,7 @@ package com.dss.tennis.tournament.tables.controller.v2;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
-import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
+import com.dss.tennis.tournament.tables.model.definitions.Pageable.PageableResponse;
 import com.dss.tennis.tournament.tables.model.definitions.tournament.EnrollTournamentParticipantRequest;
 import com.dss.tennis.tournament.tables.model.definitions.tournament.PageableTournamentResponse;
 import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentRequest.CreteTournamentRequest;
@@ -56,7 +56,7 @@ public class TournamentController {
                 .getTournamentPage(page - 1, pageSize);
 
         PageableResponse tournamentsResponse = converterHelper
-                .convert(pageableTournamentsDto, PageableTournamentResponse.class);
+                .convertPageable(pageableTournamentsDto, PageableTournamentResponse.class);
         return new ResponseEntity<>(tournamentsResponse, HttpStatus.OK);
     }
 

@@ -2,7 +2,7 @@ package com.dss.tennis.tournament.tables.model.definitions.tournament;
 
 import com.dss.tennis.tournament.tables.model.definitions.Links;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
-import com.dss.tennis.tournament.tables.model.definitions.PageableResponse;
+import com.dss.tennis.tournament.tables.model.definitions.Pageable.PageableTypedResponse;
 import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
 import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse.TournamentResponseData;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,7 +19,7 @@ import static com.dss.tennis.tournament.tables.model.definitions.ResourceObjectT
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PageableTournamentResponse implements PageableResponse {
+public class PageableTournamentResponse implements PageableTypedResponse<TournamentResponseData> {
 
     private PageableMeta meta;
     private List<TournamentResponseData> data;
@@ -27,13 +27,13 @@ public class PageableTournamentResponse implements PageableResponse {
     private Links links;
 
     @Override
-    public void setData(Object data) throws ClassCastException {
-        this.data = (List<TournamentResponseData>) data;
+    public void setData(List<TournamentResponseData> data) throws ClassCastException {
+        this.data = data;
     }
 
     @Override
     @JsonIgnore
-    public Class getResponseDataClass() {
+    public Class<TournamentResponseData> getResponseDataClass() {
         return TournamentResponseData.class;
     }
 

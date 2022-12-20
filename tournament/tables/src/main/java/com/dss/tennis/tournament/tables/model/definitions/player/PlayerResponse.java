@@ -19,7 +19,7 @@ public class PlayerResponse {
 
     @Getter
     @Setter
-    public static class PlayerResponseData {
+    public static class PlayerResponseData implements com.dss.tennis.tournament.tables.model.definitions.Data {
         private int id;
         private final String type = PLAYER.value;
         private PlayerResponseAttributes attributes;
