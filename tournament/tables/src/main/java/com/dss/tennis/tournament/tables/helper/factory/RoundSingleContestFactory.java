@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class RoundSingleContestFactory extends RoundContestFactory {
@@ -52,15 +53,14 @@ public class RoundSingleContestFactory extends RoundContestFactory {
     }
 
     @Override
-    public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
+    public Iterable<ContestDTO> getContestDTOsWithParticipants(Integer tournamentId) {
+        Map<Integer, PlayerDTO> players = playerHelper.getTournamentPlayerDtoMap(tournamentId);
         Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
-        contests.forEach(contest -> {
-            ((SingleContestDTO) contest)
-                    .setPlayerOne(players.get(contest.getParticipantOneId()));
-            ((SingleContestDTO) contest)
-                    .setPlayerTwo(players.get(contest.getParticipantTwoId()));
-        });
-        return contests;
+
+        return StreamSupport.stream(contests.spliterator(), true).map(SingleContestDTO.class::cast).peek(contest -> {
+            contest.setPlayerOne(players.get(contest.getParticipantOneId()));
+            contest.setPlayerTwo(players.get(contest.getParticipantTwoId()));
+        }).collect(Collectors.toList());
     }
 
     @Override

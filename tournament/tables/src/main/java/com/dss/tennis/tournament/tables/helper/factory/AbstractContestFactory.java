@@ -2,10 +2,8 @@ package com.dss.tennis.tournament.tables.helper.factory;
 
 import com.dss.tennis.tournament.tables.model.db.v2.Contest;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public interface AbstractContestFactory {
@@ -22,7 +20,7 @@ public interface AbstractContestFactory {
 
     Iterable<ContestDTO> getContestDTOs(Integer tournamentId);
 
-    Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players);
+    Iterable<ContestDTO> getContestDTOsWithParticipants(Integer tournamentId);
 
     Class<? extends Contest> getContestParticipantClass();
 

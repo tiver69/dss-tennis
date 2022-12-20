@@ -1,20 +1,15 @@
 package com.dss.tennis.tournament.tables.helper.factory;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
-import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
-import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
-import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.db.v1.ParticipantType;
 import com.dss.tennis.tournament.tables.model.db.v1.Tournament;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.ContestDTO;
-import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 @Service
@@ -30,10 +25,6 @@ public class TournamentFactory {
     private EliminationSingleContestFactory eliminationSingleContestFactory;
     @Autowired
     private EliminationDoubleContestFactory eliminationDoubleContestFactory;
-    @Autowired
-    private PlayerHelper playerHelper;
-    @Autowired
-    private TeamHelper teamHelper;
 
     public void createContestForNewParticipants(TournamentDTO tournamentDto, List<Integer> newParticipantIds) {
         AbstractContestFactory contestFactory = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
@@ -61,13 +52,9 @@ public class TournamentFactory {
     public TournamentDTO populateTournamentDtoWithContests(Tournament tournament) {
         TournamentDTO tournamentDto = populateTournamentDTO(tournament);
 
-        //todo refactor
-        Map<Integer, PlayerDTO> players = getParticipantHelper(tournamentDto.getParticipantType())
-                .getTournamentPlayerDtoMap(tournamentDto.getId());
         Iterable<ContestDTO> contests = getContestFactory(tournamentDto.getTournamentType(), tournamentDto
-                .getParticipantType()).getContestDTOs(tournamentDto.getId(), players);
+                .getParticipantType()).getContestDTOsWithParticipants(tournamentDto.getId());
         tournamentDto.setContests(contests);
-
         return tournamentDto;
     }
 
@@ -88,9 +75,5 @@ public class TournamentFactory {
         }
         return participantType == ParticipantType.SINGLE ? eliminationSingleContestFactory :
                 eliminationDoubleContestFactory;
-    }
-
-    private ParticipantHelper<?, ?> getParticipantHelper(ParticipantType type) {
-        return type == ParticipantType.SINGLE ? playerHelper : teamHelper;
     }
 }

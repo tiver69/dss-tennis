@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
 @Service
 public class EliminationDoubleContestFactory extends EliminationContestFactory {
@@ -72,20 +73,23 @@ public class EliminationDoubleContestFactory extends EliminationContestFactory {
     }
 
     @Override
-    public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
+    public Iterable<ContestDTO> getContestDTOsWithParticipants(Integer tournamentId) {
+        Map<Integer, PlayerDTO> players = teamHelper.getTournamentPlayerDtoMap(tournamentId);
         Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
-        if (contests == null) return null;
-        contests.forEach(contestDTO -> {
-            if (contestDTO instanceof DoubleContestDTO) {
-                TeamDTO teamOne = ((DoubleContestDTO) contestDTO).getTeamOne();
-                TeamDTO teamTwo = ((DoubleContestDTO) contestDTO).getTeamTwo();
 
-                teamOne.setPlayerOne(players.get(teamOne.getPlayerOne().getId()));
-                teamOne.setPlayerTwo(players.get(teamOne.getPlayerTwo().getId()));
-                teamTwo.setPlayerOne(players.get(teamTwo.getPlayerOne().getId()));
-                teamTwo.setPlayerTwo(players.get(teamTwo.getPlayerTwo().getId()));
-            }
-        });
+        if (contests == null) return null;
+        StreamSupport.stream(contests.spliterator(), true)
+                .forEach(contest -> {
+                    if (contest instanceof DoubleContestDTO) {
+                        TeamDTO teamOne = ((DoubleContestDTO) contest).getTeamOne();
+                        TeamDTO teamTwo = ((DoubleContestDTO) contest).getTeamTwo();
+
+                        teamOne.setPlayerOne(players.get(teamOne.getPlayerOne().getId()));
+                        teamOne.setPlayerTwo(players.get(teamOne.getPlayerTwo().getId()));
+                        teamTwo.setPlayerOne(players.get(teamTwo.getPlayerOne().getId()));
+                        teamTwo.setPlayerTwo(players.get(teamTwo.getPlayerTwo().getId()));
+                    }
+                });
         return contests;
     }
 

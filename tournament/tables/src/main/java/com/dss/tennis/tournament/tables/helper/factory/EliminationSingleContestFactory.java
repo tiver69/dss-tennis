@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
 @Service
 public class EliminationSingleContestFactory extends EliminationContestFactory {
@@ -81,17 +82,19 @@ public class EliminationSingleContestFactory extends EliminationContestFactory {
     }
 
     @Override
-    public Iterable<ContestDTO> getContestDTOs(Integer tournamentId, Map<Integer, PlayerDTO> players) {
+    public Iterable<ContestDTO> getContestDTOsWithParticipants(Integer tournamentId) {
+        Map<Integer, PlayerDTO> players = playerHelper.getTournamentPlayerDtoMap(tournamentId);
         Iterable<ContestDTO> contests = super.getContestDTOs(tournamentId);
+
         if (contests == null) return null;
-        contests.forEach(contestDTO -> {
-            if (contestDTO instanceof SingleContestDTO) {
-                Integer playerOneId = ((SingleContestDTO) contestDTO).getPlayerOne().getId();
-                Integer playerTwoId = ((SingleContestDTO) contestDTO).getPlayerTwo().getId();
-                ((SingleContestDTO) contestDTO).setPlayerOne(players.get(playerOneId));
-                ((SingleContestDTO) contestDTO).setPlayerTwo(players.get(playerTwoId));
-            }
-        });
+        StreamSupport.stream(contests.spliterator(), true)
+                .forEach(contest -> {
+                    if (contest instanceof SingleContestDTO) {
+                        SingleContestDTO singleContest = (SingleContestDTO) contest;
+                        singleContest.setPlayerOne(players.get(contest.getParticipantOneId()));
+                        singleContest.setPlayerTwo(players.get(contest.getParticipantTwoId()));
+                    }
+                });
         return contests;
     }
 
