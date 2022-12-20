@@ -1,9 +1,9 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.ErrorConstants.ErrorKey;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData.ErrorDataSource;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData.ErrorDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;

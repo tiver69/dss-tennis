@@ -2,6 +2,7 @@ package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.CommonMeta;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.ContestInfoResponseData;
 import com.dss.tennis.tournament.tables.model.definitions.contest.ContestInfoResponse.EliminationContestInfoResponseData;
@@ -13,7 +14,6 @@ import com.dss.tennis.tournament.tables.model.definitions.team.TeamResponse.Team
 import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse;
 import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentResponse.TournamentResponseData;
 import com.dss.tennis.tournament.tables.model.dto.*;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

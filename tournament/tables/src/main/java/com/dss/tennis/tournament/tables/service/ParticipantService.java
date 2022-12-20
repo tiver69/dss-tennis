@@ -6,8 +6,8 @@ import com.dss.tennis.tournament.tables.helper.participant.ParticipantHelper;
 import com.dss.tennis.tournament.tables.helper.participant.PlayerHelper;
 import com.dss.tennis.tournament.tables.helper.participant.TeamHelper;
 import com.dss.tennis.tournament.tables.model.definitions.ResourceObjectType;
+import com.dss.tennis.tournament.tables.model.definitions.player.PlayerPatch;
 import com.dss.tennis.tournament.tables.model.dto.*;
-import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import com.dss.tennis.tournament.tables.validator.PageableValidator;
 import com.dss.tennis.tournament.tables.validator.participant.PlayerValidator;
 import com.dss.tennis.tournament.tables.validator.participant.TeamValidator;
@@ -54,7 +54,7 @@ public class ParticipantService {
         return teamHelper.getParticipantDto(teamId);
     }
 
-    public PlayerDTO updatePlayer(PatchPlayer patch, Integer playerId) {
+    public PlayerDTO updatePlayer(PlayerPatch patch, Integer playerId) {
         PlayerDTO player = playerHelper.getParticipantDto(playerId);
         PlayerDTO updatedPlayer = patchApplierHelper.applyPatch(patch, player);
         Set<ErrorDataDTO> errorSet = playerValidator.validatePlayer(updatedPlayer);

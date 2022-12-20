@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.helper;
 
-import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
+import com.dss.tennis.tournament.tables.converter.ModelMapperFactory;
 import org.springframework.stereotype.Service;
 
 @Service

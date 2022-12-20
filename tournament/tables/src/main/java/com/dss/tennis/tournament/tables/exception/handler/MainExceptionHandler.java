@@ -1,9 +1,9 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.modelmapper.MappingException;

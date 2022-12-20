@@ -2,9 +2,9 @@ package com.dss.tennis.tournament.tables.controller;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.ErrorConstants;
-import com.dss.tennis.tournament.tables.model.request.PostAuthentication;
-import com.dss.tennis.tournament.tables.model.request.PostRefreshToken;
-import com.dss.tennis.tournament.tables.model.response.v1.AuthenticationResponse;
+import com.dss.tennis.tournament.tables.model.definitions.auth.AuthenticationRequest;
+import com.dss.tennis.tournament.tables.model.definitions.auth.AuthenticationResponse;
+import com.dss.tennis.tournament.tables.model.definitions.auth.RefreshTokenRequest;
 import com.dss.tennis.tournament.tables.security.Admin;
 import com.dss.tennis.tournament.tables.security.AdminDetailsService;
 import com.dss.tennis.tournament.tables.security.JwtTokenProvider;
@@ -33,7 +33,7 @@ public class AuthenticationController {
     private AdminDetailsService adminDetailsService;
 
     @PostMapping
-    public ResponseEntity<?> generateAuthenticationToken(@RequestBody PostAuthentication authenticationRequest) {
+    public ResponseEntity<?> generateAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         adminDetailsService.validateUnsuccessfulCounter(authenticationRequest.getUsername());
 
         Authentication authentication;
@@ -55,7 +55,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshAuthenticationToken(@RequestBody PostRefreshToken refreshRequest) {
+    public ResponseEntity<?> refreshAuthenticationToken(@RequestBody RefreshTokenRequest refreshRequest) {
         Admin admin = (Admin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (admin.getRefreshToken().equals(refreshRequest.getRefreshToken()) && LocalDateTime.now()

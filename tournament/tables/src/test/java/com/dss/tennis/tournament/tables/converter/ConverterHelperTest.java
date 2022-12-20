@@ -1,24 +1,16 @@
 package com.dss.tennis.tournament.tables.converter;
 
-import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
 import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.request.CreateTournament;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ConverterHelperTest {
@@ -36,8 +28,8 @@ class ConverterHelperTest {
     @Mock
     private ModelMapper modelMapperMock;
 
-    @Spy
-    private CreateTournament createTournamentSpy;
+//    @Spy
+//    private CreateTournament createTournamentSpy;
 
     @InjectMocks
     private ConverterHelper testInstance;

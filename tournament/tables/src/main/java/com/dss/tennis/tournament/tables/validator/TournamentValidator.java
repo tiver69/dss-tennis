@@ -1,8 +1,8 @@
 package com.dss.tennis.tournament.tables.validator;
 
+import com.dss.tennis.tournament.tables.model.definitions.tournament.TournamentPatch;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.request.PatchTournament;
 import com.dss.tennis.tournament.tables.repository.ContestRepository;
 import com.dss.tennis.tournament.tables.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class TournamentValidator {
         return errors;
     }
 
-    public Set<ErrorDataDTO> validateTournamentPatch(PatchTournament patch, Integer tournamentId) {
+    public Set<ErrorDataDTO> validateTournamentPatch(TournamentPatch patch, Integer tournamentId) {
         boolean isTournamentWithContests = contestRepository.isTournamentHasContests(tournamentId);
         if (!isTournamentWithContests) return Set.of();
 

@@ -2,10 +2,10 @@ package com.dss.tennis.tournament.tables.security;
 
 import com.dss.tennis.tournament.tables.exception.DetailedException;
 import com.dss.tennis.tournament.tables.exception.handler.MainExceptionHandler;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData.ErrorDataSource;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData.ErrorDataSource;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

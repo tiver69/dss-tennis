@@ -1,14 +1,13 @@
 package com.dss.tennis.tournament.tables.converter;
 
-import com.dss.tennis.tournament.tables.converter.modelmapper.ModelMapperFactory;
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
 import com.dss.tennis.tournament.tables.model.definitions.Data;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
 import com.dss.tennis.tournament.tables.model.definitions.Meta.PageableMeta;
 import com.dss.tennis.tournament.tables.model.definitions.Pageable.PageableTypedResponse;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PageableDTO;
 import com.dss.tennis.tournament.tables.model.dto.ResponseWarningDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

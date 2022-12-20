@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.apache.commons.lang3.StringUtils;

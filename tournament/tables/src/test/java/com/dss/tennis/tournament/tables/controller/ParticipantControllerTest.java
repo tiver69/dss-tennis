@@ -2,8 +2,6 @@ package com.dss.tennis.tournament.tables.controller;
 
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.GetPlayer;
-import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.ParticipantService;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,12 +60,12 @@ class ParticipantControllerTest {
 //                .getResponse().getContentAsString());
 //    }
 
-    private SuccessResponse<GetPlayer> prepareSuccessGetPlayer() {
-        GetPlayer player = GetPlayer.builder()
-                .id(PLAYER_ID)
-                .firstName(PLAYER_FIRST_NAME)
-                .lastName(PLAYER_LAST_NAME)
-                .build();
-        return new SuccessResponse<>(player, null);
-    }
+//    private SuccessResponse<GetPlayer> prepareSuccessGetPlayer() {
+//        GetPlayer player = GetPlayer.builder()
+//                .id(PLAYER_ID)
+//                .firstName(PLAYER_FIRST_NAME)
+//                .lastName(PLAYER_LAST_NAME)
+//                .build();
+//        return new SuccessResponse<>(player, null);
+//    }
 }

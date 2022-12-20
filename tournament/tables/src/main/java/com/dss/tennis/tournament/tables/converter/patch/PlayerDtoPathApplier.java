@@ -1,7 +1,7 @@
 package com.dss.tennis.tournament.tables.converter.patch;
 
+import com.dss.tennis.tournament.tables.model.definitions.player.PlayerPatch;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
-import com.dss.tennis.tournament.tables.model.request.PatchPlayer;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.Converter;
@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 
 @Getter
 @Setter
-public class PlayerDtoPathApplier implements Converter<PatchPlayer, PlayerDTO> {
+public class PlayerDtoPathApplier implements Converter<PlayerPatch, PlayerDTO> {
 
     @Override
-    public PlayerDTO convert(MappingContext<PatchPlayer, PlayerDTO> context) {
-        PatchPlayer patch = context.getSource();
+    public PlayerDTO convert(MappingContext<PlayerPatch, PlayerDTO> context) {
+        PlayerPatch patch = context.getSource();
         PlayerDTO player = context.getDestination();
 
         applyValue(patch.getFirstName(), player::setFirstName);

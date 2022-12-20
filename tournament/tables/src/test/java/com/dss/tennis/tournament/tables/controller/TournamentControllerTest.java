@@ -3,13 +3,7 @@ package com.dss.tennis.tournament.tables.controller;
 import com.dss.tennis.tournament.tables.converter.ConverterHelper;
 import com.dss.tennis.tournament.tables.helper.RequestParameterHelper;
 import com.dss.tennis.tournament.tables.helper.ResponseHelper;
-import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.request.CreatePlayer;
-import com.dss.tennis.tournament.tables.model.request.CreateTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.SuccessResponse;
 import com.dss.tennis.tournament.tables.service.TournamentService;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Set;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,8 +25,8 @@ class TournamentControllerTest {
     private static final int TOURNAMENT_ID = 111;
     private static final String TOURNAMENT_NAME = "TOURNAMENT_NAME";
     private static final String INCLUDE_PARAMETER = "INCLUDE_PARAMETER";
-    private static final CreatePlayer PLAYER_ONE = new CreatePlayer();
-    private static final CreatePlayer PLAYER_TWO = new CreatePlayer();
+//    private static final CreatePlayer PLAYER_ONE = new CreatePlayer();
+//    private static final CreatePlayer PLAYER_TWO = new CreatePlayer();
 
     @Autowired
     private MockMvc mockMvc;
@@ -106,22 +98,22 @@ class TournamentControllerTest {
 //                .getResponse().getContentAsString());
 //    }
 
-    private SuccessResponse<GetTournament> prepareSuccessGetTournament() {
-        return new SuccessResponse<>(prepareGetTournament(), Set
-                .of(ErrorData.builder().code("INTERNAL_SERVER_ERROR").build()));
-    }
-
-    private GetTournament prepareGetTournament() {
-        return GetTournament.builder()
-                .name(TOURNAMENT_NAME)
-                .tournamentType(TournamentType.ELIMINATION)
-                .build();
-    }
-
-    private CreateTournament prepareCreateTournament() {
-        return CreateTournament.builder()
-                .name(TOURNAMENT_NAME)
-                .tournamentType(TournamentType.ELIMINATION)
-                .build();
-    }
+//    private SuccessResponse<GetTournament> prepareSuccessGetTournament() {
+//        return new SuccessResponse<>(prepareGetTournament(), Set
+//                .of(ErrorData.builder().code("INTERNAL_SERVER_ERROR").build()));
+//    }
+//
+//    private GetTournament prepareGetTournament() {
+//        return GetTournament.builder()
+//                .name(TOURNAMENT_NAME)
+//                .tournamentType(TournamentType.ELIMINATION)
+//                .build();
+//    }
+//
+//    private CreateTournament prepareCreateTournament() {
+//        return CreateTournament.builder()
+//                .name(TOURNAMENT_NAME)
+//                .tournamentType(TournamentType.ELIMINATION)
+//                .build();
+//    }
 }

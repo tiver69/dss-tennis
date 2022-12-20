@@ -1,8 +1,8 @@
 package com.dss.tennis.tournament.tables.helper;
 
 import com.dss.tennis.tournament.tables.exception.handler.WarningHandler;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData.ErrorDataSource;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData.ErrorDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,6 +1,6 @@
 package com.dss.tennis.tournament.tables.exception.handler;
 
-import com.dss.tennis.tournament.tables.model.response.v1.ErrorResponse.ErrorData;
+import com.dss.tennis.tournament.tables.model.definitions.ErrorResponse.ErrorData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

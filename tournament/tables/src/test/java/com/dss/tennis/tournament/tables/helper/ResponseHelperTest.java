@@ -6,8 +6,6 @@ import com.dss.tennis.tournament.tables.model.db.v1.TournamentType;
 import com.dss.tennis.tournament.tables.model.dto.ErrorDataDTO;
 import com.dss.tennis.tournament.tables.model.dto.PlayerDTO;
 import com.dss.tennis.tournament.tables.model.dto.TournamentDTO;
-import com.dss.tennis.tournament.tables.model.response.v1.GetTournament;
-import com.dss.tennis.tournament.tables.model.response.v1.ResourceObject;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,16 +24,16 @@ class ResponseHelperTest {
     private ConverterHelper converterHelperMock;
     @Mock
     private WarningHandler warningHandlerMock;
-    @Spy
-    private GetTournament getTournamentSpy;
+//    @Spy
+//    private GetTournament getTournamentSpy;
     @Spy
     private PlayerDTO playerOneDtoSpy;
-    @Spy
-    private ResourceObject playerOneResourceObjectSpy;
+//    @Spy
+//    private ResourceObject playerOneResourceObjectSpy;
     @Spy
     private PlayerDTO playerTwoDtoSpy;
-    @Spy
-    private ResourceObject playerTwoResourceObjectSpy;
+//    @Spy
+//    private ResourceObject playerTwoResourceObjectSpy;
     @Spy
     private ErrorDataDTO errorDataSpy;
 
