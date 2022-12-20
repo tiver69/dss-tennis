@@ -819,6 +819,67 @@
 							"response": []
 						},
 						{
+							"name": "Player | Patch Id Not Correspond to Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"Required Errors Present In Response\", () => {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    pm.expect(jsonData.errors).to.be.an(\"array\");\r",
+											"\r",
+											"    pm.expect(jsonData.errors[0].status).to.eql(\"RESOURCE_OBJECT_ID_NOT_CORRESPOND_TO_REQUEST\");\r",
+											"    pm.expect(jsonData.errors[0].code).to.eql(\"400\");\r",
+											"    pm.expect(jsonData.errors[0].title).to.eql(\"Bad request\");\r",
+											"    pm.expect(jsonData.errors[0].detail).to.eql(\"Path parameter id doesn't correspond to request body id\");\r",
+											"    pm.expect(jsonData.errors[0].source.parameter).to.eql(environment.playerId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": {{playerId}},\r\n    \"type\": \"player\",\r\n    \"attributes\": {\r\n        \"firstName\": \"PatchTest-{{$timestamp}}\",\r\n        \"lastName\": \"PatchTest-{{$timestamp}}\",\r\n        \"birthDate\": \"1989-03-17\",\r\n        \"experienceYear\": \"1999\",\r\n        \"leadingHand\": \"LEFT\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/participants/players/99999",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"players",
+										"99999"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Player | Required Attributes",
 							"event": [
 								{
@@ -1537,7 +1598,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"player\",\r\n    \"attributes\": {\r\n        \"firstName\": \"PostTest1-{{$timestamp}}\",\r\n        \"lastName\": \"PostTest1-{{$timestamp}}\",\r\n        \"birthDate\": \"1999-03-17\",\r\n        \"experienceYear\": \"2009\",\r\n        \"leadingHand\": \"RIGHT\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"player\",\r\n    \"attributes\": {\r\n        \"firstName\": \"PostTesTeam1-{{$timestamp}}\",\r\n        \"lastName\": \"PostTestTeam1-{{$timestamp}}\",\r\n        \"birthDate\": \"1999-03-17\",\r\n        \"experienceYear\": \"2009\",\r\n        \"leadingHand\": \"RIGHT\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1607,7 +1668,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"player\",\r\n    \"attributes\": {\r\n        \"firstName\": \"PostTest2-{{$timestamp}}\",\r\n        \"lastName\": \"PostTest2-{{$timestamp}}\",\r\n        \"birthDate\": \"1999-03-17\",\r\n        \"experienceYear\": \"2009\",\r\n        \"leadingHand\": \"RIGHT\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"player\",\r\n    \"attributes\": {\r\n        \"firstName\": \"PostTestTeam2-{{$timestamp}}\",\r\n        \"lastName\": \"PostTestTeam2-{{$timestamp}}\",\r\n        \"birthDate\": \"1999-03-17\",\r\n        \"experienceYear\": \"2009\",\r\n        \"leadingHand\": \"RIGHT\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2236,6 +2297,66 @@
 							"response": []
 						},
 						{
+							"name": "Team | Illegal Values | Player Redundant",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"Required Errors Present In Response\", () => {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    pm.expect(jsonData.errors).to.be.an(\"array\");\r",
+											"\r",
+											"    pm.expect(jsonData.errors[0].status).to.eql(\"TEAM_PLAYER_REDUNDANT\");\r",
+											"    pm.expect(jsonData.errors[0].code).to.eql(\"400\");\r",
+											"    pm.expect(jsonData.errors[0].title).to.eql(\"Bad request\");\r",
+											"    pm.expect(jsonData.errors[0].detail).to.eql(\"Only two players can be assigned to a single team\");\r",
+											"    pm.expect(jsonData.errors[0].source.pointer).to.eql(\"/relationships/players[3]\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"team\",\r\n    \"relationships\": {\r\n        \"players\": [\r\n            {\r\n                \"id\": {{playerId_team-1}},\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": {{playerId_team-1}},\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": {{playerId_team-1}},\r\n                \"type\": \"player\"\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/participants/teams",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"teams"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Team |  Invalid Format | First Player",
 							"event": [
 								{
@@ -2565,7 +2686,7 @@
 							"response": []
 						},
 						{
-							"name": "Tournament | Planned",
+							"name": "Tournament | All Attributes",
 							"event": [
 								{
 									"listen": "test",
@@ -2581,81 +2702,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"PLANNED\");\r",
-											"    pm.expect(jsonData.data.attributes.beginningDate).to.be.undefined;\r",
-											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
-											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
-											"\r",
-											"    pm.expect(jsonData.data.relationships).to.be.undefined;\r",
-											"\r",
-											"    pm.expect(jsonData.data.links.self).to.eql(\"/tournaments/\" + jsonData.data.id);\r",
-											"});\r",
-											"pm.test(\"Included is empty for tournament without contests\", () => {\r",
-											"    var jsonData = JSON.parse(responseBody);\r",
-											"    pm.expect(jsonData.included).to.be.undefined;\r",
-											"});\r",
-											"\r",
-											"//---------------------     SAVE DATA     -----------------------\r",
-											"var jsonData = JSON.parse(responseBody);\r",
-											"postman.setEnvironmentVariable(\"tournamentId\", jsonData.data.id);\r",
-											"postman.setEnvironmentVariable(\"tournamentName\", jsonData.data.attributes.name);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{accessToken}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTestPlanned-{{$timestamp}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\"\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseURL}}/tournaments",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"tournaments"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Tournament | In Progress",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 201\", () => {\r",
-											"    pm.response.to.have.status(201);\r",
-											"});\r",
-											"pm.test(\"Tournament created correctly\", () => {\r",
-											"    var jsonData = JSON.parse(responseBody);\r",
-											"    pm.expect(jsonData.data.id).not.to.be.null;\r",
-											"\r",
-											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
-											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
-											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -2693,7 +2739,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTestProgress-{{$timestamp}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTestProgress-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2729,7 +2775,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -2986,7 +3031,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2019-12-31\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -3024,7 +3068,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PatchTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"DOUBLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2019-12-31\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PatchTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"DOUBLE\",\r\n        \"beginningDate\": \"2019-12-31\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3427,7 +3471,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -3465,7 +3508,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3501,7 +3544,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -3662,7 +3704,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -4223,7 +4264,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(50);\r",
@@ -4463,7 +4503,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(83);\r",
@@ -4607,7 +4646,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(3);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(100);\r",
@@ -5638,7 +5676,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -5676,7 +5713,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"DOUBLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"DOUBLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5712,7 +5749,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -5873,7 +5909,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -6052,7 +6087,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(50);\r",
@@ -6446,7 +6480,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(66);\r",
@@ -6592,7 +6625,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(3);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(66);\r",
@@ -7015,7 +7047,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -7053,7 +7084,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -7089,7 +7120,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -7368,7 +7398,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(33);\r",
@@ -7669,7 +7698,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(66);\r",
@@ -7878,7 +7906,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(100);\r",
@@ -8893,7 +8920,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -8931,7 +8957,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"DOUBLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"DOUBLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -8967,7 +8993,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -9168,7 +9193,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -9641,7 +9665,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"DOUBLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(100);\r",
@@ -9922,7 +9945,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"PLANNED\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.be.undefined;\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -9960,7 +9982,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10243,7 +10265,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -10281,7 +10302,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ROUND\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10365,6 +10386,67 @@
 							"response": []
 						},
 						{
+							"name": "Enroll Players |  Patch Id Not Correspond to Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"Required Errors Present In Response\", () => {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    pm.expect(jsonData.errors).to.be.an(\"array\");\r",
+											"\r",
+											"    pm.expect(jsonData.errors[0].status).to.eql(\"RESOURCE_OBJECT_ID_NOT_CORRESPOND_TO_REQUEST\");\r",
+											"    pm.expect(jsonData.errors[0].code).to.eql(\"400\");\r",
+											"    pm.expect(jsonData.errors[0].title).to.eql(\"Bad request\");\r",
+											"    pm.expect(jsonData.errors[0].detail).to.eql(\"Path parameter id doesn't correspond to request body id\");\r",
+											"    pm.expect(jsonData.errors[0].source.parameter).to.eql(environment.tournamentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"relationships\": {\r\n        \"participants\": [\r\n            {\r\n                \"id\": {{playerId_tournament-1}},\r\n                \"type\": \"player\"\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tournaments/99999/enroll",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tournaments",
+										"99999",
+										"enroll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Enroll Players",
 							"event": [
 								{
@@ -10381,7 +10463,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ROUND\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(2);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -10582,7 +10663,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"status\": \"PLANNED\",\r\n        \"beginningDate\": \"2024-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"beginningDate\": \"2024-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10597,6 +10678,66 @@
 									"path": [
 										"tournaments",
 										"{{tournamentId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Tournament | Patch Id Not Correspond to Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"Required Errors Present In Response\", () => {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    pm.expect(jsonData.errors).to.be.an(\"array\");\r",
+											"\r",
+											"    pm.expect(jsonData.errors[0].status).to.eql(\"RESOURCE_OBJECT_ID_NOT_CORRESPOND_TO_REQUEST\");\r",
+											"    pm.expect(jsonData.errors[0].code).to.eql(\"400\");\r",
+											"    pm.expect(jsonData.errors[0].title).to.eql(\"Bad request\");\r",
+											"    pm.expect(jsonData.errors[0].detail).to.eql(\"Path parameter id doesn't correspond to request body id\");\r",
+											"    pm.expect(jsonData.errors[0].source.parameter).to.eql(environment.tournamentId);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"DOUBLE\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tournaments/99999",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tournaments",
+										"99999"
 									]
 								}
 							},
@@ -10620,7 +10761,7 @@
 											"    let gameLimitErrors = jsonData.errors.filter(error => error.status == \"GAME_LIMIT_EXCEEDED\");\r",
 											"    pm.expect(gameLimitErrors.length).to.eql(2);\r",
 											"    pm.expect(gameLimitErrors.map(error => error.source.pointer)).contains(\"/attributes/score/tieBreak\", \"/attributes/score/setTwo\");\r",
-											"    pm.expect(gameLimitErrors.map(error => error.source.parameter)).contains(\"7:7\", \"10:8\");\r",
+											"    pm.expect(gameLimitErrors.map(error => error.source.parameter)).contains(\"10:8\", \"51:7\");\r",
 											"\r",
 											"    let participantTwoScoreEmptyError = jsonData.errors.filter(error => error.status == \"PARTICIPANT_TWO_SCORE_EMPTY\");\r",
 											"    pm.expect(participantTwoScoreEmptyError.length).to.eql(2);\r",
@@ -10670,7 +10811,74 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{contestId-1}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"techDefeat\":{\r\n\r\n        },\r\n        \"score\" : {\r\n            \"setOne\":{\r\n\r\n            },\r\n            \"setTwo\":{\r\n                \"participantOne\": 10,\r\n                \"participantTwo\": 8\r\n            },\r\n            \"setThree\":{\r\n                \"participantOne\": 10\r\n            },\r\n            \"tieBreak\":{\r\n                \"participantOne\": 7,\r\n                \"participantTwo\": 7\r\n            }\r\n        }\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": {{contestId-1}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"techDefeat\":{\r\n\r\n        },\r\n        \"score\" : {\r\n            \"setOne\":{\r\n\r\n            },\r\n            \"setTwo\":{\r\n                \"participantOne\": 10,\r\n                \"participantTwo\": 8\r\n            },\r\n            \"setThree\":{\r\n                \"participantOne\": 10\r\n            },\r\n            \"tieBreak\":{\r\n                \"participantOne\": 51,\r\n                \"participantTwo\": 7\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tournaments/{{tournamentId}}/contest/{{contestId-1}}/score",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournamentId}}",
+										"contest",
+										"{{contestId-1}}",
+										"score"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Contest | Illegal Values | Tie Break Score Empty",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"Required Errors Present In Response\", () => {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    pm.expect(jsonData.errors).to.be.an(\"array\");\r",
+											"    pm.expect(jsonData.errors.length).to.eq(1);\r",
+											"\r",
+											"    let firstPLayerError = jsonData.errors.filter(error => error.status == \"SET_SCORE_EMPTY\")[0];\r",
+											"\r",
+											"    pm.expect(firstPLayerError).to.be.not.null;\r",
+											"    pm.expect(firstPLayerError.status).to.eql(\"SET_SCORE_EMPTY\");\r",
+											"    pm.expect(firstPLayerError.code).to.eql(\"400\");\r",
+											"    pm.expect(firstPLayerError.title).to.eql(\"Bad request\");\r",
+											"    pm.expect(firstPLayerError.detail).to.eql(\"Set score must be provided\");\r",
+											"    pm.expect(firstPLayerError.source.pointer).to.eql(\"/attributes/score/tieBreak\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": {{contestId-1}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"score\" : {\r\n            \"tieBreak\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            }\r\n        }\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10737,7 +10945,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{contestId-1}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"score\" : {\r\n            \"setTwo\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            },\r\n            \"setThree\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            },\r\n            \"tieBreak\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            }\r\n        }\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": {{contestId-1}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"score\" : {\r\n            \"setTwo\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            },\r\n            \"setThree\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            }\r\n        }\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -10821,6 +11029,69 @@
 										"{{tournamentId}}",
 										"contest",
 										"{{contestId-1}}",
+										"score"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Contest | Patch Id Not Correspond to Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"Required Errors Present In Response\", () => {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    pm.expect(jsonData.errors).to.be.an(\"array\");\r",
+											"\r",
+											"    pm.expect(jsonData.errors[0].status).to.eql(\"RESOURCE_OBJECT_ID_NOT_CORRESPOND_TO_REQUEST\");\r",
+											"    pm.expect(jsonData.errors[0].code).to.eql(\"400\");\r",
+											"    pm.expect(jsonData.errors[0].title).to.eql(\"Bad request\");\r",
+											"    pm.expect(jsonData.errors[0].detail).to.eql(\"Path parameter id doesn't correspond to request body id\");\r",
+											"    pm.expect(jsonData.errors[0].source.parameter).to.eql(postman.getEnvironmentVariable(\"contestId-1\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": {{contestId-1}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"score\" : {\r\n            \"setOne\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            },\r\n            \"setThree\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            },\r\n            \"tieBreak\":{\r\n                \"participantOne\": 6,\r\n                \"participantTwo\": 1\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/tournaments/{{tournamentId}}/contest/99999/score",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"tournaments",
+										"{{tournamentId}}",
+										"contest",
+										"99999",
 										"score"
 									]
 								}
@@ -10939,7 +11210,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"status\": \"PLANNED\",\r\n        \"beginningDate\": \"2024-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": 99999,\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"beginningDate\": \"2024-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11004,7 +11275,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": {{contestId-1}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"techDefeat\": {\r\n            \"participantOne\": true,\r\n            \"participantTwo\": false\r\n        },\r\n        \"score\": {\r\n            \"setOne\": {\r\n                \"participantOne\": 4,\r\n                \"participantTwo\": 4\r\n            }\r\n        }\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": 99999,\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"techDefeat\": {\r\n            \"participantOne\": true,\r\n            \"participantTwo\": false\r\n        },\r\n        \"score\": {\r\n            \"setOne\": {\r\n                \"participantOne\": 4,\r\n                \"participantTwo\": 4\r\n            }\r\n        }\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11575,7 +11846,6 @@
 											"    pm.expect(jsonData.data.attributes.name).not.to.be.null;\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(0);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
@@ -11613,7 +11883,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"status\": \"IN_PROGRESS\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"PostTest-{{$timestamp}}{{$randomInt}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -11714,7 +11984,6 @@
 											"    pm.expect(jsonData.data.attributes.name).to.be.eq(pm.environment.get(\"tournamentName\"));\r",
 											"    pm.expect(jsonData.data.attributes.tournamentType).to.eql(\"ELIMINATION\");\r",
 											"    pm.expect(jsonData.data.attributes.participantType).to.eql(\"SINGLE\");\r",
-											"    pm.expect(jsonData.data.attributes.status).to.eql(\"IN_PROGRESS\");\r",
 											"    pm.expect(jsonData.data.attributes.beginningDate).to.eql(\"2022-01-01\");\r",
 											"    pm.expect(jsonData.data.attributes.participantsNumber).to.eql(4);\r",
 											"    pm.expect(jsonData.data.attributes.progress).to.eql(0);\r",
