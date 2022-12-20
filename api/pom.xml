@@ -9,11 +9,11 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>com.dss.tennis</groupId>
-	<artifactId>tournament.tables</artifactId>
+	<groupId>ua.com.dss.tennis</groupId>
+	<artifactId>tournament-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Tournament Tables API</name>
-	<description>API</description>
+	<name>DSS Tennis Tournament API</name>
+	<description>API for managing tennis tournaments</description>
 
 	<properties>
 		<java.version>1.10</java.version>
