@@ -1,0 +1,16 @@
+{
+  "data": {
+    "id": 1,
+    "type": "player",
+    "attributes": {
+      "firstName": "Lando",
+      "lastName": "Norris",
+      "age": 25,
+      "experience": 1,
+      "leadingHand": "RIGHT"
+    }
+  },
+  "links": {
+    "self": "/participants/player/1"
+  }
+}

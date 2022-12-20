@@ -1,0 +1,53 @@
+{
+  "data": {
+    "id": 1,
+    "type": "team",
+    "relationships": {
+      "players": {
+        "data": [
+          {
+            "id": 1,
+            "type": "player"
+          },
+          {
+            "id": 2,
+            "type": "player"
+          }
+        ]
+      }
+    },
+    "included": [
+      {
+        "id": 1,
+        "type": "player",
+        "attributes": {
+          "firstName": "Lando",
+          "lastName": "Norris",
+          "age": 25,
+          "experience": 1,
+          "leadingHand": "RIGHT"
+        },
+        "links": {
+          "self": "/participants/players/1"
+        }
+      },
+      {
+        "id": 2,
+        "type": "player",
+        "attributes": {
+          "firstName": "Lando1",
+          "lastName": "Norris1",
+          "age": 30,
+          "experience": 2,
+          "leadingHand": "LEFT"
+        },
+        "links": {
+          "self": "/participants/players/2"
+        }
+      }
+    ],
+    "links": {
+      "self": "/participants/team/1"
+    }
+  }
+}
