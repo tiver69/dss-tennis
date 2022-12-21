@@ -1,0 +1,1464 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DSS Tennis Tournament Tables",
+    "description": "Here will be description",
+    "termsOfService": "http://swagger.io/terms/",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://dss-tennis.com.ua"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Get and Refresh Authentication Token",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Participant-Player",
+      "description": "Manage Player",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Participant-Team",
+      "description": "Manage Team",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "Tournament",
+      "description": "Manage Tournaments"
+    },
+    {
+      "name": "Contest",
+      "description": "Manage Tournament contest scores",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/auth": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get Bearer Token",
+        "description": "",
+        "operationId": "generateAuthenticationToken",
+        "requestBody": {
+          "description": "Credentials Info",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postAuthentication"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token Provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refresh Token",
+        "description": "",
+        "operationId": "refreshAuthenticationToken",
+        "requestBody": {
+          "description": "Refresh token for ",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postRefreshToken"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token Provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants/players": {
+      "get": {
+        "tags": [
+          "Participant-Player"
+        ],
+        "summary": "Get Information About Multiple Players",
+        "description": "",
+        "operationId": "getPlayersPage",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of entities to return on a single page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single page of Players Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pageablePlayerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Participant-Player"
+        ],
+        "summary": "Create New Player",
+        "description": "",
+        "operationId": "createPlayer",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "requestBody": {
+          "description": "Information about new player",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/playerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created Player Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/playerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants/players/{playerId}": {
+      "get": {
+        "tags": [
+          "Participant-Player"
+        ],
+        "summary": "Get Information About Single Player",
+        "description": "",
+        "operationId": "getPlayerById",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "ID of single player",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Player Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/playerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Participant-Player"
+        ],
+        "summary": "Update Player's Data",
+        "description": "",
+        "operationId": "updatePlayer",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "requestBody": {
+          "description": "Information about new player",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/playerRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "ID of single player",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated Player Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/playerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants/teams": {
+      "get": {
+        "tags": [
+          "Participant-Team"
+        ],
+        "summary": "Get Information About Multiple Teams",
+        "description": "",
+        "operationId": "getTeamsPage",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of entities to return on a single page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single page of Teams Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pageableTeamResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Participant-Team"
+        ],
+        "summary": "Create New Team From Existing Players",
+        "description": "",
+        "operationId": "createTeam",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "requestBody": {
+          "description": "Information about two players for new team",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/teamRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Full Team Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teamResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants/teams/{teamId}": {
+      "get": {
+        "tags": [
+          "Participant-Team"
+        ],
+        "summary": "Get Information About Team",
+        "description": "",
+        "operationId": "getTeamById",
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "ID of player's team",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Team Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teamResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournamentId}/contest/{contestId}": {
+      "get": {
+        "tags": [
+          "Contest"
+        ],
+        "summary": "Get Information About Single Contest",
+        "description": "",
+        "operationId": "getContestById",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "in": "path",
+            "description": "ID of contest's tournament",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "contestId",
+            "in": "path",
+            "description": "ID of contest",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Contest Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/contestResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contest"
+        ],
+        "summary": "Update Score Information",
+        "description": "",
+        "operationId": "updateScore",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "requestBody": {
+          "description": "Score Information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/contestRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "in": "path",
+            "description": "ID of contest's tournament",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "contestId",
+            "in": "path",
+            "description": "ID of contest",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Contest Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/contestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments": {
+      "get": {
+        "tags": [
+          "Tournament"
+        ],
+        "summary": "Get Information About Multiple Tournaments",
+        "description": "",
+        "operationId": "getTournamentsPage",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of entities to return on a single page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single page of Tournaments Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pageableTournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tournament"
+        ],
+        "summary": "Create Tournament with Basic information",
+        "description": "",
+        "operationId": "createTournament",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "requestBody": {
+          "description": "Basic Tournament Info",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tournamentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created Tournaments Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Tournament"
+        ],
+        "summary": "Update Tournament with Basic information",
+        "description": "",
+        "operationId": "updateTournament",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "requestBody": {
+          "description": "Basic Tournament Info",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tournamentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created Tournaments Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournamentId}": {
+      "get": {
+        "tags": [
+          "Tournament"
+        ],
+        "summary": "Get Information About Single Tournament",
+        "description": "",
+        "operationId": "getTournamentById",
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "in": "path",
+            "description": "ID of tournament",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Tournament Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tournament"
+        ],
+        "summary": "Get Information About Single Tournament",
+        "description": "",
+        "operationId": "deleteTournamentById",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "in": "path",
+            "description": "ID of tournament",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tournament Deleted successfully"
+          }
+        }
+      }
+    },
+    "/tournaments/{tournamentId}/enroll": {
+      "post": {
+        "tags": [
+          "Tournament"
+        ],
+        "summary": "Add new participant to the tournament",
+        "description": "",
+        "operationId": "enrollTournamentParticipant",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "requestBody": {
+          "description": "List of new participants to enroll",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tournamentEnrollRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "in": "path",
+            "description": "ID of tournament",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Tournament Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tournaments/{tournamentId}/withdraw/{participantId}": {
+      "delete": {
+        "tags": [
+          "Tournament"
+        ],
+        "summary": "Withdraw Participant from Tournament with tech defeat or full removal",
+        "description": "",
+        "operationId": "withdrawTournamentParticipant",
+        "security": [
+          {
+            "BearerAuthentication": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tournamentId",
+            "in": "path",
+            "description": "ID of tournament",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "ID of participant to withdraw",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "techDefeat",
+            "in": "query",
+            "description": "Should apply tech defeat",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Tournament Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tournamentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "postAuthentication": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "example": "admin"
+          }
+        }
+      },
+      "authenticationResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NjM1MTkyNDcsImlhdCI6MTY2MzUxMzg0NywidXNlcm5hbWUiOiJ0YWRtaW4ifQ.0lhXFSm5tADEm3coYuWq-WqsU7q2AeO6x2_R36aTdawrvjb5O6oEaNtQ5SI2XHFhIFpcXy1Icm8nOlvruGxSiA"
+          },
+          "expireIn": {
+            "type": "integer",
+            "example": 5400
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "435e69e1-00ca-4961-beed-f5ec0d85e44d"
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer"
+          }
+        }
+      },
+      "postRefreshToken": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "example": "435e69e1-00ca-4961-beed-f5ec0d85e44d"
+          }
+        }
+      },
+      "playerRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "player"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/playerRequestAttributes"
+          }
+        }
+      },
+      "playerResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/player"
+          }
+        }
+      },
+      "pageablePlayerResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "example": "1"
+          },
+          "page": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/player"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/pageableLinks"
+          }
+        }
+      },
+      "player": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "player"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/playerResponseAttributes"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links"
+          }
+        }
+      },
+      "playerRequestAttributes": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/playerAttributes"
+          },
+          {
+            "properties": {
+              "birthDate": {
+                "type": "string",
+                "format": "date",
+                "example": "2000-09-18"
+              },
+              "experienceYear": {
+                "type": "integer",
+                "example": 2010
+              }
+            }
+          }
+        ]
+      },
+      "playerResponseAttributes": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/playerAttributes"
+          },
+          {
+            "properties": {
+              "age": {
+                "type": "integer",
+                "example": "25"
+              },
+              "experience": {
+                "type": "integer",
+                "example": "1"
+              }
+            }
+          }
+        ]
+      },
+      "playerAttributes": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "Lando"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Norris"
+          },
+          "leadingHand": {
+            "type": "string",
+            "enum": [
+              "RIGHT",
+              "LEFT"
+            ],
+            "example": "RIGHT"
+          }
+        }
+      },
+      "teamRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "team"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/teamRelationships"
+          }
+        }
+      },
+      "teamResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/team"
+          }
+        }
+      },
+      "pageableTeamResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "example": "1"
+          },
+          "page": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/team"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/player"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/pageableLinks"
+          }
+        }
+      },
+      "team": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "team"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/teamRelationships"
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/player"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/links"
+          }
+        }
+      },
+      "teamRelationships": {
+        "type": "object",
+        "properties": {
+          "players": {
+            "$ref": "#/components/schemas/multipleResourceObject"
+          }
+        }
+      },
+      "contestRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "contest"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/contestAttributes"
+          }
+        }
+      },
+      "contestResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/contest"
+          }
+        }
+      },
+      "contest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "contest"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/contestAttributes"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/contestRelationships"
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/team"
+                },
+                {
+                  "$ref": "#/components/schemas/player"
+                }
+              ]
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/links"
+          }
+        }
+      },
+      "contestAttributes": {
+        "type": "object",
+        "properties": {
+          "techDefeat": {
+            "$ref": "#/components/schemas/contestAttributeTechDefeat"
+          },
+          "score": {
+            "type": "object",
+            "properties": {
+              "setOne": {
+                "$ref": "#/components/schemas/contestAttributeScoreSet"
+              },
+              "setTwo": {
+                "$ref": "#/components/schemas/contestAttributeScoreSet"
+              },
+              "setThree": {
+                "$ref": "#/components/schemas/contestAttributeScoreSet"
+              },
+              "tieBreak": {
+                "$ref": "#/components/schemas/contestAttributeScoreSet"
+              }
+            }
+          }
+        }
+      },
+      "contestAttributeScoreSet": {
+        "type": "object",
+        "properties": {
+          "participantOne": {
+            "type": "integer",
+            "example": 1
+          },
+          "participantTwo": {
+            "type": "integer",
+            "example": 6
+          }
+        }
+      },
+      "contestAttributeTechDefeat": {
+        "type": "object",
+        "properties": {
+          "participantOne": {
+            "type": "boolean",
+            "example": false
+          },
+          "participantTwo": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "contestRelationships": {
+        "type": "object",
+        "properties": {
+          "participantOne": {
+            "$ref": "#/components/schemas/singleResourceObject"
+          },
+          "participantTwo": {
+            "$ref": "#/components/schemas/singleResourceObject"
+          },
+          "winner": {
+            "$ref": "#/components/schemas/singleResourceObject"
+          }
+        }
+      },
+      "tournamentEnrollRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "tournament"
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "participants": {
+                "$ref": "#/components/schemas/multipleResourceObject"
+              }
+            }
+          }
+        }
+      },
+      "tournamentRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "tournament"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/tournamentAttributes"
+          }
+        }
+      },
+      "tournamentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/tournament"
+          }
+        }
+      },
+      "tournament": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "tournament"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/tournamentAttributes"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/tournamentRelationships"
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/contestInfo"
+                },
+                {
+                  "$ref": "#/components/schemas/eliminationContestInfo"
+                }
+              ]
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/links"
+          }
+        }
+      },
+      "tournamentAttributes": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Tournament 1"
+          },
+          "tournamentType": {
+            "type": "string",
+            "enum": [
+              "ROUND",
+              "ELIMINATION"
+            ],
+            "example": "ROUND"
+          },
+          "participantType": {
+            "type": "string",
+            "enum": [
+              "SINGLE",
+              "DOUBLE"
+            ],
+            "example": "SINGLE"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PLANNED",
+              "IN_PROGRESS",
+              "PLAYED"
+            ],
+            "example": "PLANNED"
+          },
+          "beginningDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2020-07-17"
+          },
+          "participantsNumber": {
+            "type": "integer",
+            "example": 10
+          },
+          "progress": {
+            "type": "integer",
+            "example": 25
+          }
+        }
+      },
+      "tournamentRelationships": {
+        "anyOf": [
+          {
+            "properties": {
+              "contests": {
+                "$ref": "#/components/schemas/multipleResourceObject"
+              }
+            }
+          },
+          {
+            "properties": {
+              "finalContest": {
+                "$ref": "#/components/schemas/singleResourceObject"
+              }
+            }
+          }
+        ]
+      },
+      "contestInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "contestInfo"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/contestInfoAttributes"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links"
+          }
+        }
+      },
+      "contestInfoAttributes": {
+        "type": "object",
+        "properties": {
+          "participantOne": {
+            "type": "string",
+            "example": "Lando Norris"
+          },
+          "participantTwo": {
+            "type": "string",
+            "example": "Lando1 Norris1"
+          },
+          "mainScore": {
+            "type": "string",
+            "example": "1:6 7:5 2:1"
+          },
+          "tieBreak": {
+            "type": "string",
+            "example": "4:1"
+          },
+          "techDefeat": {
+            "$ref": "#/components/schemas/contestAttributeTechDefeat"
+          }
+        }
+      },
+      "eliminationContestInfo": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/contestInfo"
+          },
+          {
+            "properties": {
+              "relationships": {
+                "$ref": "#/components/schemas/eliminationContestInfoRelationships"
+              }
+            }
+          }
+        ]
+      },
+      "eliminationContestInfoRelationships": {
+        "type": "object",
+        "properties": {
+          "firstParentContest": {
+            "$ref": "#/components/schemas/singleResourceObject"
+          },
+          "secondParentContest": {
+            "$ref": "#/components/schemas/singleResourceObject"
+          }
+        }
+      },
+      "pageableTournamentResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "example": 1
+          },
+          "page": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/tournament"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/pageableLinks"
+          }
+        }
+      },
+      "singleResourceObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "type": {
+            "type": "string",
+            "example": "team"
+          }
+        }
+      },
+      "multipleResourceObject": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/singleResourceObject"
+        }
+      },
+      "links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string",
+            "example": "/link/id_1/link/id_2"
+          }
+        }
+      },
+      "pageableLinks": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/links"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "first": {
+                "type": "string",
+                "example": "/link/id_1/link/id_2"
+              },
+              "last": {
+                "type": "string",
+                "example": "/link/id_1/link/id_2"
+              },
+              "prev": {
+                "type": "string",
+                "example": "/link/id_1/link/id_2"
+              },
+              "next": {
+                "type": "string",
+                "example": "/link/id_1/link/id_2"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BearerAuthentication": {
+        "type": "apiKey",
+        "description": "Main Bearer authentication",
+        "name": "Authentication ",
+        "in": "header"
+      }
+    },
+    "parameters": {},
+    "examples": {}
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

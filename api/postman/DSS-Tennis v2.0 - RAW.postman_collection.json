@@ -1,0 +1,833 @@
+{
+	"info": {
+		"_postman_id": "b782ff66-9925-46f6-954e-16cf08edd879",
+		"name": "DSS-Tennis v2.0 | RAW",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7420059"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Authentication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"accessToken\", jsonData.accessToken);\r",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"username\" : \"tadmin\",\r\n\t\"password\" : \"tadmin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"accessToken\", jsonData.accessToken);\r",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"refreshToken\" : \"{{refreshToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/refresh",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "participant",
+			"item": [
+				{
+					"name": "player",
+					"item": [
+						{
+							"name": "Player",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/participants/players/{{playerId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"players",
+										"{{playerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Players",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/participants/players?page=5&pageSize=5",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"players"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "5"
+										},
+										{
+											"key": "pageSize",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Player",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"playerId\", jsonData.data.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"player\",\r\n    \"attributes\": {\r\n        \"firstName\": \"PostTest-{{$timestamp}}\",\r\n        \"lastName\": \"PostTest-{{$timestamp}}\",\r\n        \"birthDate\": \"1999-03-17\",\r\n        \"experienceYear\": \"2009\",\r\n        \"leadingHand\": \"RIGHT\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/participants/players",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"players"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Player",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"playerId\", jsonData.data.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"{{playerId}}\",\r\n    \"type\": \"player\",\r\n    \"attributes\": {\r\n        \"firstName\": \"PatchTest-{{$timestamp}}\",\r\n        \"lastName\": \"PatchTest-{{$timestamp}}\",\r\n        \"birthDate\": \"{{birthDate}}\",\r\n        \"experienceYear\": \"{{experienceYear}}\",\r\n        \"leadingHand\": \"LEFT\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/participants/players/{{playerId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"players",
+										"{{playerId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "team",
+					"item": [
+						{
+							"name": "Team",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/participants/teams/{{teamId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"teams",
+										"{{teamId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Teams",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/participants/teams?page=5&pageSize=5",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"teams"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "5"
+										},
+										{
+											"key": "pageSize",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Team",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"teamId\", jsonData.data.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "{{contentType}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"team\",\r\n    \"relationships\": {\r\n        \"players\": [\r\n            {\r\n                \"id\": 34,\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": 33,\r\n                \"type\": \"player\"\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/participants/teams",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"participants",
+										"teams"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "tournament",
+			"item": [
+				{
+					"name": "Tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData.data.attributes.tournamentType == \"ELIMINATION\") {\r",
+									"    postman.setEnvironmentVariable(\"contestId\", jsonData.data.relationships.finalContest.id);\r",
+									"} else {\r",
+									"    postman.setEnvironmentVariable(\"contestId\", jsonData.data.relationships.contests[0].id);\r",
+									"}\r",
+									"postman.setEnvironmentVariable(\"tournamentId\", jsonData.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tournaments/115?include=contests,players",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"115"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "contests,players"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tournaments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tournaments?page=0&pageSize=10",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"tournamentId\", jsonData.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"name-{{$timestamp}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/tournaments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"tournamentId\", jsonData.data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"attributes\": {\r\n        \"name\": \"name-{{$timestamp}}\",\r\n        \"tournamentType\": \"ELIMINATION\",\r\n        \"participantType\": \"SINGLE\",\r\n        \"beginningDate\": \"2022-01-01\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/tournaments/{{tournamentId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournamentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tournaments/{{tournamentId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournamentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enroll Players",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"contestId\", jsonData.data.contests[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"relationships\": {\r\n        \"participants\": [\r\n            {\r\n                \"id\": \"22\",\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": \"21\",\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": \"15\",\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": \"14\",\r\n                \"type\": \"player\"\r\n            }\r\n        ]\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/tournaments/{{tournamentId}}/enroll",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournamentId}}",
+								"enroll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enroll Teams",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"contestId\", jsonData.data.contests[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{tournamentId}},\r\n    \"type\": \"tournament\",\r\n    \"relationships\": {\r\n        \"participants\": [\r\n            {\r\n                \"id\": \"25\",\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": \"21\",\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": \"15\",\r\n                \"type\": \"player\"\r\n            },\r\n            {\r\n                \"id\": \"14\",\r\n                \"type\": \"player\"\r\n            }\r\n        ]\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/tournaments/{{tournamentId}}/enroll",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournamentId}}",
+								"enroll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw Participant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tournaments/{{tournamentId}}/withdraw/14?techDefeat=false",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournamentId}}",
+								"withdraw",
+								"14"
+							],
+							"query": [
+								{
+									"key": "techDefeat",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "contest",
+			"item": [
+				{
+					"name": "Contest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"contestId\", jsonData.data.contests[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tournaments/{{tournamentId}}/contest/{{contestId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournamentId}}",
+								"contest",
+								"{{contestId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Contest Score",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"if (jsonData.data.score.setOne) {\r",
+									"    postman.setEnvironmentVariable(\"setOneId\", jsonData.data.score.setOne.id);\r",
+									"}\r",
+									"\r",
+									"if (jsonData.data.score.setTwo) {\r",
+									"    postman.setEnvironmentVariable(\"setTwoId\", jsonData.data.score.setTwo.id);\r",
+									"}\r",
+									"\r",
+									"if (jsonData.data.score.setThree) {\r",
+									"    postman.setEnvironmentVariable(\"setThreeId\", jsonData.data.score.setThree.id);\r",
+									"}\r",
+									"\r",
+									"if (jsonData.data.score.tieBreak) {\r",
+									"    postman.setEnvironmentVariable(\"tieBreakId\", jsonData.data.score.tieBreak.id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{contestId}},\r\n    \"type\": \"contest\",\r\n    \"attributes\": {\r\n        \"techDefeat\": {\r\n            \"participantOne\": false,\r\n            \"participantTwo\": false\r\n        },\r\n        \"score\": {\r\n            \"setOne\": {\r\n                \"participantOne\": 1,\r\n                \"participantTwo\": 6\r\n            },\r\n            \"setTwo\": {\r\n                \"participantOne\": 1,\r\n                \"participantTwo\": 6\r\n            },\r\n            \"setThree\": {\r\n                \"participantOne\": 1,\r\n                \"participantTwo\": 6\r\n            },\r\n            \"tieBreak\": {\r\n                \"participantOne\": 1,\r\n                \"participantTwo\": 6\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/tournaments/{{tournamentId}}/contest/{{contestId}}/score",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tournaments",
+								"{{tournamentId}}",
+								"contest",
+								"{{contestId}}",
+								"score"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

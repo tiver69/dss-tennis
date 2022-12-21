@@ -1,0 +1,153 @@
+{
+  "data": {
+    "id": 273,
+    "type": "contest",
+    "attributes": {
+      "techDefeat": {
+        "participantOne": false,
+        "participantTwo": false
+      },
+      "score": {
+        "setOne": {
+          "participantOne": 6,
+          "participantTwo": 7
+        },
+        "setTwo": {
+          "participantOne": 6,
+          "participantTwo": 7
+        },
+        "setThree": {
+          "participantOne": 6,
+          "participantTwo": 7
+        },
+        "tieBreak": {
+          "participantOne": 6,
+          "participantTwo": 7
+        }
+      }
+    },
+    "relationships": {
+      "participants": {
+        "data": [
+          {
+            "id": 1,
+            "type": "team"
+          },
+          {
+            "id": 2,
+            "type": "team"
+          }
+        ]
+      },
+      "winner": {
+        "data": {
+          "id": 2,
+          "type": "team"
+        }
+      }
+    },
+    "included": [
+      {
+        "id": 1,
+        "type": "team",
+        "relationships": {
+          "players": {
+            "data": [
+              {
+                "id": 1,
+                "type": "player"
+              },
+              {
+                "id": 2,
+                "type": "player"
+              }
+            ]
+          }
+        },
+        "links": {
+          "self": "/participants/teams/1"
+        }
+      },
+      {
+        "id": 2,
+        "type": "team",
+        "relationships": {
+          "players": {
+            "data": [
+              {
+                "id": 3,
+                "type": "player"
+              },
+              {
+                "id": 4,
+                "type": "player"
+              }
+            ]
+          }
+        },
+        "links": {
+          "self": "/participants/teams/2"
+        }
+      },
+      {
+        "id": 1,
+        "type": "player",
+        "attributes": {
+          "firstName": "Lando",
+          "lastName": "Norris",
+          "age": 25,
+          "experience": 1,
+          "leadingHand": "RIGHT"
+        },
+        "links": {
+          "self": "/participants/players/1"
+        }
+      },
+      {
+        "id": 2,
+        "type": "player",
+        "attributes": {
+          "firstName": "Lando1",
+          "lastName": "Norris1",
+          "age": 30,
+          "experience": 2,
+          "leadingHand": "LEFT"
+        },
+        "links": {
+          "self": "/participants/players/2"
+        }
+      },
+      {
+        "id": 3,
+        "type": "player",
+        "attributes": {
+          "firstName": "Lando3",
+          "lastName": "Norris3",
+          "age": 25,
+          "experience": 1,
+          "leadingHand": "RIGHT"
+        },
+        "links": {
+          "self": "/participants/players/3"
+        }
+      },
+      {
+        "id": 4,
+        "type": "player",
+        "attributes": {
+          "firstName": "Lando4",
+          "lastName": "Norris4",
+          "age": 30,
+          "experience": 2,
+          "leadingHand": "LEFT"
+        },
+        "links": {
+          "self": "/participants/players/4"
+        }
+      }
+    ],
+    "links": {
+      "self": "/tournament/1/contest/273"
+    }
+  }
+}
