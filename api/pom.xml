@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>ua.com.dss.tennis</groupId>
-	<artifactId>tournament-api</artifactId>
+	<artifactId>tournament.api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>DSS Tennis Tournament API</name>
 	<description>API for managing tennis tournaments</description>
