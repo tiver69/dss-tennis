@@ -9,7 +9,7 @@
   <span> · </span>
     <a href="https://github.com/tiver69/dss-tennis/tree/dev/bot">Telegram Bot</a>
   <span> · </span>
-    <a href="">Android App</a>
+    <a href="https://github.com/tiver69/dss-tennis/tree/dev/android">Android App</a>
   <span> · </span>
     <a href="https://github.com/tiver69/dss-tennis/tree/dev/database">Database</a>
 </h4>

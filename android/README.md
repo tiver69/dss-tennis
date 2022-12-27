@@ -1,18 +1,18 @@
 <div align="center">
   <!--<img src="assets/logo.png" alt="logo" width="200" height="auto" />-->
-  <h1>DSS Tennis</h1>
+  <h1>DSS Tennis Tournament API</h1>
   <p>
-    Here are applications and features created for managing local/private tennis tournaments 
+    Here is API for managing tournaments 
   </p>   
 <h4>
+    <a href="https://github.com/tiver69/dss-tennis/tree/dev">General</a>
+  <span> · </span>
     <a href="https://github.com/tiver69/dss-tennis/tree/dev/api">API</a>
   <span> · </span>
     <a href="https://github.com/tiver69/dss-tennis/tree/dev/bot">Telegram Bot</a>
   <span> · </span>
-    <a href="https://github.com/tiver69/dss-tennis/tree/dev/android">Android App</a>
-  <span> · </span>
     <a href="https://github.com/tiver69/dss-tennis/tree/dev/database">Database</a>
- </h4>
+</h4>
 </div>
 <br />
 
@@ -20,12 +20,7 @@
 # Table of Contents
 
 - [General Description](#general-description)
-- [API](#api)
-- [Telegram Bot](#telegram-bot)
-- [Android App](#android-app)
-- [Database](#database)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
+- [Documentation](#documentation)
 
 
 <!-- #################### About the Project #################### -->
@@ -33,19 +28,7 @@
 
 
 <!-- #################### API #################### -->
-## API
-
-
-<!-- #################### Telegram Bot #################### -->
-## Telegram Bot
-
-
-<!-- #################### Android App #################### -->
-## Android App
-
-
-<!-- #################### Database #################### -->
-## Database
+## Documentation
 
 
 <!-- #################### Contact #################### -->
@@ -60,8 +43,6 @@ Project Link: [https://github.com/tiver69/dss-tennis](https://github.com/tiver69
 ## Acknowledgements
 
 Shoutout to useful resources used:
-
-- [Awesome README](https://github.com/Louis3797/awesome-readme-template)
 
 <br />
 
